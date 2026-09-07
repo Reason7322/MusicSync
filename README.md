@@ -1,5 +1,7 @@
 # Music Sync
 
+This app is 100% vibe coded, use at your own discretion.
+
 A native Linux desktop music synchronization utility built with **Python 3,
 PySide6 and Qt Widgets**. KDE Connect supplies SSHFS access, rsgain applies
 ReplayGain, and rsync performs previews and synchronization. No GTK, browser,
