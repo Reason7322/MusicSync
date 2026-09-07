@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "musicsync"
+version = "0.1.0"
+description = "Safe KDE Connect music mirroring for Linux"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Reason7322"}]
+requires-python = ">=3.11"
+dependencies = ["PySide6>=6.8,<7"]
+
+[project.gui-scripts]
+musicsync = "musicsync.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+musicsync = ["icons/*.svg"]

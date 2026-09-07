@@ -1,0 +1,67 @@
+{
+  "checks": [
+    {
+      "check": "Python syntax compilation",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Source desktop entry validation",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Static launcher shell syntax",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Git diff whitespace check (no tracked files yet)",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Artifact ignore policy",
+      "status": "PASS",
+      "paths_checked": 16,
+      "unignored": []
+    },
+    {
+      "check": "Publication candidate privacy scan",
+      "status": "PASS",
+      "files_scanned": 55,
+      "findings": [],
+      "binary_files": [],
+      "scope": "Nonignored tracked and untracked files. Pattern scan and manual keyword review; no guarantee of detecting every possible secret."
+    },
+    {
+      "check": "Git state (read-only inspection)",
+      "status": "PARTIAL",
+      "tracked_files": 0,
+      "has_commit": false,
+      "note": "Repository already initialized before this task; all project files untracked. No Git mutations performed; no committed history to scan."
+    },
+    {
+      "check": "Untracked source whitespace scan",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "check": "Local Markdown links",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "check": "Renamed SVG artwork preserved",
+      "status": "PASS"
+    }
+  ],
+  "lint": "No linter or type checker configured; syntax and suite AST checks used.",
+  "physical_device": "NOT TESTED in publication preparation; offline tests only.",
+  "at": "2026-09-07T18:20:35+02:00",
+  "application_id": "io.github.reason7322.MusicSync"
+}

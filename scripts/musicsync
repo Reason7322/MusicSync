@@ -1,0 +1,5 @@
+#!/bin/sh
+# Development launcher, independent of caller's working directory or interactive shell.
+MUSICSYNC_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export PYTHONPATH="$MUSICSYNC_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "$MUSICSYNC_ROOT/.venv/bin/python" -m musicsync "$@"

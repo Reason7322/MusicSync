@@ -1,0 +1,36 @@
+{
+  "checks": [
+    {
+      "check": "Python syntax compilation",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Source desktop entry validation",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Installed desktop entry validation",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Launcher shell syntax",
+      "status": "PASS",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "check": "Git release state",
+      "status": "FAIL",
+      "exit_code": 128,
+      "output": "fatal: not a git repository (or any parent up to mount point /)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).\n"
+    }
+  ],
+  "lint": "No linter or type checker is configured in pyproject.toml.",
+  "live": "Read-only live test was interrupted; no completion evidence was produced."
+}

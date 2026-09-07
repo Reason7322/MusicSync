@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Music Sync
+Comment=Preview and synchronize music with KDE Connect
+Exec=musicsync
+Icon=io.github.reason7322.MusicSync
+Terminal=false
+Categories=AudioVideo;Audio;
+StartupNotify=true
+DBusActivatable=false

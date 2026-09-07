@@ -1,0 +1,1378 @@
+{
+  "at": "2026-09-07T18:17:50+02:00",
+  "tests_run": 112,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "seconds": 16.755,
+  "tests": [
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='preview')",
+      "status": "PASS",
+      "seconds": 0.0019,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='success')",
+      "status": "PASS",
+      "seconds": 0.0035,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='failure')",
+      "status": "PASS",
+      "seconds": 0.0045,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='cancel')",
+      "status": "PASS",
+      "seconds": 0.0053,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules",
+      "status": "PASS",
+      "seconds": 0.0053,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_empty_and_missing_source",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_inventory_snapshot_and_protection",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_local_directory_cannot_pass_remote_guard",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_no_symlinks",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_probe_cleanup",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovered_device_selection_saves_real_selection_and_retains_it",
+      "status": "PASS",
+      "seconds": 0.0367,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device (listing='')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device (listing='test-phone Example phone\\nother-phone Other phone\\n')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device",
+      "status": "PASS",
+      "seconds": 0.0115,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_first_run_widgets_require_selection_then_enable_operations",
+      "status": "PASS",
+      "seconds": 0.0521,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_missing_config_uses_qt_music_location_without_inventing_device_or_writing",
+      "status": "PASS",
+      "seconds": 0.0112,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_saved_source_is_not_replaced_by_qt_suggestion",
+      "status": "PASS",
+      "seconds": 0.0113,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-qrl6ip52')",
+      "status": "PASS",
+      "seconds": 0.0012,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-qrl6ip52/')",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='relative')",
+      "status": "PASS",
+      "seconds": 0.0016,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/../music')",
+      "status": "PASS",
+      "seconds": 0.0018,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/bad\\npath')",
+      "status": "PASS",
+      "seconds": 0.002,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source",
+      "status": "PASS",
+      "seconds": 0.0123,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'source': '/'})",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'remote_dir': '/storage/emulated/0/../Music'})",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'device_id': 'test-phone'})",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'device_name': 'Phone'})",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'threads': 0})",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'exclusions': []})",
+      "status": "PASS",
+      "seconds": 0.0013,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices",
+      "status": "PASS",
+      "seconds": 0.0116,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command (preview=True)",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command (preview=False)",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command",
+      "status": "PASS",
+      "seconds": 0.0108,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unset_source_is_not_scanned_and_does_not_stop_device_discovery",
+      "status": "PASS",
+      "seconds": 0.011,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='changed')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='empty')",
+      "status": "PASS",
+      "seconds": 0.002,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='phone_changed')",
+      "status": "PASS",
+      "seconds": 0.0029,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes",
+      "status": "PASS",
+      "seconds": 0.0029,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_rsync_uses_pinned_directories_and_delete_cap",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_arguments",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_devices",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_itemization",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_mount_validation",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_progress",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_settings",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_threshold",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_cancel_and_kill_escalation",
+      "status": "PASS",
+      "seconds": 3.2613,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_delete_cap_blocks_unpreviewed_deletion",
+      "status": "PASS",
+      "seconds": 0.1452,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_failed_to_start",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_incremental_channels_and_cr",
+      "status": "PASS",
+      "seconds": 0.0606,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_real_rsync_in_temporary_directories",
+      "status": "PASS",
+      "seconds": 0.1339,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_timeout",
+      "status": "PASS",
+      "seconds": 0.0963,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_atomic_settings_failure_preserves_previous_content",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='{')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='[]')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='{\"unknown\":1}')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='{\"threads\":0}')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=0, total=0)",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=1, total=1)",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=1, total=5)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=2, total=5)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=49, total=1000)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=50, total=1000)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=20, total=100)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=21, total=100)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='')",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='/')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='relative')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='/tmp/../Music')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value=None)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='-flag')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='a/b')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='a b')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/../Music')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/./Music')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0//Music')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='//storage/emulated/0/Music')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/Music/')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/Music\\x00')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=0)",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=33)",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=True)",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value='4')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='mirror', value='true')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='mirror', value=1)",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='replaygain', value=None)",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='replaygain', value=1)",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=[])",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=['*.mp3'])",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=['/.thumbnails/', '/a/b/'])",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size (code='cd+++++++++')",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size (code='*deleting  ')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size (code='.f..t......')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_log_location_rotation_and_ansi_cleanup",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='kdeconnect-cli')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='sshfs')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='rsync')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='rsgain')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='findmnt')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='mountpoint')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='fusermount3')",
+      "status": "PASS",
+      "seconds": 0.0012,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset",
+      "status": "PASS",
+      "seconds": 0.0013,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_progress_units_and_unrecognized_lines",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_replaygain_summary_recognized_or_explicitly_unknown",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_roundtrip_all_settings_and_config_file_permissions",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_unicode_line_separator_is_a_filename_not_a_record_boundary",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - fuse.sshfs kdeconnect@host:/ rw\\n42 1 0:2 / /run/user/1000/device rw - fuse.sshfs kdeconnect@host:/ rw\\n')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - ext4 kdeconnect@host:/ rw\\n')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - fuse.sshfs other@host:/ rw\\n')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_fifo_and_unix_socket_rejected_without_blocking",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='bad json')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": []}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}, {\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}]}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/other\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}]}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": \"bad\"}]}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected (ids=[124])",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected (ids=[123, 124])",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_missing_not_created_and_symlink_components_rejected",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_readonly_and_delete_denied_probe_errors",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_source_zero_byte_file_is_a_file_but_directories_and_exclusions_are_not",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='file')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='directory')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='missing')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_unreadable_subtree_aborts_instead_of_becoming_deletions",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Scan PC library')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Discover KDE Connect devices')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Check per-track ReplayGain')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Get KDE Connect mountpoint')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Scan phone Music')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Verify phone write and delete capability')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='rsync preview')",
+      "status": "PASS",
+      "seconds": 0.0012,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Final phone write/delete check')",
+      "status": "PASS",
+      "seconds": 0.0016,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='rsync mirror')",
+      "status": "PASS",
+      "seconds": 0.002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate",
+      "status": "PASS",
+      "seconds": 0.002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cleanup_failure_visible_separately_and_borrowed_failure_untouched",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate (gate=1)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate (gate=2)",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate (gate=3)",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_final_verification_detects_remaining_changes",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_malformed_preview_aborts_real_sync",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_missing_mountpoint_directory_can_be_created_only_by_kdeconnect",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_normal_unmount_failure_falls_back_once_to_lazy",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned (cancelled=False)",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned (cancelled=True)",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_unexpected_mount_never_detached",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_preview_does_not_require_preset_or_rsgain",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_replaygain_disabled_does_not_require_or_invoke_it",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_stale_detach_failure_no_remount_or_sync",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_stale_detach_that_did_not_detach_stops",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_stale_storage_timeout_uses_one_recovery",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_cleanup_waits_for_unmount",
+      "status": "PASS",
+      "seconds": 0.3087,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_mount_cleans_partial_mount",
+      "status": "PASS",
+      "seconds": 0.0896,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_replaygain_cancels_process_and_never_mounts",
+      "status": "PASS",
+      "seconds": 0.0897,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_rsync_cancels_and_cleans_owned_mount",
+      "status": "PASS",
+      "seconds": 0.1012,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_while_approval_pending_stops_without_sync",
+      "status": "PASS",
+      "seconds": 0.115,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_large_delete_dialog_defaults_to_cancel_and_lists_files",
+      "status": "PASS",
+      "seconds": 0.0929,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_large_preview_table_10000_rows_and_return_to_event_loop",
+      "status": "PASS",
+      "seconds": 0.1863,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_progress_and_log_widgets_update_while_subprocess_runs",
+      "status": "PASS",
+      "seconds": 0.1442,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_repeated_clicks_and_controller_starts_cannot_overlap",
+      "status": "PASS",
+      "seconds": 0.0897,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_settings_dialog_saves_all_controls_to_isolated_xdg",
+      "status": "PASS",
+      "seconds": 0.0687,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_startup_is_idle_and_does_not_begin_sync",
+      "status": "PASS",
+      "seconds": 0.067,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_history_write_failure_is_visible_and_does_not_erase_prior_success",
+      "status": "PASS",
+      "seconds": 0.0027,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='preview')",
+      "status": "PASS",
+      "seconds": 0.0013,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='failure')",
+      "status": "PASS",
+      "seconds": 0.0034,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='cancel')",
+      "status": "PASS",
+      "seconds": 0.0041,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes",
+      "status": "PASS",
+      "seconds": 0.0041,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_success_fields_counts_timezone_and_cleanup_warning",
+      "status": "PASS",
+      "seconds": 0.0024,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_cancelled_startup_stops_without_followup_commands",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_cleanup_presence_timeout_does_not_claim_unmounted",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_presence_timeout_never_authorizes_sync_even_exit_zero",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_status_permission_error_is_not_reported_as_unmounted",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_startup_status_checks_do_not_mount_or_sync",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.ProcessLifecycleReleaseTests.test_cancel_does_not_leave_a_child_process_running",
+      "status": "PASS",
+      "seconds": 3.2313,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.ProcessLifecycleReleaseTests.test_cancel_from_started_signal_does_not_launch_command",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_actual_rsync_cancel_before_delete_after_keeps_extra_file",
+      "status": "PASS",
+      "seconds": 3.413,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_failed_sender_io_does_not_delete_phone_only_file",
+      "status": "PASS",
+      "seconds": 0.1453,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_large_library_worker_and_parser_10000_files",
+      "status": "PASS",
+      "seconds": 0.3905,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_real_preview_is_byte_and_mtime_unchanged_with_unusual_names",
+      "status": "PASS",
+      "seconds": 0.0914,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_root_thumbnails_protected_but_nested_thumbnails_follow_mirror",
+      "status": "PASS",
+      "seconds": 0.045,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_update_only_keeps_extra_files_and_updates_changed_files",
+      "status": "PASS",
+      "seconds": 0.0447,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_application_identity_is_consistent",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_desktop_template_and_pyproject_metadata",
+      "status": "PASS",
+      "seconds": 0.0023,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_external_command_ast_has_no_shell_interpolation_or_gui_waits",
+      "status": "PASS",
+      "seconds": 0.0215,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_first_run_without_saved_config",
+      "status": "PASS",
+      "seconds": 1.8386,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_setup_and_launch_from_unrelated_cwd",
+      "status": "PASS",
+      "seconds": 1.8426,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_installer_is_relocatable_and_does_not_modify_real_home",
+      "status": "PASS",
+      "seconds": 0.1416,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_installer_refuses_unrelated_existing_files_before_any_write",
+      "status": "PASS",
+      "seconds": 0.0019,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_real_qt_honors_isolated_xdg_music_directory",
+      "status": "PASS",
+      "seconds": 0.0824,
+      "detail": ""
+    },
+    {
+      "test": "test_replaygain_integration.ReplayGainIntegrationTests.test_new_track_tagged_then_skipped_byte_for_byte",
+      "status": "PASS",
+      "seconds": 0.1964,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_broken_replacement_stops",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_cancel_cleans_owned_mount",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_cancel_replaygain_never_mounts",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_changed_cleanup_mount_left_untouched",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_delete_approval_and_cap",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Scan PC library')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Discover KDE Connect devices')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Check per-track ReplayGain')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Get KDE Connect mountpoint')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Mount KDE Connect filesystem')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Verify SSHFS identity')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Scan phone Music')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Verify phone write and delete capability')",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='rsync preview')",
+      "status": "PASS",
+      "seconds": 0.0012,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Final phone write/delete check')",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_healthy_borrowed_mount_left_alone",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_preview_no_tagging_probe_or_real_rsync",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_real_order",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_rsync_error_does_not_verify_success",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_stale_recovered_once",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_unexpected_filesystem_never_unmounted",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    }
+  ]
+}
