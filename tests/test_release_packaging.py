@@ -29,7 +29,7 @@ def relocated_tree():
     with tempfile.TemporaryDirectory(prefix='musicsync-release-') as tmp:
         base = Path(tmp)
         root = base / 'Music Sync $cash `literal` "quote" \'apostrophe\' %percent & semi; Ω'
-        shutil.copytree(ROOT, root, ignore=shutil.ignore_patterns('.venv', '__pycache__', '.git', '*.pyc'))
+        shutil.copytree(ROOT, root, ignore=shutil.ignore_patterns('.venv', '__pycache__', '.git', '*.pyc', 'build', 'dist'))
         home = base / 'isolated-home'
         home.mkdir()
         yield root, home

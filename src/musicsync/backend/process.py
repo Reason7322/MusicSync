@@ -3,8 +3,10 @@ import codecs
 import os
 import re
 import signal
+from dataclasses import replace
 from PySide6.QtCore import QObject, QProcess, QProcessEnvironment, QTimer, Signal, Slot
 from musicsync.models import Result
+from musicsync.runtime import HOST_TOOLS, host_environment, tool_program
 
 
 class ProcessRunner(QObject):
@@ -42,9 +44,13 @@ class ProcessRunner(QObject):
         self.decoders = {key: codecs.getincrementaldecoder("utf-8")("surrogateescape") for key in self.buffers}
         process = self.process
         self.busy = True
-        env = QProcessEnvironment.systemEnvironment()
+        env = QProcessEnvironment()
+        environment = host_environment() if command.program in HOST_TOOLS else dict(os.environ)
+        for key, value in environment.items():
+            env.insert(key, value)
         env.insert("LC_ALL", "C.UTF-8")
         process.setProcessEnvironment(env)
+        command = replace(command, program=tool_program(command.program))
         self.started.emit(command)
         if self.cancelled:
             self.pending_result = Result(-1, cancelled=True)

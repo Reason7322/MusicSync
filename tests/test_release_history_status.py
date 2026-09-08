@@ -110,11 +110,39 @@ class TimeoutStatusReleaseTests(unittest.TestCase):
         next(generator)
         generator.send(Result(0, Settings().device_id + ' Phone\n'))
         generator.send(Result(0, '/run/user/1000/device'))
-        try:
+        probe = generator.send(Result(1, stderr='Permission denied'))
+        self.assertEqual(json.loads(probe.args[-1])['action'], 'mount_path')
+        with self.assertRaises(StopIteration) as done:
             generator.send(Result(1, stderr='Permission denied'))
-        except StopIteration as done:
-            self.assertNotIn('Not mounted', done.value.get('filesystem', ''))
-            self.assertIn('error', done.value)
+        self.assertNotIn('Not mounted', done.exception.value.get('filesystem', ''))
+        self.assertIn('Permission denied', done.exception.value['error'])
+
+    def test_absent_mount_directory_is_unmounted_without_creating_it(self):
+        service = StatusService()
+        generator = service._read(Settings(), scan=False)
+        next(generator)
+        generator.send(Result(0, Settings().device_id + ' Phone\n'))
+        generator.send(Result(0, '/run/user/1000/device'))
+        probe = generator.send(Result(1))
+        self.assertEqual(json.loads(probe.args[-1])['action'], 'mount_path')
+        with self.assertRaises(StopIteration) as done:
+            generator.send(Result(0, '{"exists": false}'))
+        self.assertIn('Not mounted', done.exception.value['filesystem'])
+        self.assertNotIn('error', done.exception.value)
+
+    def test_mount_path_timeout_or_existing_path_never_claims_absence(self):
+        for reply in (Result(0, '{"exists": false}', timed_out=True), Result(0, '{"exists": true}')):
+            with self.subTest(reply=reply):
+                service = StatusService()
+                generator = service._read(Settings(), scan=False)
+                next(generator)
+                generator.send(Result(0, Settings().device_id + ' Phone\n'))
+                generator.send(Result(0, '/run/user/1000/device'))
+                generator.send(Result(1))
+                with self.assertRaises(StopIteration) as done:
+                    generator.send(reply)
+                self.assertIn('error', done.exception.value)
+                self.assertNotIn('Not mounted', done.exception.value['filesystem'])
 
     def test_cancelled_startup_stops_without_followup_commands(self):
         service = StatusService()

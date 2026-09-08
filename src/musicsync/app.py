@@ -10,7 +10,7 @@ from musicsync.main_window import MainWindow
 from musicsync.settings import Settings
 
 
-def main():
+def main(test_mode=None):
     app = QApplication(sys.argv)
     app.setApplicationName('Music Sync')
     app.setApplicationVersion(__version__)
@@ -31,8 +31,14 @@ def main():
         QMessageBox.critical(None, 'Music Sync configuration error', str(error))
         return 1
     window = MainWindow(settings)
+    if test_mode:
+        from musicsync.packaging_check import install_check
+        install_check(app, window, test_mode)
     window.show()
-    return app.exec()
+    code = app.exec()
+    if test_mode:
+        return 0 if window.packaging_check['result'] == 'PASS' else 1
+    return code
 
 
 if __name__ == '__main__':

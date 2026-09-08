@@ -12,6 +12,7 @@ import sys
 from musicsync.backend.filesystem import current_mount, fd_mount_id, inventory, remote_directory, write_probe, DIR_FLAGS
 from musicsync.backend.rsync import arguments
 from musicsync.settings import PHONE_STORAGE, Settings
+from musicsync.runtime import HOST_TOOLS, executable, host_environment, tool_program
 
 
 def execute(payload):
@@ -29,16 +30,21 @@ def execute(payload):
     if action == "source":
         return inventory(payload["source"], payload.get("exclusions", []), True)
     if action == "dependencies":
-        missing = [name for name in payload["programs"] if shutil.which(name) is None]
+        missing = [name for name in payload["programs"] if shutil.which(tool_program(name)) is None]
         if missing:
-            raise OSError("Missing runtime tools: " + ", ".join(missing))
+            host = [name for name in missing if name in HOST_TOOLS]
+            advice = ' Install the host KDE Connect and SSHFS/FUSE setup and util-linux tools.' if host else ''
+            raise OSError("Missing runtime tools: " + ", ".join(missing) + advice)
         if payload.get("preset") and not Path(payload["preset"]).is_file():
             raise OSError("ReplayGain preset does not exist: " + payload["preset"])
         return {}
     target, mount_id = payload["mountpoint"], payload["mount_id"]
     if action == "unmount":
         current_mount(target, mount_id)
-        program = shutil.which("fusermount3")
+        program = executable("fusermount3")
+        environment = host_environment()
+        os.environ.clear()
+        os.environ.update(environment)
         os.execv(program, [program, "-uz" if payload.get("lazy") else "-u", target])
     remote = PHONE_STORAGE if action == "storage" else payload["remote"]
     with remote_directory(target, remote, mount_id) as destination:
@@ -67,7 +73,7 @@ def execute(payload):
                 current_mount(target, mount_id)
                 os.fchdir(destination)
                 os.set_inheritable(source, True)
-                program = shutil.which("rsync")
+                program = executable("rsync")
                 args = arguments(settings, f"/proc/self/fd/{source}", ".", payload["dry_run"], payload.get("max_delete"))
                 os.execv(program, [program, *args])
             finally:
@@ -75,9 +81,9 @@ def execute(payload):
     raise ValueError("Unknown filesystem operation: " + action)
 
 
-def main():
+def main(payload=None):
     try:
-        print(json.dumps(execute(json.loads(sys.argv[1])), ensure_ascii=True))
+        print(json.dumps(execute(json.loads(payload if payload is not None else sys.argv[1])), ensure_ascii=True))
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(str(error), file=sys.stderr)

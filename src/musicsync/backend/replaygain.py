@@ -1,9 +1,10 @@
 import re
 from musicsync.models import Command
+from musicsync.runtime import effective_preset
 
 
 def command(settings):
-    return Command("rsgain", ["easy", "-S", "-m", str(settings.threads), "-p", settings.preset, settings.source], 0, "Check per-track ReplayGain")
+    return Command("rsgain", ["easy", "-S", "-m", str(settings.threads), "-p", effective_preset(settings.preset), settings.source], 0, "Check per-track ReplayGain")
 
 
 def processed_tracks(output: str) -> bool | None:
