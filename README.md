@@ -1,9 +1,15 @@
 # MusicSync
+MusicSync is a small Linux app for syncing a local music library to an Android phone through KDE Connect.
+
 This app is 100% vibe coded by Codex. Use at your own discretion.
+
+I have personally tested it on Fedora 44 + Hyprland on bare metal, as well as on:
+ - Ubuntu 26.04 (VM)
+ - EndeavourOS running KDE (VM)
+ - Pop!_OS 24.04 running COSMIC (VM)
 
 <img width="2560" height="1376" alt="2026-09-09-014021_hyprshot" src="https://github.com/user-attachments/assets/7bd8b67a-4e3c-4c05-a729-57e02237d37e" />
 
-MusicSync is a small Linux app for syncing a local music library to an Android phone through KDE Connect.
 
 The PC library is treated as the source of truth. MusicSync can preview changes, copy new or updated files, remove files that no longer exist on the PC, and apply per-track ReplayGain before syncing.
 Built with Python, PySide6 and Qt Widgets.
@@ -34,7 +40,7 @@ Everything else required by MusicSync is bundled in the AppImage, including Pyth
 ## Download and run
 Download the latest AppImage from the [Releases](https://github.com/Reason7322/MusicSync/releases) page.
 
-Then:
+Then run these commands in your terminal:
 ```bash
 chmod +x MusicSync-0.1.0-x86_64.AppImage
 ./MusicSync-0.1.0-x86_64.AppImage
