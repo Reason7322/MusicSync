@@ -8,13 +8,15 @@ This app is 100% vibe coded by Codex. Use at your own discretion.
 
 I have personally tested it on Fedora 44 + Hyprland on bare metal, as well as on:
  - Ubuntu 26.04 (VM)
- - EndeavourOS running KDE (VM)
+ - EndeavourOS running KDE Plasma (VM)
  - Pop!_OS 24.04 running COSMIC (VM)
 
 
 
 The PC library is treated as the source of truth. MusicSync can preview changes, copy new or updated files, remove files that no longer exist on the PC, and apply per-track ReplayGain before syncing.
 Built with Python, PySide6 and Qt Widgets.
+
+Warning: MusicSync treats the PC library as authoritative. With Mirror mode enabled, files that exist only on the phone may be deleted. Mirror mode can be disabled in Settings. Always review the preview before syncing.
 
 ## What it does
 
@@ -36,7 +38,7 @@ MusicSync never deletes files from the PC.
 - SSHFS / FUSE support installed on the Linux PC
 - Android filesystem access enabled for KDE Connect
 
-Everything else required by MusicSync is bundled in the AppImage, including Python, PySide6/Qt, `rsync`, and `rsgain`.
+The AppImage bundles Python, PySide6/Qt, rsync, and rsgain; you do not need to install those separately.
 
 
 ## Download and run
@@ -46,3 +48,4 @@ Then run these commands in your terminal:
 ```bash
 chmod +x MusicSync-0.1.0-x86_64.AppImage
 ./MusicSync-0.1.0-x86_64.AppImage
+```
