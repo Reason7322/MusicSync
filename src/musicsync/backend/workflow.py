@@ -5,12 +5,12 @@ All resource cleanup lives in the generator's finally block, including cancellat
 """
 from dataclasses import asdict, dataclass, replace
 import json
-import sys
 
 from musicsync.backend import kdeconnect, replaygain, rsync
 from musicsync.backend.mounts import mount_query, parse_findmnt, validate_mountpoint
 from musicsync.models import Command, Outcome, State, Summary
 from musicsync.settings import DELETE_ABSOLUTE, suspicious_deletions
+from musicsync.runtime import effective_preset, worker_invocation
 
 
 @dataclass(frozen=True)
@@ -35,7 +35,8 @@ class Cancelled(Failure):
 
 
 def helper(action, label, timeout=30000, **payload):
-    return Command(sys.executable, ["-m", "musicsync.backend.worker", json.dumps(dict(action=action, **payload), ensure_ascii=True)], timeout, label)
+    program, args = worker_invocation(json.dumps(dict(action=action, **payload), ensure_ascii=True))
+    return Command(program, args, timeout, label)
 
 
 class Workflow:
@@ -165,7 +166,7 @@ class Workflow:
         tagging = not self.preview and self.settings.replaygain
         if tagging:
             programs.append("rsgain")
-        yield from self._call(helper("dependencies", "Validate runtime dependencies", programs=programs, preset=self.settings.preset if tagging else None), "Configuration error.")
+        yield from self._call(helper("dependencies", "Validate runtime dependencies", programs=programs, preset=effective_preset(self.settings.preset) if tagging else None), "Configuration error.")
         inventory = yield from self._source()
         yield Event(State.CHECKING_SOURCE, "Local library checked.", inventory)
         yield from self._device()

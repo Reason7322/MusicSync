@@ -1,0 +1,66 @@
+{
+  "qtbase-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z": {
+    "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6112/qt6_6112/qt.qt6.6112.linux_gcc_64/6.11.2-0-202608131018qtbase-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z",
+    "sha256": "0f86f13b161141e77b1d056b54e2b6fc40fb16f243e71123346f9fb35d418027"
+  },
+  "qtsvg-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z": {
+    "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6112/qt6_6112/qt.qt6.6112.linux_gcc_64/6.11.2-0-202608131018qtsvg-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z",
+    "sha256": "939fe0e5d49d11d6d3eceea0184219703c25a1f8dc75f45e99071ca244824a0d"
+  },
+  "qtwayland-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z": {
+    "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6112/qt6_6112/qt.qt6.6112.linux_gcc_64/6.11.2-0-202608131018qtwayland-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z",
+    "sha256": "7a541f8d36f93a1e337e6d3fc040537c04fc70a65a04b6078738dd0f59ddf83d"
+  },
+  "icu-linux-Rhel8.6-x86_64.7z": {
+    "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6112/qt6_6112/qt.qt6.6112.linux_gcc_64/6.11.2-0-202608131018icu-linux-Rhel8.6-x86_64.7z",
+    "sha256": "111bdae30a66fff6ef65620e95766170fa5a6f425c360ea33b79cb2ec7e2fd86"
+  },
+  "extra-cmake-modules-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/extra-cmake-modules-6.29.0.tar.xz",
+    "sha256": "aaf2542edd5c5af9ea56a46468892d38a7978af65f0f3518379fa8ce66cad2b8"
+  },
+  "kconfig-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/kconfig-6.29.0.tar.xz",
+    "sha256": "a0e902865763fd4cd1c86973c316069f210492923d7b8065d5052c539ae46b91"
+  },
+  "karchive-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/karchive-6.29.0.tar.xz",
+    "sha256": "3d66cd9d71fbbebc3cea68757111002666b366898b01178b6fa7203715574287"
+  },
+  "ki18n-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/ki18n-6.29.0.tar.xz",
+    "sha256": "9037f3caa67768869f00ee257dbb35b81febe6ad600ed0bd3ffdf293c36252ba"
+  },
+  "kguiaddons-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/kguiaddons-6.29.0.tar.xz",
+    "sha256": "6d0c4a4ddc7d4833ae537b1bf146896beba76135ec4b8bcf2a9525e33e39b3a4"
+  },
+  "kcolorscheme-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/kcolorscheme-6.29.0.tar.xz",
+    "sha256": "a868d9c62d402474ba063735f674967826aa905f0b9a5a176999588cde57d662"
+  },
+  "kwidgetsaddons-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/kwidgetsaddons-6.29.0.tar.xz",
+    "sha256": "76285d03cdc06f0647afbbc89f31ab5aa766cbc3c6eb177e3f8a0441444e3068"
+  },
+  "breeze-icons-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/breeze-icons-6.29.0.tar.xz",
+    "sha256": "2948a313ffe35895b846dde5a93302a1fcd587ad8dfb860b8757629209586fe4"
+  },
+  "kiconthemes-6.29.0.tar.xz": {
+    "url": "https://download.kde.org/stable/frameworks/6.29/kiconthemes-6.29.0.tar.xz",
+    "sha256": "233de4cd2fef5b7b4ce1e317196407d25300b767614a93e160b45ac34710223d"
+  },
+  "qt6ct.tar.gz": {
+    "url": "https://www.opencode.net/trialuser/qt6ct/-/archive/00823e41aa60e8fe266d5aee328e82ad1ad94348/qt6ct-00823e41aa60e8fe266d5aee328e82ad1ad94348.tar.gz",
+    "sha256": "00e8fb1efaeb294ec2379b29656e204311f80188e3dec2f775d5c417954720f1"
+  },
+  "qt6ct-kde.patch": {
+    "url": "https://www.opencode.net/trialuser/qt6ct/-/merge_requests/9.diff",
+    "sha256": "f4a88560e22627a67e500eb241a181484c9442af7eed9df64eeb6f7a55dcbcf0"
+  },
+  "qttools-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z": {
+    "url": "https://download.qt.io/online/qtsdkrepository/linux_x64/desktop/qt6_6112/qt6_6112/qt.qt6.6112.linux_gcc_64/6.11.2-0-202608131018qttools-Linux-RHEL_9_6-GCC-Linux-RHEL_9_6-X86_64.7z",
+    "sha256": "42d5f3dbfc25647d9d95ef8b64401dc7e3ef7c83a39a29b548dfa0985f71c0ca"
+  }
+}

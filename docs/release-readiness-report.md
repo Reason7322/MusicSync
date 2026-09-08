@@ -1,5 +1,13 @@
 # MusicSync release-readiness report
 
+> AppImage follow-up, 2026-09-08: see [the AppImage build and runtime report](appimage-build-report.md).
+> The current machine-readable suite contains 128 passing test methods, including
+> packaging and first-mount startup regressions. The original audit below remains
+> historical; its old Git/physical-test findings are not a description of the
+> current AppImage test run.
+> GTK3/Ubuntu GNOME and qt6ct regression results are in the
+> [GTK3 integration report](gtk3-appimage-report.md).
+
 Audit date: **2026-09-07**, Europe/Warsaw. Project:
 `MusicSync/ (repository root)`.
 
@@ -424,3 +432,10 @@ names retain exact regression and parameter identifiers for reproduction.
 Subtest timing values in the JSON are elapsed time within the parent method, not independent subtest runtimes.
 
 [Exact audited source manifest](release-source.sha256) records the application, tests, scripts, resources and README at the historical audit baseline; it does not match the later publication edits. This is a source snapshot identifier, not a Git commit or clean-checkout substitute.
+
+## qt6ct packaging follow-up
+
+The subsequent qt6ct AppImage integration passed all **127** current release
+tests and actual artifact/theme tests. See [the qt6ct report](qt6ct-appimage-report.md)
+and refreshed `release-test-results.json`. The historical audit tables above are
+retained; no destructive physical-phone test was added by the theme follow-up.

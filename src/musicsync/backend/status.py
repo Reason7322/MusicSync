@@ -1,11 +1,13 @@
 """Read-only asynchronous startup/refresh service; never asks KDE Connect to mount."""
 import json
+from dataclasses import replace
 from PySide6.QtCore import QObject, Signal
 from musicsync.backend.kdeconnect import discover, mountpoint, parse_devices
 from musicsync.backend.mounts import mount_query, parse_findmnt, validate_mountpoint
 from musicsync.backend.process import ProcessRunner
 from musicsync.backend.workflow import helper
 from musicsync.models import Command
+from musicsync.runtime import HOST_TOOLS, appdir
 
 
 class StatusService(QObject):
@@ -26,6 +28,11 @@ class StatusService(QObject):
 
     def _read(self, settings, scan):
         status = {}
+        if appdir() is not None:
+            result = yield helper('dependencies', 'Check host integration requirements', programs=list(HOST_TOOLS))
+            if result.code or result.timed_out:
+                return {'device_status': 'Host setup incomplete', 'filesystem': result.stderr or 'Host dependency check timed out.',
+                        'error': result.stderr or 'Host dependency check timed out.'}
         if scan and not settings.source:
             status['library_error'] = 'Choose a PC music library in Settings.'
         elif scan:
@@ -57,6 +64,16 @@ class StatusService(QObject):
             return status
         target = validate_mountpoint(result.stdout.strip())
         result = yield Command('mountpoint', ['-q', target], label='Inspect mount status')
+        if result.code == 1 and not result.timed_out:
+            # KDE creates this directory on demand. As in Workflow, distinguish
+            # ENOENT from inaccessible paths in a bounded asynchronous worker.
+            probe = yield helper('mount_path', 'Inspect absent mountpoint', path=target)
+            if probe.code or probe.timed_out:
+                status['filesystem'] = 'Filesystem status unavailable'
+                status['error'] = probe.stderr or 'Mount path check failed or timed out.'
+                return status
+            if not json.loads(probe.stdout)['exists']:
+                result = replace(result, code=32)
         if result.timed_out or result.code not in (0, 32):
             status['filesystem'] = 'Filesystem status unavailable'
             status['error'] = result.stderr or 'Mount status check failed or timed out.'

@@ -4,8 +4,8 @@ This app is 100% vibe coded, use at your own discretion.
 
 A native Linux desktop music synchronization utility built with **Python 3,
 PySide6 and Qt Widgets**. KDE Connect supplies SSHFS access, rsgain applies
-ReplayGain, and rsync performs previews and synchronization. No GTK, browser,
-Electron, QML or Qt Quick. The application inherits the existing Qt theme and
+ReplayGain, and rsync performs previews and synchronization. The UI uses Qt
+Widgets, without a browser, Electron, QML or Qt Quick. The application inherits the existing Qt theme and
 does not set a stylesheet or force a Qt platform plugin.
 
 Music Sync grew from a known-working personal `syncmusic` Fish script.
@@ -65,6 +65,128 @@ or empty library cannot be synchronized; choose an existing library in Settings.
 
 Existing saved settings remain in use. An unavailable configured device is shown
 as disconnected and is never silently replaced with another phone.
+
+## AppImage build (x86_64)
+
+On the `appimage-packaging` work, the supported build entry point is:
+
+```fish
+python3 scripts/build_appimage.py
+```
+
+The host needs Python 3 for this **build script** and working rootless Podman.
+It does not use the project's `.venv`, request sudo, install host packages or run
+Git commands. The builder pulls a digest-pinned Ubuntu 24.04 image, installs pinned
+PySide6/pyside6-deploy and Nuitka, and freezes the app in **standalone** mode.
+It assembles an AppDir, collects third-party notices/corresponding sources, then
+uses checksum-pinned official appimagetool/type-2-runtime binaries. It does not
+use linuxdeploy-plugin-python or place an inner onefile executable in the image.
+
+Outputs are ignored: staging/downloads/logs under `build/appimage/`, and the image,
+source archive and manifests under `dist/`. Network access and several GB of free
+space are needed. `--skip-container-build` reuses the builder; `--stage assemble`
+reuses an existing standalone freeze. Use the default full build after application
+code changes. The release-test source-copy fixture excludes these generated trees.
+
+The AppImage bundles Python, PySide6/Qt Widgets and Wayland client plugins, MusicSync,
+rsync, rsgain 3.6, the independent-track preset, and compatible qt6ct theme/style
+plugins with their KDE color-scheme/icon dependencies. Bundled tools are selected by
+absolute AppDir-relative paths, without replacing the host PATH. Native/source
+runs still use host utilities. The default system preset setting maps to the
+bundled preset at runtime; custom preset paths are retained, and temporary mount
+paths are never saved into settings.
+
+Users still need **KDE Connect and its configured desktop session, kdeconnect-cli,
+SSHFS, fusermount3, findmnt, mountpoint, D-Bus and kernel FUSE support**. The host
+also supplies glibc and graphics-driver entry points. No KDE Connect daemon,
+pairing data or independent service stack is packaged. The finished image does
+not need host Python, PySide6, Qt, rsync or rsgain. Startup reports missing host
+integration tools; healthy source/native operation is unchanged.
+
+Settings and logs retain the normal user XDG locations outside the image. Close
+an existing MusicSync instance before testing. Explicit packaged diagnostics:
+
+```fish
+./dist/MusicSync-0.1.0-x86_64.AppImage --runtime-info
+./dist/MusicSync-0.1.0-x86_64.AppImage --tool-version rsync
+./dist/MusicSync-0.1.0-x86_64.AppImage --tool-version rsgain
+./dist/MusicSync-0.1.0-x86_64.AppImage --smoke-test
+# Uses saved configuration; clicks Preview only, then closes after cleanup:
+./dist/MusicSync-0.1.0-x86_64.AppImage --preview-test
+# Repeatable artifact tests; ffmpeg/ffprobe are needed only to create/inspect
+# temporary test audio. --preview is explicit and uses saved phone settings:
+python3 scripts/test_appimage.py dist/MusicSync-0.1.0-x86_64.AppImage --gui --preview
+```
+
+The diagnostic flags are opt-in; a normal launch never starts synchronization.
+The artifact test restricts PATH to host integration tools, checks actual loaded
+Qt libraries, moves an extracted AppDir to a Unicode/metacharacter path, and
+tests private ReplayGain and rsync only against temporary music directories.
+Omit `--preview` to avoid contacting the configured phone's filesystem. GUI tests
+expect a native Wayland session. Normal AppImage mounting itself needs a working
+host `fusermount3`; `--appimage-extract` and `squashfs-root/AppRun` provide a
+manual extraction fallback when AppImage FUSE mounting is unavailable.
+Diagnostic output can contain private paths/device information: keep it out of
+public commits. Build/runtime results and portability boundaries are documented
+in [the AppImage build report](docs/appimage-build-report.md).
+
+The image does not install a launcher into the host desktop automatically. A
+desktop portal may log that the application ID is not installed until desktop
+integration is supplied. When the desktop selects `QT_QPA_PLATFORMTHEME=qt6ct`,
+the bundled plugins read the user's normal external qt6ct/XDG configuration.
+The build uses current [qt6ct upstream](https://www.opencode.net/trialuser/qt6ct)
+with its pinned KDE integration patch, matching Qt 6.11.2 SDK headers, and links
+against the actual PySide6 wheel runtime. KDE Frameworks are also built against
+that runtime. No host Qt plugin search path is added and no second Qt is shipped.
+Inherited theme/style variables are preserved. Other platform-theme plugins are
+supported only when bundled; otherwise Qt falls back normally. MusicSync does not
+force a theme, palette or stylesheet. Optional Qt Quick bridges are disabled;
+KDE `.colors` and icon-engine support, including Breeze fallback icons, are kept.
+
+On GNOME, the image also supplies Qt's GTK3 platform-theme plugin from the same
+PySide6 6.11.2 wheel as its Qt runtime. With `QT_QPA_PLATFORMTHEME` unset, Qt
+naturally tries `gtk3` before its built-in `gnome` fallback. This bridges GTK
+appearance settings into Qt Widgets; the application UI remains Qt. GTK3 is not
+forced on other desktops and explicit qt6ct selection takes precedence.
+GTK3/GDK and their non-base library closure are private, as are a matching dconf
+GSettings backend and GTK schemas. The user settings database, D-Bus session,
+fonts and selected external themes remain on the host. Host commands receive
+their original GIO/schema environment, so KDE Connect is not put into a private
+GTK or GSettings environment. See [the GTK3 report](docs/gtk3-appimage-report.md)
+for actual GNOME dark/light tests, size and dependency details.
+
+To repeat the GNOME appearance test in an actual GNOME Wayland session:
+
+```fish
+python3 scripts/test_appimage_gnome.py dist/MusicSync-0.1.0-x86_64.AppImage --dark-gtk-theme Yaru-dark --light-gtk-theme Yaru
+```
+
+The theme names are test inputs for Ubuntu's installed themes; choose installed
+equivalents on another desktop. This harness temporarily changes GNOME's
+`color-scheme` and `gtk-theme`, restores their original values in `finally`, and
+captures private evidence under `build/gtk3/gnome-tests`. It never synchronizes
+music. Python and `gsettings` are needed for the harness only.
+
+From a normal qt6ct Wayland session, test the artifact's theme integration with:
+
+```fish
+python3 scripts/test_appimage_theme.py dist/MusicSync-0.1.0-x86_64.AppImage
+```
+
+This diagnostic needs host Python, `strace` and `readelf`; users launching the
+application do not. It tests the existing external configuration, then changes
+only a temporary external XDG copy to verify palette changes without rebuilding.
+It leaves the active qt6ct configuration unchanged. See the
+[qt6ct build and runtime report](docs/qt6ct-appimage-report.md) for dependency sizes,
+exact build inputs and observed results.
+
+**Binary redistribution includes license obligations.** Keep MusicSync MIT, retain
+the image's bundled notices, and distribute the matching corresponding-source
+archive alongside the AppImage. See [third-party notices and replacement instructions](packaging/appimage/THIRD-PARTY-NOTICES.md).
+The build records package versions/hashes; apt repositories and continuous-release
+download URLs are not permanent archives, so reproducing an older build may require
+the retained inputs. No cross-distribution or bit-for-bit reproducibility claim is
+made merely because the build succeeded.
 
 ## Development environment
 
