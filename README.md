@@ -23,11 +23,9 @@ I have personally tested it on Fedora 44 + Hyprland on bare metal, as well as on
 
 MusicSync never deletes files from the PC.
 ReplayGain makes individual tracks play at a more consistent perceived loudness by adding volume metadata. It does not re-encode the music or permanently change the audio.
-
-The PC library is treated as the source of truth. MusicSync can preview changes, copy new or updated files, remove files that no longer exist on the PC, and apply per-track ReplayGain before syncing.
 Built with Python, PySide6 and Qt Widgets.
 
-Warning: MusicSync treats the PC library as authoritative. With Mirror mode enabled, files that exist only on the phone may be deleted. Mirror mode is disabled by default in Settings. Always review the preview before syncing.
+> **Warning:** MusicSync treats the PC library as authoritative. With Mirror mode enabled, files that exist only on the phone may be deleted. Mirror mode is **disabled** by default. Always review the preview before syncing.
 
 ## Requirements
 - 64-bit Linux (x86_64)
