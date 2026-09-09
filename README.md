@@ -20,17 +20,15 @@ Warning: MusicSync treats the PC library as authoritative. With Mirror mode enab
 
 ## What it does
 
-- Syncs a music folder from your Linux PC to Android
-- Uses KDE Connect for access to the phone
-- Shows a preview before anything is copied or deleted
-- Supports mirror mode and update-only mode
-- Applies per-track ReplayGain using `rsgain`
-- Protects KDE Connect's `.thumbnails` directory
-- Checks the phone filesystem before syncing
-- Refuses suspicious or unexpectedly large deletion operations without confirmation
-- Does not run in the background or sync automatically
+- Syncs your Linux music library to Android through KDE Connect
+- Shows a preview before making changes
+- Supports update-only and mirror modes
+- Applies per-track ReplayGain with `rsgain`
+- Includes safeguards against unexpected deletions
+- Does not sync automatically or run in the background
 
 MusicSync never deletes files from the PC.
+ReplayGain makes individual tracks play at a more consistent perceived loudness by adding volume metadata. It does not re-encode the music or permanently change the audio.
 
 ## Requirements
 - 64-bit Linux (x86_64)
