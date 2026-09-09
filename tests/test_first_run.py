@@ -42,6 +42,7 @@ class FirstRunTests(unittest.TestCase):
         self.assertEqual(settings.source, str(self.music))
         self.assertEqual((settings.device_id, settings.device_name), ('', ''))
         self.assertFalse(settings.configured)
+        self.assertIs(settings.mirror, False)
         self.assertFalse((self.root / 'config').exists())
         self.assertFalse(self.music.exists())
         settings.validate(require_configured=False)
@@ -49,6 +50,16 @@ class FirstRunTests(unittest.TestCase):
             settings.validate()
         with self.assertRaises(ValueError):
             settings.save()
+
+    def test_mirror_defaults_off_and_saved_values_are_preserved_without_writing(self):
+        self.assertIs(Settings().mirror, False)
+        path = self.root / 'settings.json'
+        for mirror in (True, False):
+            with self.subTest(mirror=mirror):
+                content = json.dumps({'mirror': mirror})
+                path.write_text(content)
+                self.assertIs(Settings.load(path).mirror, mirror)
+                self.assertEqual(path.read_text(), content)
 
     def test_unconfigured_workflow_stops_before_any_external_command(self):
         for preview in (True, False):
@@ -143,6 +154,7 @@ class FirstRunTests(unittest.TestCase):
     def test_discovered_device_selection_saves_real_selection_and_retains_it(self):
         dialog = SettingsDialog(Settings(), [Device('test-phone', 'Example phone')])
         try:
+            self.assertFalse(dialog.mirror.isChecked())
             self.assertIsNone(dialog.devices.currentData())
             self.assertEqual(dialog.device_id.text(), '')
             with patch('musicsync.settings_dialog.QMessageBox.warning') as warning:

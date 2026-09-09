@@ -70,7 +70,7 @@ class ProcessTests(unittest.TestCase):
             (destination / 'delete.mp3').write_bytes(b'old song')
             (destination / '.thumbnails').mkdir()
             (destination / '.thumbnails' / 'keep').write_bytes(b'Android cache')
-            settings = Settings(source=str(source))
+            settings = Settings(source=str(source), mirror=True)
             preview, _ = run(Command('rsync', arguments(settings, str(source), str(destination), True)))
             self.assertEqual(preview.code, 0, preview.stderr)
             changes = [parse_change(line) for line in preview.stdout.splitlines()]
@@ -94,6 +94,6 @@ class ProcessTests(unittest.TestCase):
             dst.mkdir()
             (src / 'keep').write_text('keep')
             (dst / 'extra').write_text('extra')
-            result, _ = run(Command('rsync', arguments(Settings(), str(src), str(dst), False, 0)))
+            result, _ = run(Command('rsync', arguments(Settings(mirror=True), str(src), str(dst), False, 0)))
             self.assertEqual(result.code, 25)
             self.assertTrue((dst / 'extra').exists())

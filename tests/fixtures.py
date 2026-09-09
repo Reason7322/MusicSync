@@ -11,3 +11,4 @@ class ConfiguredSettings(Settings):
     source: str = '/tmp/musicsync-test-library'
     device_id: str = 'test-device'
     device_name: str = 'Test phone'
+    mirror: bool = True

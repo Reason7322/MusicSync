@@ -7,13 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
 from musicsync import APP_ID
-
-
-def desktop_argument(value):
-    # Exec quoting followed by Desktop Entry string escaping (two layers).
-    # https://specifications.freedesktop.org/desktop-entry/latest/exec-variables.html
-    escaped = ''.join('\\' + c if c in '\\"`$' else c for c in str(value))
-    return '"' + escaped.replace('\\', '\\\\').replace('%', '%%') + '"'
+from musicsync.desktop_integration import apply_files, desktop_argument
 
 
 def main():
@@ -40,20 +34,10 @@ def main():
         data / 'applications' / f'{APP_ID}.desktop': template.replace('Exec=musicsync\n', f'Exec={launcher}\n').encode(),
         Path.home() / '.local/bin/musicsync': f'#!/bin/sh\nexec {launcher} "$@"\n'.encode(),
     }
-    # Preflight all targets so a conflict never causes a partial install.
-    for target, (content, _) in files.items():
-        if target.is_symlink() or (target.exists() and target.read_bytes() not in (content, legacy.get(target, content))):
-            parser.error(f'Refusing to replace/remove an unrelated or modified file: {target}')
-    for target, (content, mode) in files.items():
-        if args.uninstall:
-            if target.exists():
-                target.unlink()
-                print(f'Removed {target}')
-        else:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(content)
-            target.chmod(mode)
-            print(f'Installed {target}')
+    try:
+        apply_files(files, uninstall=args.uninstall, legacy=legacy)
+    except (OSError, ValueError) as error:
+        parser.error(str(error))
 
 
 if __name__ == '__main__':

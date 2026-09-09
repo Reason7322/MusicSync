@@ -62,7 +62,7 @@ class Settings:
     replaygain: bool = True
     preset: str = "/usr/share/rsgain/presets/no_album.ini"
     threads: int = 4
-    mirror: bool = True
+    mirror: bool = False
     exclusions: list[str] = field(default_factory=lambda: ["/.thumbnails/"])
 
     @property
