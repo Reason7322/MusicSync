@@ -30,8 +30,9 @@ Built with Python, PySide6 and Qt Widgets.
 ## Requirements
 - 64-bit Linux (x86_64)
 - KDE Connect installed on both the Linux PC and Android device, with the devices paired
+- KDE Connect's **Filesystem access** plugin enabled on the Android device
+If MusicSync detects your phone but cannot access its storage, open KDE Connect on Android, select your PC, then go to **⋮ → Plugin settings** and enable **Filesystem access**. 
 - SSHFS / FUSE support installed on the Linux PC
-- Android filesystem access enabled for KDE Connect
 
 The AppImage bundles Python, PySide6/Qt, rsync, and rsgain; you do not need to install those separately.
 
