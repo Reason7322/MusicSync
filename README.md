@@ -43,6 +43,7 @@ Download the latest AppImage from the [Releases](https://github.com/Reason7322/M
 
 Then run these commands in your terminal:
 ```bash
+cd ~/Downloads
 chmod +x MusicSync-0.1.0-x86_64.AppImage
 ./MusicSync-0.1.0-x86_64.AppImage
 ```
