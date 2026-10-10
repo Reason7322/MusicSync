@@ -79,6 +79,17 @@ class ControlledRunner(QObject):
 
 
 class GUIReleaseTests(unittest.TestCase):
+    def test_preview_and_live_status_show_destination_filename_translation(self):
+        window, _, _ = self.window()
+        change = Change('Add', 'Track - 01.mp3', 5, source_path='Track: 01.mp3')
+
+        window._preview(Summary([change]))
+        window.counts = {'Add': 0, 'Update': 0, 'Delete': 0}
+        window._change(change)
+
+        self.assertEqual(window.table.item(0, 1).text(), 'Track: 01.mp3 → Track - 01.mp3')
+        self.assertIn('Track: 01.mp3 → Track - 01.mp3', window.transfer_label.text())
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix='musicsync-gui-release-')
         self.root = Path(self.tmp.name)

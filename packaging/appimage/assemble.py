@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 
 SOURCE, WORK, OUT = Path('/source'), Path('/work'), Path('/out')
 APP_ID = 'io.github.reason7322.MusicSync'
+VERSION = '0.1.1'
 APPDIR = WORK / 'MusicSync.AppDir'
 # System ABI / driver entry points belong to the desktop, not a private libc stack.
 SYSTEM_LIBS = {'libc.so.6', 'libm.so.6', 'libdl.so.2', 'libpthread.so.0', 'librt.so.1',
@@ -179,23 +180,23 @@ def assemble():
     for name, item in pins.items():
         downloaded[name] = download(item['url'], WORK / 'downloads' / name, item['sha256'])
         downloaded[name].chmod(0o755)
-    collect_licenses(APPDIR, provenance, pins)
+    collect_licenses(APPDIR, provenance, pins, VERSION)
     # Appimagetool runs extracted; no build-host FUSE privilege required.
     tool_dir = WORK / 'appimagetool-extracted'
     tool_dir.mkdir(exist_ok=True)
     if not (tool_dir / 'squashfs-root/AppRun').exists():
         run([downloaded['appimagetool'], '--appimage-extract'], cwd=tool_dir, stdout=subprocess.DEVNULL)
-    env = dict(os.environ, ARCH='x86_64', VERSION='0.1.0')
+    env = dict(os.environ, ARCH='x86_64', VERSION=VERSION)
     run([tool_dir / 'squashfs-root/AppRun', '--no-appstream', '--runtime-file', downloaded['runtime'],
-         APPDIR, OUT / 'MusicSync-0.1.0-x86_64.AppImage'], env=env)
+         APPDIR, OUT / f'MusicSync-{VERSION}-x86_64.AppImage'], env=env)
     # appimagetool adds X-AppImage-Version to the root desktop file. Hash the
     # final tree after that mutation, so the manifest describes the actual image.
     manifest = {'application_id': APP_ID, 'architecture': 'x86_64', 'inner_mode': 'standalone',
                 'tools': pins, 'system_libraries': sorted(SYSTEM_LIBS),
                 'files': {str(p.relative_to(APPDIR)): sha(p) for p in sorted(APPDIR.rglob('*')) if p.is_file()}}
     (OUT / 'appimage-build-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
-    artifacts = [OUT / name for name in ('MusicSync-0.1.0-x86_64.AppImage',
-                 'MusicSync-0.1.0-x86_64-sources.tar.gz', 'appimage-build-manifest.json',
+    artifacts = [OUT / name for name in (f'MusicSync-{VERSION}-x86_64.AppImage',
+                 f'MusicSync-{VERSION}-x86_64-sources.tar.gz', 'appimage-build-manifest.json',
                  'bundled-components.json')]
     (OUT / 'SHA256SUMS').write_text(''.join(f'{sha(p)}  {p.name}\n' for p in artifacts))
     (OUT / 'artifact-sizes.json').write_text(json.dumps({p.name: p.stat().st_size for p in artifacts}, indent=2) + '\n')

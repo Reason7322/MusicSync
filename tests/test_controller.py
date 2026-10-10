@@ -5,6 +5,7 @@ from unittest.mock import patch
 from PySide6.QtCore import QObject, QEventLoop, QTimer, Signal
 
 from musicsync.backend.sync_controller import SyncController
+from musicsync.backend.workflow import Workflow
 from musicsync.models import State
 from fixtures import ConfiguredSettings as Settings
 from test_process import APP
@@ -30,6 +31,24 @@ class FakeRunner(QObject):
 
 
 class ControllerTests(unittest.TestCase):
+    def test_streamed_change_uses_workflow_filename_translation(self):
+        controller = SyncController(runner=FakeRunner(Simulation()))
+        controller.state = State.SYNCING
+        controller.workflow = Workflow(Settings(), False)
+        controller.workflow.source_inventory = {
+            'files': {'Track: 01.mp3': [5, 1]},
+            'destination_files': {'Track - 01.mp3': [5, 1]},
+            'destination_paths': {'Track: 01.mp3': 'Track - 01.mp3'},
+            'source_paths': {'Track - 01.mp3': 'Track: 01.mp3'},
+        }
+        controller.workflow.destination_inventory = {'files': {}}
+        changes = []
+        controller.change.connect(changes.append)
+
+        controller._line('stdout', 'MUSICSYNC|>f+++++++++|5|Track - 01.mp3')
+
+        self.assertEqual(changes[0].source_path, 'Track: 01.mp3')
+
     def test_terminal_states_and_last_success_rules(self):
         for mode in ['preview', 'success', 'failure', 'cancel']:
             with self.subTest(mode=mode), tempfile.TemporaryDirectory() as root:

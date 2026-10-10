@@ -16,6 +16,7 @@ I have personally tested it on Fedora 44 + Hyprland on bare metal, as well as on
 
 - Syncs your Linux music library to Android through KDE Connect
 - Shows a preview before making changes
+- Translates Android-incompatible phone filenames while leaving PC filenames unchanged
 - Supports update-only and mirror modes
 - Applies per-track ReplayGain with `rsgain`
 - Includes safeguards against unexpected deletions
@@ -26,6 +27,8 @@ ReplayGain makes individual tracks play at a more consistent perceived loudness 
 Built with Python, PySide6 and Qt Widgets.
 
 > **Warning:** MusicSync treats the PC library as authoritative. With Mirror mode enabled, files that exist only on the phone may be deleted. Mirror mode is **disabled** by default. Always review the preview before syncing.
+
+Desktop application ID: **`io.github.reason7322.MusicSync`**
 
 ## Requirements
 - 64-bit Linux (x86_64)
@@ -44,6 +47,6 @@ Download the latest AppImage from the [Releases](https://github.com/Reason7322/M
 Then run these commands in your terminal:
 ```bash
 cd ~/Downloads
-chmod +x MusicSync-0.1.0-x86_64.AppImage
-./MusicSync-0.1.0-x86_64.AppImage
+chmod +x MusicSync-0.1.1-x86_64.AppImage
+./MusicSync-0.1.1-x86_64.AppImage
 ```

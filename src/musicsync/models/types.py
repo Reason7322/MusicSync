@@ -51,6 +51,7 @@ class Change:
     size: int | None
     directory: bool = False
     code: str = ""
+    source_path: str | None = None
 
 
 @dataclass

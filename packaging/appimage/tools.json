@@ -1,12 +1,12 @@
 {
   "appimagetool": {
     "url": "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage",
-    "sha256": "a6d71e2b6cd66f8e8d16c37ad164658985e0cf5fcaa950c90a482890cb9d13e0",
-    "commit": "8c8c91f762b412a19f4e8d2c4b35afb98f2d7c81"
+    "sha256": "95cbe7cce9717fce90c484e34052ee7c7f1d7635b33c12525b4776826a7d29b6",
+    "commit": "854e19e951900cf141245b384d45735942521abe"
   },
   "runtime": {
     "url": "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64",
-    "sha256": "1cc49bcf1e2ccd593c379adb17c9f85a36d619088296504de95b1d06215aebbf",
-    "commit": "75849dce7cc37e4319b633df1f116ca895c71a12"
+    "sha256": "156f4bdbde9c52d01814600013e0a273f0118dc2de98975f3c8c63427ec79074",
+    "commit": "8f39b89e2ac31e1640b3d3f7e9a5108e6ce805fa"
   }
 }

@@ -143,7 +143,19 @@ class Workflow:
     def _rsync_command(self, dry_run, max_delete=None):
         return self._remote("rsync", "rsync preview" if dry_run else "rsync mirror" if self.settings.mirror else "rsync update", timeout=0,
                             settings=asdict(self.settings), dry_run=dry_run, max_delete=max_delete,
-                            source_digest=self.source_inventory["digest"], destination_digest=self.destination_inventory["digest"])
+                            source_digest=self.source_inventory["digest"],
+                            mapping_digest=self.source_inventory["mapping_digest"],
+                            destination_digest=self.destination_inventory["digest"])
+
+    def enrich_change(self, change):
+        if change.action == "Delete":
+            info = self.destination_inventory["files"].get(change.path)
+            return replace(change, size=info[0]) if info and not change.directory else change
+        destination_files = self.source_inventory["destination_files"]
+        source_path = self.source_inventory["source_paths"].get(change.path)
+        info = destination_files.get(change.path)
+        return replace(change, size=info[0] if info and not change.directory else change.size,
+                       source_path=source_path)
 
     def _parse(self, output):
         changes = []
@@ -152,11 +164,7 @@ class Workflow:
         for line in output.replace("\r", "\n").split("\n"):
             change = rsync.parse_change(line)
             if change:
-                files = self.destination_inventory["files"] if change.action == "Delete" else self.source_inventory["files"]
-                info = files.get(change.path)
-                if info and not change.directory:
-                    change = replace(change, size=info[0])
-                changes.append(change)
+                changes.append(self.enrich_change(change))
         return Summary(changes)
 
     def _core(self):

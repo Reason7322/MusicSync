@@ -8,9 +8,11 @@ import json
 import os
 from pathlib import Path
 import stat
+import tempfile
 import uuid
 from contextlib import contextmanager
 
+from musicsync.backend.android_names import destination_paths
 from musicsync.backend.mounts import proc_mounts
 
 TRACK_EXTENSIONS = {".mp3", ".flac", ".ogg", ".opus", ".m4a", ".aac", ".wav", ".aiff", ".aif", ".wv", ".ape", ".mp2", ".wma", ".mka"}
@@ -86,10 +88,63 @@ def inventory(root, exclusions=(), require_files=False, mount_id=None):
         if require_files and not files:
             raise OSError("The source library contains zero files. Refusing to mirror an empty source.")
         digest = hashlib.sha256(json.dumps([files, sorted(directories)], sort_keys=True, ensure_ascii=True).encode()).hexdigest()
-        return {"files": files, "count": len(files), "tracks": tracks, "bytes": size, "digest": digest}
+        return {"files": files, "directories": sorted(directories), "count": len(files),
+                "tracks": tracks, "bytes": size, "digest": digest}
     finally:
         if not isinstance(root, int):
             os.close(base_fd)
+
+
+def source_inventory(root, exclusions=(), require_files=False):
+    """Inventory a source and add its deterministic Android destination map."""
+    result = inventory(root, exclusions, require_files)
+    mapping = destination_paths(result["files"], result["directories"])
+    result["destination_paths"] = mapping
+    result["source_paths"] = {destination: source for source, destination in mapping.items()}
+    result["destination_files"] = {mapping[path]: info for path, info in result["files"].items()}
+    result["mapping_digest"] = hashlib.sha256(
+        json.dumps(mapping, sort_keys=True, ensure_ascii=True).encode()
+    ).hexdigest()
+    return result
+
+
+def _open_pinned_file(root_fd, relative, expected):
+    parts = relative.split("/")
+    directory = os.dup(root_fd)
+    try:
+        for part in parts[:-1]:
+            child = os.open(part, DIR_FLAGS, dir_fd=directory)
+            os.close(directory)
+            directory = child
+        fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=directory)
+    finally:
+        os.close(directory)
+    info = os.fstat(fd)
+    if not stat.S_ISREG(info.st_mode) or [info.st_size, info.st_mtime_ns] != expected:
+        os.close(fd)
+        raise OSError(f"Source file changed while preparing synchronization: {relative!r}. Preview again.")
+    return fd
+
+
+@contextmanager
+def staged_source(root_fd, snapshot, staging_parent=None):
+    """Create an Android-named symlink forest backed only by pinned file FDs."""
+    mapping = snapshot["destination_paths"]
+    opened = []
+    with tempfile.TemporaryDirectory(prefix="musicsync-stage-", dir=staging_parent) as temporary:
+        stage = Path(temporary)
+        try:
+            for source_dir in sorted(snapshot["directories"], key=lambda value: (value.count("/"), value)):
+                (stage / mapping[source_dir]).mkdir()
+            for source_path in sorted(snapshot["files"]):
+                fd = _open_pinned_file(root_fd, source_path, snapshot["files"][source_path])
+                opened.append(fd)
+                destination = stage / mapping[source_path]
+                os.symlink(f"/proc/self/fd/{fd}", destination)
+            yield stage, tuple(opened)
+        finally:
+            for fd in opened:
+                os.close(fd)
 
 
 def write_probe(fd):

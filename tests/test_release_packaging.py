@@ -36,6 +36,22 @@ def relocated_tree():
 
 
 class PackagingReleaseTests(unittest.TestCase):
+    def test_v011_version_is_consistent_across_source_and_appimage_outputs(self):
+        from musicsync import __version__
+        metadata = tomllib.loads((ROOT / 'pyproject.toml').read_text())
+        assemble = (ROOT / 'packaging/appimage/assemble.py').read_text()
+        licenses = (ROOT / 'packaging/appimage/licenses.py').read_text()
+        notices = (ROOT / 'packaging/appimage/THIRD-PARTY-NOTICES.md').read_text()
+        readme = (ROOT / 'README.md').read_text()
+
+        self.assertEqual(__version__, '0.1.1')
+        self.assertEqual(metadata['project']['version'], __version__)
+        for text in (assemble, licenses, notices, readme):
+            self.assertNotIn('0.1.0', text)
+        self.assertIn('MusicSync-0.1.1-x86_64.AppImage', readme)
+        self.assertNotIn('binary, version, source, source_version', licenses)
+        self.assertNotIn('for source, version in unique_sources', licenses)
+
     def test_installer_is_relocatable_and_does_not_modify_real_home(self):
         with relocated_tree() as (root, home):
             env = dict(os.environ, HOME=str(home), XDG_DATA_HOME=str(home / 'data'))
