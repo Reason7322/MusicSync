@@ -47,8 +47,10 @@ def parse_progress(line):
     return None
 
 
-def arguments(settings, source, destination, dry_run, max_delete=None):
+def arguments(settings, source, destination, dry_run, max_delete=None, copy_links=False):
     args = ["-rtv", "--omit-dir-times", "--human-readable", "--itemize-changes", "--info=progress2", "--stats", f"--out-format={PREFIX}%i|%l|%n"]
+    if copy_links:
+        args.append("--copy-links")
     if settings.mirror:
         args.append("--delete-after")
         if max_delete is not None:

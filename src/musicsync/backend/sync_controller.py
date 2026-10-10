@@ -121,7 +121,7 @@ class SyncController(QObject):
             try:
                 change = parse_change(line)
                 if change:
-                    self.change.emit(change)
+                    self.change.emit(self.workflow.enrich_change(change))
             except ValueError:
                 # Full output is strictly parsed by the workflow at process exit.
                 pass

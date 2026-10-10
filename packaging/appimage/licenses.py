@@ -40,7 +40,7 @@ def extract_notices(archive, destination):
                     shutil.copyfileobj(source, output)
 
 
-def collect_licenses(appdir, provenance, pins):
+def collect_licenses(appdir, provenance, pins, version):
     notices = appdir / 'usr/share/licenses/musicsync'
     notices.mkdir(parents=True)
     shutil.copy2(SOURCE / 'LICENSE', notices / 'MusicSync-MIT.txt')
@@ -84,7 +84,7 @@ def collect_licenses(appdir, provenance, pins):
             raise RuntimeError('Unaudited ELF file: ' + relative)
     for package in sorted(packages):
         values = run(['dpkg-query', '-W', '-f=${binary:Package}\t${Version}\t${source:Package}\t${source:Version}', package], capture_output=True).stdout.split('\t')
-        binary, version, source, source_version = values
+        binary, package_version, source, source_version = values
         copyright_file = Path('/usr/share/doc') / package.split(':')[0] / 'copyright'
         if not copyright_file.is_file():
             raise RuntimeError('Missing package copyright: ' + package)
@@ -92,15 +92,15 @@ def collect_licenses(appdir, provenance, pins):
         target = notices / 'ubuntu' / (package.replace(':', '_') + '.copyright')
         target.parent.mkdir(exist_ok=True)
         shutil.copy2(copyright_file, target)
-        components[package] = dict(version=version, source=source, source_version=source_version,
+        components[package] = dict(version=package_version, source=source, source_version=source_version,
                                    licenses=sorted(set(re.findall(r'^License: (.+)$', text, re.M))),
                                    notice=str(target.relative_to(appdir)))
     # Fetch exact Ubuntu source-package versions, including distributor patches
     # and build rules, not just a possibly different upstream tarball.
     unique_sources = sorted({(v['source'], v['source_version']) for v in components.values()})
-    for source, version in unique_sources:
-        print('Corresponding source:', source, version, flush=True)
-        run(['apt-get', 'source', '--download-only', source + '=' + version], cwd=ubuntu,
+    for source, source_version in unique_sources:
+        print('Corresponding source:', source, source_version, flush=True)
+        run(['apt-get', 'source', '--download-only', source + '=' + source_version], cwd=ubuntu,
             stdout=subprocess.DEVNULL)
     upstream = sources / 'upstream'
     upstream.mkdir(exist_ok=True)
@@ -182,5 +182,5 @@ def collect_licenses(appdir, provenance, pins):
         target.write_text(json.dumps(inventory, indent=2) + '\n')
     shutil.copy2(SOURCE / 'packaging/appimage/THIRD-PARTY-NOTICES.md', notices / 'README.md')
     shutil.copy2(notices / 'BUNDLED-COMPONENTS.json', sources / 'BUNDLED-COMPONENTS.json')
-    with tarfile.open(OUT / 'MusicSync-0.1.0-x86_64-sources.tar.gz', 'w:gz', compresslevel=1) as tar:
+    with tarfile.open(OUT / f'MusicSync-{version}-x86_64-sources.tar.gz', 'w:gz', compresslevel=1) as tar:
         tar.add(sources, arcname='MusicSync-corresponding-source')

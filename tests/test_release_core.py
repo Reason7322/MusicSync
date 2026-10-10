@@ -302,7 +302,12 @@ class ParsingSettingsReleaseTests(unittest.TestCase):
     def test_unicode_line_separator_is_a_filename_not_a_record_boundary(self):
         workflow = Workflow(Settings(), True)
         names = ['left\u2028right.mp3', 'left\u2029right.mp3', 'left\x85right.mp3']
-        workflow.source_inventory = {'files': {name: [8, 0] for name in names}}
+        workflow.source_inventory = {
+            'files': {name: [8, 0] for name in names},
+            'destination_files': {name: [8, 0] for name in names},
+            'destination_paths': {name: name for name in names},
+            'source_paths': {name: name for name in names},
+        }
         workflow.destination_inventory = {'files': {}}
         records = ''.join(f'MUSICSYNC|>f+++++++++|8|{name}\n' for name in names)
         self.assertEqual([c.path for c in workflow._parse(records).changes], names)

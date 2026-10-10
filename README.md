@@ -32,6 +32,8 @@ Warning: MusicSync treats the PC library as authoritative. With Mirror mode enab
 
 MusicSync never deletes files from the PC.
 
+Desktop application ID: **`io.github.reason7322.MusicSync`**
+
 ## Requirements
 - 64-bit Linux (x86_64)
 - KDE Connect installed on both the Linux PC and Android device, with the devices paired
@@ -46,6 +48,6 @@ Download the latest AppImage from the [Releases](https://github.com/Reason7322/M
 
 Then run these commands in your terminal:
 ```bash
-chmod +x MusicSync-0.1.0-x86_64.AppImage
-./MusicSync-0.1.0-x86_64.AppImage
+chmod +x MusicSync-0.1.1-x86_64.AppImage
+./MusicSync-0.1.1-x86_64.AppImage
 ```

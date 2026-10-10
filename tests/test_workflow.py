@@ -53,7 +53,11 @@ class Simulation:
             payload = json.loads(command.args[2])
             action = payload['action']
             if action in {"source", "destination"}:
-                return Result(0, json.dumps({"count": 100, "tracks": 100, "bytes": 1000, "files": {}, "digest": "same"}))
+                data = {"count": 100, "tracks": 100, "bytes": 1000, "files": {},
+                        "directories": [], "digest": "same"}
+                if action == "source":
+                    data.update(destination_files={}, destination_paths={}, source_paths={}, mapping_digest="mapping")
+                return Result(0, json.dumps(data))
             if action == "storage" and self.stale:
                 return Result(1, stderr="Input/output error")
             if action == "unmount":
@@ -86,6 +90,33 @@ class Simulation:
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_rsync_payload_binds_execution_to_previewed_filename_mapping(self):
+        workflow = Workflow(Settings(), False)
+        workflow.mountpoint = '/run/user/1000/phone'
+        workflow.mount = type('Mount', (), {'id': 42})()
+        workflow.source_inventory = {'digest': 'source', 'mapping_digest': 'mapping'}
+        workflow.destination_inventory = {'digest': 'destination'}
+
+        payload = json.loads(workflow._rsync_command(False, 3).args[2])
+
+        self.assertEqual(payload['mapping_digest'], 'mapping')
+
+    def test_preview_change_reports_original_and_android_destination_names(self):
+        workflow = Workflow(Settings(), True)
+        workflow.source_inventory = {
+            'files': {'Bloodborne: OST.mp3': [5, 1]},
+            'destination_files': {'Bloodborne - OST.mp3': [5, 1]},
+            'destination_paths': {'Bloodborne: OST.mp3': 'Bloodborne - OST.mp3'},
+            'source_paths': {'Bloodborne - OST.mp3': 'Bloodborne: OST.mp3'},
+        }
+        workflow.destination_inventory = {'files': {}}
+
+        change = workflow._parse('MUSICSYNC|>f+++++++++|5|Bloodborne - OST.mp3\n').changes[0]
+
+        self.assertEqual(change.path, 'Bloodborne - OST.mp3')
+        self.assertEqual(change.source_path, 'Bloodborne: OST.mp3')
+        self.assertEqual(change.size, 5)
+
     def test_preview_no_tagging_probe_or_real_rsync(self):
         simulation = Simulation(preview=True)
         outcome = simulation.run()

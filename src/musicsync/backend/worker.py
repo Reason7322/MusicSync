@@ -7,9 +7,12 @@ import json
 import os
 from pathlib import Path
 import shutil
+import signal
 import sys
 
-from musicsync.backend.filesystem import current_mount, fd_mount_id, inventory, remote_directory, write_probe, DIR_FLAGS
+from musicsync.backend.filesystem import (current_mount, fd_mount_id, inventory,
+                                          remote_directory, source_inventory,
+                                          staged_source, write_probe, DIR_FLAGS)
 from musicsync.backend.rsync import arguments
 from musicsync.settings import PHONE_STORAGE, Settings
 from musicsync.runtime import HOST_TOOLS, executable, host_environment, tool_program
@@ -28,7 +31,7 @@ def execute(payload):
             raise OSError('The KDE Connect mountpoint is not an ordinary directory.')
         return {'exists': True}
     if action == "source":
-        return inventory(payload["source"], payload.get("exclusions", []), True)
+        return source_inventory(payload["source"], payload.get("exclusions", []), True)
     if action == "dependencies":
         missing = [name for name in payload["programs"] if shutil.which(tool_program(name)) is None]
         if missing:
@@ -65,17 +68,41 @@ def execute(payload):
             try:
                 if fd_mount_id(source) == mount_id:
                     raise OSError("Source must not be inside the phone mount.")
-                source_inventory = inventory(source, settings.exclusions, True)
+                source_snapshot = source_inventory(source, settings.exclusions, True)
                 destination_inventory = inventory(destination, settings.exclusions, mount_id=mount_id)
-                for kind, value in [("source", source_inventory), ("destination", destination_inventory)]:
+                for kind, value in [("source", source_snapshot), ("destination", destination_inventory)]:
                     if payload.get(kind + "_digest") and value["digest"] != payload[kind + "_digest"]:
                         raise OSError(f"The {kind} changed since preview. Nothing synchronized; preview again.")
+                if source_snapshot["mapping_digest"] != payload["mapping_digest"]:
+                    raise OSError("The Android filename mapping changed since preview. Nothing synchronized; preview again.")
                 current_mount(target, mount_id)
                 os.fchdir(destination)
-                os.set_inheritable(source, True)
                 program = executable("rsync")
-                args = arguments(settings, f"/proc/self/fd/{source}", ".", payload["dry_run"], payload.get("max_delete"))
-                os.execv(program, [program, *args])
+                translated = any(source_path != destination_path for source_path, destination_path
+                                 in source_snapshot["destination_paths"].items())
+                if not translated:
+                    os.set_inheritable(source, True)
+                    args = arguments(settings, f"/proc/self/fd/{source}", ".", payload["dry_run"], payload.get("max_delete"))
+                    os.execv(program, [program, *args])
+                with staged_source(source, source_snapshot) as (stage, file_fds):
+                    args = arguments(settings, str(stage), ".", payload["dry_run"],
+                                     payload.get("max_delete"), copy_links=True)
+                    previous = signal.signal(signal.SIGTERM, lambda *_: None)
+                    try:
+                        for fd in file_fds:
+                            os.set_inheritable(fd, True)
+                        child = os.posix_spawn(program, [program, *args], os.environ)
+                        while True:
+                            try:
+                                _, status = os.waitpid(child, 0)
+                                break
+                            except InterruptedError:
+                                continue
+                    finally:
+                        for fd in file_fds:
+                            os.set_inheritable(fd, False)
+                        signal.signal(signal.SIGTERM, previous)
+                    return os.waitstatus_to_exitcode(status)
             finally:
                 os.close(source)
     raise ValueError("Unknown filesystem operation: " + action)
@@ -83,7 +110,10 @@ def execute(payload):
 
 def main(payload=None):
     try:
-        print(json.dumps(execute(json.loads(payload if payload is not None else sys.argv[1])), ensure_ascii=True))
+        result = execute(json.loads(payload if payload is not None else sys.argv[1]))
+        if type(result) is int:
+            return result
+        print(json.dumps(result, ensure_ascii=True))
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(str(error), file=sys.stderr)

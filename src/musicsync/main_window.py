@@ -31,6 +31,13 @@ def label(text=''):
     return widget
 
 
+def change_path_text(change):
+    destination = clean(change.path)
+    if change.source_path and change.source_path != change.path:
+        return f'{clean(change.source_path)} → {destination}'
+    return destination
+
+
 class MainWindow(QMainWindow):
     def __init__(self, settings):
         super().__init__()
@@ -228,7 +235,7 @@ class MainWindow(QMainWindow):
     def _preview(self, summary):
         self.table.setRowCount(len(summary.changes))
         for row, change in enumerate(summary.changes):
-            for col, text in enumerate([change.action, clean(change.path), 'Folder' if change.directory else size_text(change.size)]):
+            for col, text in enumerate([change.action, change_path_text(change), 'Folder' if change.directory else size_text(change.size)]):
                 self.table.setItem(row, col, QTableWidgetItem(text))
         self.summary_label.setText('    '.join(f'{action}: {summary.count(action)} files · {size_text(summary.size(action))}' for action in ['Add', 'Update', 'Delete']))
 
@@ -256,7 +263,7 @@ class MainWindow(QMainWindow):
     def _change(self, change):
         if not change.directory:
             self.counts[change.action] += 1
-        self.transfer_label.setText(f'{change.action}: {clean(change.path)}\nAdded {self.counts["Add"]} · Updated {self.counts["Update"]} · Removed {self.counts["Delete"]}')
+        self.transfer_label.setText(f'{change.action}: {change_path_text(change)}\nAdded {self.counts["Add"]} · Updated {self.counts["Update"]} · Removed {self.counts["Delete"]}')
 
     def _complete(self, outcome):
         # Closing the main window while approval is pending cancels the workflow;

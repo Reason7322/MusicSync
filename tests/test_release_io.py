@@ -9,7 +9,7 @@ import time
 import unittest
 
 from PySide6.QtCore import QEventLoop, QTimer
-from musicsync.backend.filesystem import inventory
+from musicsync.backend.filesystem import inventory, source_inventory
 from musicsync.backend.process import ProcessRunner
 from musicsync.backend.rsync import arguments
 from musicsync.backend.workflow import Workflow, helper
@@ -65,7 +65,7 @@ class RealTemporaryRsyncReleaseTests(unittest.TestCase):
             self.assertEqual(result.code, 0, result.stderr)
             self.assertEqual((snapshot(source), snapshot(phone)), before)
             workflow = Workflow(config, True)
-            workflow.source_inventory, workflow.destination_inventory = inventory(source), inventory(phone)
+            workflow.source_inventory, workflow.destination_inventory = source_inventory(source), inventory(phone)
             summary = workflow._parse(result.stdout)
             self.assertEqual({c.path for c in summary.changes if c.action == 'Add'}, set(names))
             self.assertEqual(summary.count('Delete'), 1)
