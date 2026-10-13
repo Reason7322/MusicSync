@@ -129,6 +129,21 @@ class GUIReleaseTests(unittest.TestCase):
         self.assertEqual(window.styleSheet(), '')
         self.assertTrue(window.preview_button.isEnabled())
 
+    def test_liquid_glass_ui_keeps_qt_theme_and_shows_results_only_after_preview(self):
+        window, _, _ = self.window()
+        self.assertEqual(window.styleSheet(), '')
+        self.assertIs(window.results_stack.currentWidget(), window.empty_page)
+        self.assertIn('Ready to compare', window.empty_title.text())
+
+        window._preview(Summary([]))
+        self.assertIs(window.results_stack.currentWidget(), window.empty_page)
+        self.assertIn('No changes needed', window.empty_title.text())
+
+        window._preview(Summary([Change('Add', 'example.ogg', 100)]))
+        self.assertIs(window.results_stack.currentWidget(), window.table)
+        self.assertEqual(window.table.rowCount(), 1)
+        self.assertEqual(window.table.item(0, 1).text(), 'example.ogg')
+
     def test_repeated_clicks_and_controller_starts_cannot_overlap(self):
         window, sim, runner = self.window('rsync preview')
         QTest.mouseClick(window.preview_button, Qt.MouseButton.LeftButton)

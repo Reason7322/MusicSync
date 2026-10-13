@@ -1,9 +1,12 @@
 import json
 import logging
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import (QCheckBox, QGroupBox, QHBoxLayout, QHeaderView, QLabel,
-                               QMainWindow, QMessageBox, QPlainTextEdit, QProgressBar,
-                               QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtGui import QIcon, QPalette
+from PySide6.QtWidgets import (QCheckBox, QFrame, QGroupBox, QHBoxLayout, QHeaderView,
+                               QLabel, QMainWindow, QMessageBox, QPlainTextEdit,
+                               QProgressBar, QPushButton, QSizePolicy, QStackedWidget,
+                               QStyle, QTableWidget, QTableWidgetItem, QToolBar,
+                               QToolButton, QVBoxLayout, QWidget)
 
 from musicsync.backend.status import StatusService
 from musicsync.backend.sync_controller import SyncController
@@ -45,7 +48,8 @@ class MainWindow(QMainWindow):
         self.devices = []
         self.closing = False
         self.setWindowTitle('Music Sync')
-        self.resize(850, 710)
+        self.resize(900, 720)
+        self.setMinimumSize(675, 500)
         self.controller = SyncController(self)
         self.status_service = StatusService(self)
         self.controller.state_changed.connect(self._state)
@@ -57,38 +61,63 @@ class MainWindow(QMainWindow):
         self.controller.log_line.connect(self._log)
         self.controller.completed.connect(self._complete)
         self.status_service.ready.connect(self._status)
+        # A real Qt toolbar lets qt6ct/Kvantum draw the same toolbar material as
+        # the rest of the desktop. Avoid application-owned QSS and fixed colors.
+        toolbar = QToolBar('Music Sync', self)
+        toolbar.setMovable(False)
+        toolbar.setFloatable(False)
+        toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.addToolBar(toolbar)
+        title = label('Music Sync')
+        title_font = title.font()
+        title_font.setPointSize(title_font.pointSize() + 2)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        title.setContentsMargins(8, 0, 8, 0)
+        toolbar.addWidget(title)
+        context = label('PC → phone · KDE Connect')
+        context.setForegroundRole(QPalette.ColorRole.PlaceholderText)
+        toolbar.addWidget(context)
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        toolbar.addWidget(spacer)
+        self.refresh_button = QToolButton()
+        self.refresh_button.setText('Refresh')
+        self.refresh_button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.refresh_button.setIcon(self._theme_icon('view-refresh', QStyle.StandardPixmap.SP_BrowserReload))
+        self.refresh_button.clicked.connect(lambda: self.refresh(True))
+        toolbar.addWidget(self.refresh_button)
+        self.settings_button = QToolButton()
+        self.settings_button.setText('Settings…')
+        self.settings_button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.settings_button.setIcon(self._theme_icon('configure', QStyle.StandardPixmap.SP_FileDialogDetailedView))
+        self.settings_button.clicked.connect(self._settings)
+        toolbar.addWidget(self.settings_button)
+
         center = QWidget()
         self.setCentralWidget(center)
         layout = QVBoxLayout(center)
-        layout.setContentsMargins(22, 18, 22, 18)
-        layout.setSpacing(12)
-        heading = QHBoxLayout()
-        title = label('Music Sync')
-        font = title.font()
-        font.setPointSize(font.pointSize() + 7)
-        font.setBold(True)
-        title.setFont(font)
-        heading.addWidget(title)
-        heading.addStretch()
-        self.refresh_button = QPushButton('Refresh')
-        self.refresh_button.clicked.connect(lambda: self.refresh(True))
-        self.settings_button = QPushButton('Settings…')
-        self.settings_button.clicked.connect(self._settings)
-        heading.addWidget(self.refresh_button)
-        heading.addWidget(self.settings_button)
-        layout.addLayout(heading)
+        layout.setContentsMargins(18, 14, 18, 12)
+        layout.setSpacing(10)
         paths = QHBoxLayout()
         pc = QGroupBox('PC Library')
         pc_layout = QVBoxLayout(pc)
+        pc_layout.setSpacing(4)
         self.source_label = label(settings.source)
         self.library_label = label('Inspecting library…')
+        self.library_label.setForegroundRole(QPalette.ColorRole.PlaceholderText)
         pc_layout.addWidget(self.source_label)
         pc_layout.addWidget(self.library_label)
         self.phone_group = QGroupBox(settings.device_name)
         phone_layout = QVBoxLayout(self.phone_group)
+        phone_layout.setSpacing(4)
         self.device_label = label('Checking connection…')
+        connected_font = self.device_label.font()
+        connected_font.setBold(True)
+        self.device_label.setFont(connected_font)
         self.remote_label = label(settings.remote_dir)
         self.filesystem_label = label('')
+        self.filesystem_label.setForegroundRole(QPalette.ColorRole.PlaceholderText)
         phone_layout.addWidget(self.device_label)
         phone_layout.addWidget(self.remote_label)
         phone_layout.addWidget(self.filesystem_label)
@@ -112,8 +141,38 @@ class MainWindow(QMainWindow):
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.table.setAlternatingRowColors(True)
-        sync_layout.addWidget(self.table)
+        self.table.setShowGrid(False)
+        self.table.setFrameShape(QFrame.Shape.NoFrame)
+
+        # An empty table looks like a missing UI. Give the idle/zero-change
+        # states a useful explanation; the actual table remains unchanged.
+        self.empty_page = QWidget()
+        empty_layout = QVBoxLayout(self.empty_page)
+        empty_layout.setContentsMargins(16, 16, 16, 16)
+        empty_layout.addStretch()
+        self.empty_icon = QLabel()
+        preview_icon = self._theme_icon('folder-music', QStyle.StandardPixmap.SP_DirIcon)
+        self.empty_icon.setPixmap(preview_icon.pixmap(40, 40))
+        self.empty_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        empty_layout.addWidget(self.empty_icon)
+        self.empty_title = label('Ready to compare')
+        empty_font = self.empty_title.font()
+        empty_font.setPointSize(empty_font.pointSize() + 2)
+        empty_font.setBold(True)
+        self.empty_title.setFont(empty_font)
+        self.empty_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        empty_layout.addWidget(self.empty_title)
+        self.empty_detail = label('Preview changes to see what will be copied to your phone.')
+        self.empty_detail.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.empty_detail.setForegroundRole(QPalette.ColorRole.PlaceholderText)
+        empty_layout.addWidget(self.empty_detail)
+        empty_layout.addStretch()
+        self.results_stack = QStackedWidget()
+        self.results_stack.addWidget(self.empty_page)
+        self.results_stack.addWidget(self.table)
+        sync_layout.addWidget(self.results_stack, 1)
         self.ignored_label = label('Ignored and protected: Music/.thumbnails/')
+        self.ignored_label.setForegroundRole(QPalette.ColorRole.PlaceholderText)
         sync_layout.addWidget(self.ignored_label)
         self.progress_bar = QProgressBar()
         self.progress_bar.hide()
@@ -129,15 +188,19 @@ class MainWindow(QMainWindow):
         self.cancel_button.clicked.connect(self.controller.cancel)
         self.cancel_button.hide()
         self.preview_button = QPushButton('Preview Changes')
+        self.preview_button.setIcon(self._theme_icon('document-preview', QStyle.StandardPixmap.SP_FileDialogContentsView))
         self.preview_button.clicked.connect(lambda: self._start(True))
         self.sync_button = QPushButton('Sync Now')
+        self.sync_button.setIcon(self._theme_icon('media-playback-start', QStyle.StandardPixmap.SP_MediaPlay))
         self.sync_button.clicked.connect(lambda: self._start(False))
         actions.addWidget(self.cancel_button)
         actions.addWidget(self.preview_button)
         actions.addWidget(self.sync_button)
         layout.addLayout(actions)
         self.last_label = label()
-        layout.addWidget(self.last_label)
+        statusbar = self.statusBar()
+        statusbar.setSizeGripEnabled(False)
+        statusbar.addWidget(self.last_label, 1)
         self.log = QPlainTextEdit()
         self.log.setReadOnly(True)
         self.log.setMaximumBlockCount(2500)
@@ -152,6 +215,14 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(lambda: self.refresh(False))
         self.timer.start()
         QTimer.singleShot(0, lambda: self.refresh(True))
+
+    def _theme_icon(self, name, fallback):
+        return QIcon.fromTheme(name, self.style().standardIcon(fallback))
+
+    def _empty(self, title, detail):
+        self.empty_title.setText(title)
+        self.empty_detail.setText(detail)
+        self.results_stack.setCurrentWidget(self.empty_page)
 
     def _paths(self):
         self.source_label.setText(self.settings.source or 'Choose a PC library in Settings')
@@ -214,6 +285,8 @@ class MainWindow(QMainWindow):
         self.transfer_label.setText('')
         self.table.setRowCount(0)
         self.summary_label.setText('')
+        self._empty('Comparing libraries…' if preview else 'Preparing synchronization…',
+                    'Music Sync is checking the changes to your phone.')
         self.controller.start(self.settings, preview)
 
     def _state(self, state, message):
@@ -233,10 +306,21 @@ class MainWindow(QMainWindow):
             self.filesystem_label.setText('Unmounting app-created filesystem…')
 
     def _preview(self, summary):
-        self.table.setRowCount(len(summary.changes))
-        for row, change in enumerate(summary.changes):
-            for col, text in enumerate([change.action, change_path_text(change), 'Folder' if change.directory else size_text(change.size)]):
-                self.table.setItem(row, col, QTableWidgetItem(text))
+        # Populate while hidden from the stack, preventing Kvantum from
+        # repainting the view for every insertion in large previews.
+        self.table.setUpdatesEnabled(False)
+        try:
+            self.table.setRowCount(len(summary.changes))
+            for row, change in enumerate(summary.changes):
+                for col, text in enumerate([change.action, change_path_text(change), 'Folder' if change.directory else size_text(change.size)]):
+                    self.table.setItem(row, col, QTableWidgetItem(text))
+        finally:
+            self.table.setUpdatesEnabled(True)
+        if summary.changes:
+            self.results_stack.setCurrentWidget(self.table)
+        else:
+            self._empty('No changes needed',
+                        'Your phone is up to date for the selected synchronization mode.')
         self.summary_label.setText('    '.join(f'{action}: {summary.count(action)} files · {size_text(summary.size(action))}' for action in ['Add', 'Update', 'Delete']))
 
     def _approve(self, approval):
@@ -279,7 +363,10 @@ class MainWindow(QMainWindow):
                 comparison = 'Libraries match.' if self.settings.mirror else 'Phone copies are up to date; extra phone files are retained in update-only mode.'
                 self.status_label.setText(comparison + (' Preview only; ReplayGain was not run.' if outcome.preview else ' Synchronization complete and verified.'))
             self._last()
-        elif not outcome.cancelled:
+        elif outcome.cancelled:
+            self._empty('Operation cancelled', 'No further changes will be made.')
+        else:
+            self._empty('Could not complete', 'Show the log for details and try again when ready.')
             self.filesystem_label.setText('Operation stopped · see error below')
             if 'is not connected' in outcome.message:
                 self.device_label.setText('Disconnected')
@@ -307,6 +394,7 @@ class MainWindow(QMainWindow):
             self._paths()
             self.table.setRowCount(0)
             self.summary_label.setText('')
+            self._empty('Ready to compare', 'Settings changed. Preview to see the new comparison.')
             self.status_label.setText('Settings changed. Preview to compare these libraries.')
             self.refresh(True)
 
