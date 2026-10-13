@@ -44,7 +44,7 @@ preserves wheel metadata and Nuitka's runtime license/exception.
 
 ## Redistribution and replacement
 
-Distribute `MusicSync-0.1.1-x86_64-sources.tar.gz` alongside the matching AppImage
+Distribute `MusicSync-0.1.2-x86_64-sources.tar.gz` alongside the matching AppImage
 with equally accessible download links and no extra charge. It contains the
 application/build scripts, exact Ubuntu source packages including patches/build
 rules, Qt/PySide module sources, qt6ct/KDE sources and the applied patch,

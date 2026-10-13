@@ -18,4 +18,4 @@ plugins = platforms,imageformats,iconengines,platformthemes,wayland-decoration-c
 
 [nuitka]
 mode = standalone
-extra_args = --noinclude-qt-translations --include-package=musicsync --include-package-data=musicsync --output-filename=musicsync.bin --report=/work/nuitka-report.xml --jobs=8 --assume-yes-for-downloads --file-reference-choice=runtime --lto=no
+extra_args = --noinclude-qt-translations --include-package=musicsync --include-package-data=musicsync --output-filename=musicsync.bin --report=/work/nuitka-report.xml --jobs=2 --assume-yes-for-downloads --file-reference-choice=runtime --lto=no

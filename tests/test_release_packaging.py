@@ -44,11 +44,11 @@ class PackagingReleaseTests(unittest.TestCase):
         notices = (ROOT / 'packaging/appimage/THIRD-PARTY-NOTICES.md').read_text()
         readme = (ROOT / 'README.md').read_text()
 
-        self.assertEqual(__version__, '0.1.1')
+        self.assertEqual(__version__, '0.1.2')
         self.assertEqual(metadata['project']['version'], __version__)
         for text in (assemble, licenses, notices, readme):
             self.assertNotIn('0.1.0', text)
-        self.assertIn('MusicSync-0.1.1-x86_64.AppImage', readme)
+        self.assertIn('MusicSync-0.1.2-x86_64.AppImage', readme)
         self.assertNotIn('binary, version, source, source_version', licenses)
         self.assertNotIn('for source, version in unique_sources', licenses)
 
