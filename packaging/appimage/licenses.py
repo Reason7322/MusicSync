@@ -57,7 +57,8 @@ def collect_licenses(appdir, provenance, pins, version):
             module = {'Archive': 'karchive', 'BreezeIcons': 'breeze-icons', 'ColorScheme': 'kcolorscheme',
                       'ConfigCore': 'kconfig', 'ConfigGui': 'kconfig', 'GuiAddons': 'kguiaddons',
                       'I18n': 'ki18n', 'IconThemes': 'kiconthemes'}.get(name.removeprefix('libKF6').split('.so')[0])
-            owner = module or ('qt6ct' if name.startswith('libqt6ct') else None)
+            owner = module or ('qt6ct' if name.startswith('libqt6ct') else
+                               'kvantum-1.1.6' if name == 'libkvantum.so' else None)
             if owner is None:
                 raise RuntimeError('Unknown theme-library provenance: ' + original)
         elif original.startswith('/usr/local/') and 'rsgain' in original:
@@ -137,7 +138,8 @@ def collect_licenses(appdir, provenance, pins, version):
     # Include the exact qt6ct/KF sources and upstream patch used by the theme
     # build, plus SDK provenance. SDK binaries are build-only, not redistributed.
     theme_inputs = json.loads((SOURCE / 'packaging/appimage/theme-inputs.json').read_text())
-    for name, metadata in theme_inputs.items():
+    kvantum_inputs = json.loads((SOURCE / 'packaging/appimage/kvantum-input.json').read_text())
+    for name, metadata in {**theme_inputs, **kvantum_inputs}.items():
         original = WORK / 'theme/inputs' / name
         if sha(original) != metadata['sha256']:
             raise RuntimeError('Theme source input changed: ' + name)
@@ -148,6 +150,7 @@ def collect_licenses(appdir, provenance, pins, version):
             extract_notices(original, notices / 'theme' / name)
         upstream_inputs[name] = metadata
     shutil.copy2(SOURCE / 'packaging/appimage/theme-inputs.json', sources / 'theme-inputs.json')
+    shutil.copy2(SOURCE / 'packaging/appimage/kvantum-input.json', sources / 'kvantum-input.json')
     shutil.copy2(WORK / 'theme/qt-link-inputs.json', notices / 'qt-link-inputs.json')
     # Nuitka's runtime has its own runtime exception; preserve it, not just the
     # compiler's Apache license. Wheel licensing metadata is copied verbatim.

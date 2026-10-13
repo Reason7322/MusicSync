@@ -53,7 +53,7 @@ def install_check(app, window, mode):
                                   'ButtonText', 'Highlight', 'HighlightedText')},
             loaded_theme_libraries=sorted({line.split(maxsplit=5)[5].strip()
                 for line in Path('/proc/self/maps').read_text().splitlines()
-                if any(name in line for name in ('/libqt6ct', '/libKF6', '/libqgtk3',
+                if any(name in line for name in ('/libqt6ct', '/libkvantum', '/libKF6', '/libqgtk3',
                        '/libgtk-3', '/libgdk-3', '/libdconf')) and len(line.split(maxsplit=5)) == 6}))
         if screenshot := os.environ.get('MUSICSYNC_TEST_SCREENSHOT'):
             evidence['screenshot_saved'] = window.grab().save(screenshot)

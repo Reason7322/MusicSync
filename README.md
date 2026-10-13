@@ -39,6 +39,10 @@ Desktop application ID: **`io.github.reason7322.MusicSync`**
 - SSHFS / FUSE support installed on the Linux PC
 
 The AppImage bundles Python, PySide6/Qt, rsync, and rsgain; you do not need to install those separately.
+It also bundles a Qt-matched **Kvantum style engine** so a `qt6ct`-configured
+Kvantum theme can work inside the AppImage. Personal Kvantum theme files and
+color settings are still loaded from your desktop, not embedded in MusicSync.
+See the [v0.1.3 Kvantum integration report](docs/kvantum-appimage-v013-report.md).
 
 
 ## Download and run
@@ -47,6 +51,6 @@ Download the latest AppImage from the [Releases](https://github.com/Reason7322/M
 Then run these commands in your terminal:
 ```bash
 cd ~/Downloads
-chmod +x MusicSync-0.1.2-x86_64.AppImage
+chmod +x MusicSync-0.1.3-x86_64.AppImage
 ./MusicSync-0.1.2-x86_64.AppImage
 ```

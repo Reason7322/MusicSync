@@ -1,5 +1,10 @@
 # qt6ct AppImage integration
 
+**Later packaging correction (v0.1.3):** The `qt6ct` proxy alone did not
+load the separately configured Kvantum style engine. See
+[v0.1.3 Kvantum integration](kvantum-appimage-v013-report.md). The historical
+checks below describe an earlier AppImage and do not prove Kvantum rendering.
+
 > Follow-up: [GTK3 platform-theme integration](gtk3-appimage-report.md) records
 > the newer artifact and the passing qt6ct regression run with GTK3 included.
 

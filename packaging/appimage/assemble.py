@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 
 SOURCE, WORK, OUT = Path('/source'), Path('/work'), Path('/out')
 APP_ID = 'io.github.reason7322.MusicSync'
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 APPDIR = WORK / 'MusicSync.AppDir'
 # System ABI / driver entry points belong to the desktop, not a private libc stack.
 SYSTEM_LIBS = {'libc.so.6', 'libm.so.6', 'libdl.so.2', 'libpthread.so.0', 'librt.so.1',
@@ -116,7 +116,8 @@ def assemble():
             shutil.copy2(original, tool_libs / libname)
             provenance[str((tool_libs / libname).relative_to(APPDIR))] = str(original)
     from theme_build import PREFIX
-    for kind, name in (('platformthemes', 'libqt6ct.so'), ('styles', 'libqt6ct-style.so')):
+    for kind, name in (('platformthemes', 'libqt6ct.so'), ('styles', 'libqt6ct-style.so'),
+                       ('styles', 'libkvantum.so')):
         original = PREFIX / 'plugins' / kind / name
         target = private / 'PySide6/qt-plugins' / kind / name
         target.parent.mkdir(parents=True, exist_ok=True)

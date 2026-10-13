@@ -35,6 +35,8 @@ def freeze():
 if __name__ == '__main__':
     from theme_build import build_theme
     build_theme()
+    from kvantum_build import build_kvantum
+    build_kvantum()
     if sys.argv[1] in ('all', 'freeze'):
         freeze()
     if sys.argv[1] in ('all', 'assemble'):

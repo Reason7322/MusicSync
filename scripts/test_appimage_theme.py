@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 
@@ -57,6 +58,15 @@ def main():
             assert any(p.endswith(suffix) for p in libraries), (suffix, libraries)
         assert any('/libqt6ct-common.so' in p for p in libraries)
         assert appearance['style_class'] == 'Qt6CTProxyStyle', appearance
+        # A proxy style can pass every qt6ct/palette assertion while silently
+        # falling back to Fusion when its configured rendering plugin is absent.
+        # Require the *actual* Kvantum shared library to be mapped by Qt.
+        selected = configparser.ConfigParser(interpolation=None)
+        selected.read_string(original.decode())
+        if selected.get('Appearance', 'style', fallback='').lower() == 'kvantum':
+            assert any(p.endswith('/styles/libkvantum.so') and p.startswith(normal['appdir'] + '/')
+                       for p in libraries), 'Kvantum selected by qt6ct but absent from running AppImage'
+            results['bundled_kvantum_loaded'] = True
         if args.reference:
             line = next(line for line in args.reference.read_text().splitlines()
                         if line.startswith('MUSICSYNC_CHECK='))
@@ -77,6 +87,17 @@ def main():
             settings.read_string(original.decode())
             external = dict(os.environ, XDG_CONFIG_HOME=str(root / 'config'),
                             XDG_STATE_HOME=str(root / 'state'))
+            selected_style = settings.get('Appearance', 'style', fallback='').lower()
+            kvantum_style = None
+            if selected_style == 'kvantum':
+                # The Kvantum engine owns the palette. Copy the actual external
+                # theme into a temporary XDG tree; never edit the user's files.
+                source = Path.home() / '.config/Kvantum'
+                assert (source / 'kvantum.kvconfig').is_file()
+                shutil.copytree(source, root / 'config/Kvantum')
+                theme = (source / 'kvantum.kvconfig').read_text().split('theme=', 1)[1].splitlines()[0].strip()
+                kvantum_style = root / 'config/Kvantum' / theme / (theme + '.kvconfig')
+                assert kvantum_style.is_file(), kvantum_style
             with copied_config.open('w') as stream:
                 settings.write(stream)
             first = record('external-before', [image, '--smoke-test'], external)
@@ -94,8 +115,15 @@ def main():
             settings['Appearance']['color_scheme_path'] = str(colors)
             with copied_config.open('w') as stream:
                 settings.write(stream)
+            if kvantum_style:
+                text = kvantum_style.read_text()
+                edited, changed = re.subn(r'(?m)^window\.color=[^\n]*$',
+                                          'window.color=#ecf0f5', text, count=1)
+                assert changed == 1
+                kvantum_style.write_text(edited)
             second = record('external-after', [image, '--smoke-test'], external)
-            assert first['appearance']['palette'] != second['appearance']['palette']
+            assert first['appearance']['palette'] != second['appearance']['palette'], (
+                'External Qt/Kvantum theme change was ignored by the AppImage')
             assert second['appearance']['palette']['Window'] == '#ecf0f5', second['appearance']
             results['external_palette_change_without_rebuild'] = True
             for label, theme in (('unset-theme', None), ('unsupported-theme', 'musicsync-unsupported-test')):
@@ -142,7 +170,7 @@ def main():
         results['active_config_unchanged'] = config.read_bytes() == original
         (output / 'results.json').write_text(json.dumps(results, indent=2) + '\n')
     assert results['active_config_unchanged']
-    print('PASS: bundled qt6ct/style, external config and palette A/B, fallback, Wayland, relative ELF paths.')
+    print('PASS: bundled qt6ct/Kvantum, external config and palette A/B, fallback, Wayland, relative ELF paths.')
     print('Private evidence:', output / 'results.json')
 
 

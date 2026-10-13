@@ -1,0 +1,8 @@
+{
+  "kvantum-1.1.6.tar.gz": {
+    "url": "https://codeload.github.com/tsujan/Kvantum/tar.gz/ce2438af4c573856882eadca320b9a89eb8522b3",
+    "sha256": "bbf362da756db107bc7e734f40b6aef4ad9ac112909c8d090ccd0ee361acb966",
+    "commit": "ce2438af4c573856882eadca320b9a89eb8522b3",
+    "version": "1.1.6"
+  }
+}
