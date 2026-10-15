@@ -35,7 +35,7 @@ from pathlib import Path
 from typing import Callable, Iterable, Optional, Sequence
 
 from .cleaning import MAX_NAME_BYTES, Reason, clean_text, name_key
-from .naming import Override, make_ost_name, propose_name  # noqa: F401 (re-exported)
+from .naming import NameProposal, Override, make_ost_name, propose_name  # noqa: F401 (re-exported)
 from .scanner import ScanResult, scan_root
 from .tags import ParseError, TagSnapshot, apply_tag_edits, read_tag_snapshot
 
@@ -194,6 +194,37 @@ def _detect_collisions(
     return tuple(reports), item_flags
 
 
+_PROPOSAL_EXT_RE = re.compile(r"\.(mp3|flac|ogg|m4a)$", re.I)
+
+
+def _usable_stem(name: str) -> str:
+    """Filename minus its audio extension, stripped. Empty for bare extensions."""
+    return _PROPOSAL_EXT_RE.sub("", name or "").strip()
+
+
+def _guard_empty_stem(proposal: NameProposal) -> NameProposal:
+    """Reject proposals whose entire identity is extension/junk.
+
+    The naming layer can legitimately emit e.g. ``".mp3"`` when a filename's
+    stem is ALL recognized junk (e.g. ``(Official HD Video).mp3``); renaming
+    onto a hidden file is not a deterministic outcome, so the preview
+    downgrades such proposals to ambiguous review with an explicit flag.
+    """
+    if proposal.status != "ok" or not proposal.proposed_name:
+        return proposal
+    stem = _usable_stem(proposal.proposed_name)
+    if not stem or set(stem) <= {"."}:
+        return NameProposal(
+            "ambiguous",
+            None,
+            proposal.reasons,
+            tuple(proposal.flags) + (
+                Reason("empty_stem", f"{proposal.proposed_name!r} has no usable stem"),
+            ),
+        )
+    return proposal
+
+
 def build_preview(
     root: os.PathLike | str,
     overrides: Optional[Sequence[Override]] = None,
@@ -228,34 +259,49 @@ def build_preview(
                 reasons=(Reason("parse_error", str(exc)),),
             )
         else:
-            proposal = propose_name(scanned, tags, override_by_rel.get(scanned.rel_path))
+            try:
+                proposal = propose_name(scanned, tags, override_by_rel.get(scanned.rel_path))
+            except ValueError as exc:  # e.g. caller supplied an empty override name
+                item = ItemPlan(
+                    rel_path=scanned.rel_path,
+                    current_name=scanned.name,
+                    size=scanned.size,
+                    mtime_ns=scanned.mtime_ns,
+                    status="error",
+                    reasons=(Reason("invalid_override", str(exc)),),
+                )
+            else:
+                # Explicit OST convention hints (caller identity decisions).
+                hint_game = ost_hints.get(scanned.rel_path)
+                if hint_game is not None and tags.has_tags and tags.title:
+                    try:
+                        hinted = make_ost_name(hint_game, tags.title)
+                    except ValueError:
+                        pass
+                    else:
+                        proposal = _apply_hint(proposal, hinted, scanned.name)
 
-            # Explicit OST convention hints (caller identity decisions).
-            hint_game = ost_hints.get(scanned.rel_path)
-            if hint_game is not None and tags.has_tags and tags.title:
-                try:
-                    hinted = make_ost_name(hint_game, tags.title)
-                except ValueError:
-                    pass
-                else:
-                    proposal = _apply_hint(proposal, hinted, scanned.name)
+                # A stem made entirely of recognized junk cleans to a bare
+                # extension (".mp3"); renaming onto that hidden file is not a
+                # deterministic outcome and must go to review instead.
+                proposal = _guard_empty_stem(proposal)
 
-            tag_edits = _tag_edits_for(tags) if tags.has_tags else ()
-            safety_flags = _name_safety_flags(proposal.proposed_name)
-            item = ItemPlan(
-                rel_path=scanned.rel_path,
-                current_name=scanned.name,
-                size=scanned.size,
-                mtime_ns=scanned.mtime_ns,
-                status=proposal.status,
-                proposed_name=proposal.proposed_name,
-                reasons=proposal.reasons,
-                flags=tuple(proposal.flags) + tuple(safety_flags),
-                tag_edits=tag_edits,
-            )
+                tag_edits = _tag_edits_for(tags) if tags.has_tags else ()
+                safety_flags = _name_safety_flags(proposal.proposed_name)
+                item = ItemPlan(
+                    rel_path=scanned.rel_path,
+                    current_name=scanned.name,
+                    size=scanned.size,
+                    mtime_ns=scanned.mtime_ns,
+                    status=proposal.status,
+                    proposed_name=proposal.proposed_name,
+                    reasons=proposal.reasons,
+                    flags=tuple(proposal.flags) + tuple(safety_flags),
+                    tag_edits=tag_edits,
+                )
 
         raw_items.append(item)
-        items_by_dir.setdefault(item.rel_dir if hasattr(item, "rel_dir") else item.rel_path.rpartition("/")[0], []).append(item)
+        items_by_dir.setdefault(item.rel_dir, []).append(item)
 
     collisions, collision_flags = _detect_collisions(items_by_dir, scan.dir_entries)
     final_items: list[ItemPlan] = []
@@ -304,7 +350,7 @@ def _name_safety_flags(name: Optional[str]) -> tuple[Reason, ...]:
     encoded_len = len(name.encode("utf-8"))
     if encoded_len > MAX_NAME_BYTES:
         flags.append(Reason("name_too_long", f"{encoded_len} bytes > 255"))
-    unsafe = [c for c in name if c == "\x00" or ord(c) < 32]
+    unsafe = [c for c in name if c == "\x00" or c == "/" or c == "\\" or ord(c) < 32]
     if unsafe:
         flags.append(Reason("name_contains_unsafe_chars", repr(sorted(set(unsafe)))))
     return tuple(flags)
@@ -401,14 +447,14 @@ def plan_moves(ops: Iterable[tuple[str, tuple[str, str]]]) -> list[_Step]:
         guard += 1
         if guard > limit:
             raise EngineError("rename planning did not converge")
-        holders_other = lambda ident: {name_key(cur[o]) for o in remaining if o != ident}  # noqa: E731
+        holders_other = lambda ident: {name_key(Path(cur[o]).name) for o in remaining if o != ident}  # noqa: E731
         ready = [ident for ident in sorted(remaining) if name_key(Path(by_id[ident][1]).name) not in holders_other(ident)]
         if not ready:
             first = min(remaining)
             tmp_name = f".tmp-musicsync-rename-{uuid.uuid4().hex}"
             parent = Path(cur[first]).parent
             steps.append(_Step(first, cur[first], _join(parent, tmp_name), "temp"))
-            cur[first] = tmp_name  # frees its old slot; loop continues
+            cur[first] = _join(parent, tmp_name)  # full rel path; keeps dir parent
             continue
         for ident in ready:
             to_rel = by_id[ident][1]

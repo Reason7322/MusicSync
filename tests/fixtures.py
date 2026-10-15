@@ -52,9 +52,16 @@ def _png_chunk(tag: bytes, payload: bytes) -> bytes:
 
 
 def make_png_1x1() -> bytes:
-    """Minimal valid 1x1 RGBA PNG used as cover-art fixture data."""
+    """Minimal valid 1x1 RGBA PNG used as cover-art fixture data.
+
+    The single scanline is exactly 5 bytes: one filter byte (0 = None) plus a
+    4-byte RGBA pixel. (The earlier payload was 4 bytes total and decoded to a
+    truncated scanline; mutagen stores APIC data opaquely, so tests stayed
+    green while the fixture PNG was invalid.)
+    """
     ihdr = _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0))
-    idat = _png_chunk(b"IDAT", zlib.compress(b"\x00\xff\x00\x00"))
+    scanline = b"\x00" + bytes((0xFF, 0x00, 0x00, 0xFF))  # filter byte + RGBA pixel
+    idat = _png_chunk(b"IDAT", zlib.compress(scanline))
     return b"\x89PNG\r\n\x1a\n" + ihdr + idat + _png_chunk(b"IEND", b"")
 
 
