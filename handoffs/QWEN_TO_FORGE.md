@@ -3,24 +3,21 @@
 Date: 2026-10-15 (local). Branch: `qwen/music-cleanup`. Incoming SHA at start of work:
 `39a29ed9d34c851fa29bf83de525cda5e3e61376`.
 
-This is a **mid-implementation checkpoint, not a completed feature**. All five
-engine modules exist on disk; none of them has been exercised by tests. Do NOT
-claim any runtime behavior works until the test suite exists and passes.
+This document was written mid-implementation by Qwen (Phase 1 draft). **UPDATED after Mission 01 (Qwen shift):** the helper foundation is now restored and verified — `musicsyncrename/__init__.py` created; tags.py syntax error fixed (orphaned `try:` block); two TypeErrors in naming.py and one UnboundLocalError in scanner.py fixed with targeted edits; focused 42-test unittest suite green (`python3 -m unittest discover -s tests -v` → Ran 42 tests, OK). `engine.py` is UNCHANGED and remains a known-broken mid-rewrite draft — all engine design notes below still stand. The module table and "Unresolved" sections have been updated where stale; everything else (design decisions, mutagen pitfalls, test matrix) is unchanged.
 
 ## What was implemented (source state in this commit)
 
 | File | State |
 |---|---|
-| `musicsyncrename/__init__.py` | **MISSING — never created.** The initial write attempt failed with ENOENT before the package directory existed and was not retried. The package cannot be imported until this file is written (intended public surface: cleaning helpers, scanner entry points, TagSnapshot/tags functions, naming API incl. `Override`, engine API: `build_preview`, `apply_changes`, `undo_session`, `list_sessions`, plus re-export of `make_ost_name`/`propose_override`). |
+| `musicsyncrename/__init__.py` | **CREATED (Mission 01).** Re-exports the valid public surface: cleaning helpers, scanner entry points, TagSnapshot/tags functions, naming API incl. `Override`, plus re-export of `make_ost_name`/`propose_override`. `engine` is deliberately NOT exported until Mission 02 lands a tested engine (package import must not depend on it). |
 | `musicsyncrename/cleaning.py` | Complete per design, untested. NFC normalization (`normalized_nfc` reason), zero-width stripping, broken-punctuation map (fullwidth colon/quotes/parens etc.), anchored paren-junk patterns ("Official HD Video", "(HQ…)", "[Lyrics]", "(1080p …)", "audio NNN kbps" variants), trailing junk suffixes (" - Lyrics", "Lyric Video", "audio 320 kbps original"), leading track-number removal (filename context only via `clean_filename_stem`), quote-unwrap, whitespace finalize. Every step reported as `Reason(code, detail)`. Design rule: fullwidth bar `｜` is deliberately NOT a separator (files shaped "Game｜DLC｜Track" must stay ambiguous). |
-| `musicsyncrename/scanner.py` | Complete per design, untested. Non-recursive-symlink-safe walk (`follow_symlinks=False`, symlinks recorded in `symlinks_skipped`), deterministic ordering, MP3-only track items with (size, mtime_ns) snapshot, `dir_entries: dict[rel_dir -> tuple[names]]` for collision detection. |
-| `musicsyncrename/tags.py` | Complete per design, untested as a module. `read_tag_snapshot()` (TPE1→artists with TPE2 fallback, TIT2→titles, TALB album, ReplayGain key detection `RVRB`/`TXXX:REPLAYGAIN*`, APIC count) and `apply_tag_edits(path, {frame: value})` restricted to TIT2/TPE1 (refuses other frames). API shape against mutagen 1.47 was verified by probe runs (below); the module code itself was never imported/executed in tests. |
-| `musicsyncrename/naming.py` | Complete per design, untested. Entry point `propose_name(scanned, tags: TagSnapshot, override=None)` — NOTE contract: caller passes a TagSnapshot even when tags are absent (`has_tags=False`); ParseError handling belongs to the engine (status "error"), NOT naming. Paths: reliable TPE1+TIT2 → `Artist - Title.mp3`; else filename-derived with single/zero/multi separator analysis; multiple separators or one-side-empty-after-cleanup → status `ambiguous` with reason codes (`multiple_separators`, `one_side_empty_after_cleanup`, `conflicting_*_values`, `missing_or_empty_*_tag`). Overrides win but are revalidated downstream. `make_ost_name(game, track)` for the explicit `Game OST - Track.mp3` convention; OST hints only ever produce a non-blocking `ost_candidate` flag otherwise (historical map proves auto-reordering OST names is human judgment, not determinism). |
+| `musicsyncrename/scanner.py` | Complete per design. Non-recursive-symlink-safe walk (`follow_symlinks=False`, symlinks recorded in `symlinks_skipped`), deterministic ordering, MP3-only track items with (size, mtime_ns) snapshot, `dir_entries: dict[rel_dir -> tuple[names]]` for collision detection. **Mission 01:** fixed missing `nonlocal directory_count` (UnboundLocalError on entry into ANY subdirectory); now covered by tests/test_scanner.py (determinism, symlink exclusion incl. dir symlinks, counts). |
+| `musicsyncrename/tags.py` | Complete per design. `read_tag_snapshot()` (TPE1→artists with TPE2 fallback, TIT2→titles, TALB album, ReplayGain key detection `RVRB`/`TXXX:REPLAYGAIN*`, APIC count) and `apply_tag_edits(path, {frame: value})` restricted to TIT2/TPE1 (refuses other frames). **Mission 01:** fixed SyntaxError from orphaned `try:` in `apply_tag_edits` (removed, body dedented — no behavior change); now covered by tests/test_tags.py (snapshot read-back incl. conflicting multi-value frame, restricted editing + refusal of all other frames, APIC/RVRB/TXXX + audio-byte preservation). |
+| `musicsyncrename/naming.py` | Complete per design. Entry point `propose_name(scanned, tags: TagSnapshot, override=None)` — NOTE contract: caller passes a TagSnapshot even when tags are absent (`has_tags=False`); ParseError handling belongs to the engine (status "error"), NOT naming. Paths: reliable TPE1+TIT2 → `Artist - Title.mp3`; else filename-derived with single/zero/multi separator analysis; multiple separators or one-side-empty-after-cleanup → status `ambiguous` with reason codes (`multiple_separators`, `one_side_empty_after_cleanup`, `conflicting_*_values`, `missing_or_empty_*_tag`). Overrides win but are revalidated downstream. `make_ost_name(game, track)` for the explicit `Game OST - Track.mp3` convention; OST hints only ever produce a non-blocking `ost_candidate` flag otherwise (historical map proves auto-reordering OST names is human judgment, not determinism). **Mission 01:** fixed two demonstrated TypeErrors — bare `_reason("from_tags",...)` not wrapped in a tuple (broke EVERY tag-based proposal) and `list + tuple` concatenation in both ambiguous returns; now covered by tests/test_naming.py. |
 | `musicsyncrename/engine.py` | **BROKEN DRAFT — do not trust any part of it.** It contains a plausible-but-unverified `plan_moves()` core plus heavily contradictory fragments in `build_preview`, `apply_changes`, and `undo_session` (duplicate/conflicting bookkeeping, dead lines referencing `anomalies[0][0]`, inconsistent report fields). It needs a full rewrite of the apply/undo sections. See design notes below so it is not re-derived from scratch. |
 | `.scratch_probe.py` | **Useful but INTERMEDIATE** probe (committed here on purpose): working synthetic silent-MP3 builder (`0xFF 0xFB 0x90 0xC0` header + zero-fill, 417 bytes/frame = MPEG-1 Layer III 128 kbps/44.1 kHz mono) and the `audio_part()` first-`\xff\xfb` comparison helper; it demonstrates the FAILING TXXX case (`value=` kwarg → empty text). The final SUCCESSFUL roundtrip code (PNG builder, `text=` TXXX usage) was executed via stdin during this session and is NOT saved on disk. Reimplement those parts in `tests/fixtures.py` using the verified API facts listed below. |
 
-No tests exist yet. No `docs/USAGE.md` was written. Nothing has been run against
-any real music library; no file outside this workspace was touched.
+No tests existed before Mission 01. Mission 01 added `tests/` (`fixtures.py` + 42 passing unittest cases, synthetic tempdir MP3s only — no pytest available). No `docs/USAGE.md` yet. Nothing has been run against any real music library; no file outside this workspace was touched.
 
 ## Environment facts (verified this session)
 
@@ -34,6 +31,9 @@ any real music library; no file outside this workspace was touched.
 - TXXX lookup key format is `"TXXX:<desc>"` (e.g. `tags.getall("TXXX:REPLAYGAIN_TRACK_GAIN")`), NOT `"TXXX:desc=..."`.
 - APIC keys on reload are normalized to bare `"APIC:"` regardless of mime/type suffix; match by prefix when iterating.
 - `MP3` objects have **no `.close()`** in 1.47 — do not call it. Frame deletion via `del tags["TIT2"]` works.
+- Sequential `ID3.add(TPE1(...))` calls are LAST-WRITE-WINS (a second add replaces, does not append). Conflicting multi-values persist on disk as ONE frame whose `.text` is a list; that list survives save+reload and `read_tag_snapshot()` conflict detection reads it correctly (verified Mission 01).
+- The naming branch `one_side_empty_after_cleanup` is defensive/unreachable with the current cleaning regex set (observed by analysis + fixture attempts in Mission 01) — do not chase it; ambiguous coverage lives on `multiple_separators`, tags-cleaned-to-empty, and conflicting-value flags.
+- Degenerate edge: a filename whose ENTIRE stem is recognized junk (e.g. `(Official HD Video).mp3`) gets proposal `.mp3` from preserved naming code (verified observation). The engine should reject/flag empty-stem proposals at preview time — add to Mission 02.
 
 ## Design decisions already made (recorded so the rewrite is mechanical, not research)
 
@@ -71,7 +71,7 @@ Reference material: `/home/reason/Temporary/AgentHandoff/MusicSyncRename-referen
 
 ## Next actions for the next engineer (smallest first)
 
-1. Create the missing `musicsyncrename/__init__.py` (see table above for intended exports).
+1. ~~Create the missing `musicsyncrename/__init__.py`~~ — **DONE in Mission 01**.
 2. Rewrite `engine.py`: keep/verify the `plan_moves()` core (untested — add direct unit tests for chain/cycle/duplicate-target), then implement clean `build_preview`, `apply_changes`, `undo_session`, `list_sessions` per the design above. The current engine.py file is a broken draft; deleting/replacing its apply+undo sections is expected work, not "fixing what was verified".
 3. Build `tests/fixtures.py`: reuse the MP3 builder and `audio_part()` helper from `.scratch_probe.py`, re-implement a small PNG generator (zlib+struct, 1x1 RGBA) and TXXX fixtures using `text=` per the verified API facts above, then write the test matrix with `unittest`.
 4. Run `python3 -m unittest discover -s tests -v`; iterate until green. Only then is anything "verified".
@@ -79,6 +79,5 @@ Reference material: `/home/reason/Temporary/AgentHandoff/MusicSyncRename-referen
 
 ## Unresolved / honest status
 
-- No test has ever run against any of the five modules.
-- `engine.py` is knowingly broken (mid-rewrite draft). The package cannot be imported: `musicsyncrename/__init__.py` was never created (first write attempt failed ENOENT and was not retried).
+- Helper modules (`cleaning`, `scanner`, `tags`, `naming`) are tested green by the Mission 01 suite (42 tests). `engine.py` is still knowingly broken (mid-rewrite draft) and untested — its rewrite per the design notes above is the next milestone.
 - Nothing deployed anywhere; live library untouched; historical backups untouched.

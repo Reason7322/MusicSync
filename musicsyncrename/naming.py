@@ -211,8 +211,10 @@ def propose_name(
                 )
             proposed = _with_extension(f"{artist_cleaned.value} - {title_cleaned.value}")
             reasons = (
-                _reason("from_tags", "TPE1/TIT2")
-            ) + artist_cleaned.reasons + title_cleaned.reasons
+                (_reason("from_tags", "TPE1/TIT2"),)
+                + artist_cleaned.reasons
+                + title_cleaned.reasons
+            )
             if _OST_HINT_TEXT_RE.search(f"{artist_cleaned.value} {title_cleaned.value}") or _OST_HINT_TEXT_RE.search(stem):
                 flags.append(_reason("ost_candidate", "consider 'Game OST - Track' convention"))
             return _finish(scanned, "ok", proposed, reasons, tuple(flags))
@@ -238,7 +240,7 @@ def propose_name(
                 "ambiguous",
                 None,
                 reasons,
-                tuple(flags + (_reason("one_side_empty_after_cleanup"),)),
+                tuple((*flags, _reason("one_side_empty_after_cleanup"))),
             )
         proposed = _with_extension(f"{left_clean} - {right_clean}")
     elif separator_count >= 2:
@@ -247,7 +249,7 @@ def propose_name(
             "ambiguous",
             None,
             reasons,
-            tuple(flags + (_reason("multiple_separators", f"{separator_count} found"),)),
+            tuple((*flags, _reason("multiple_separators", f"{separator_count} found"))),
         )
     else:  # single identifier: cleanup only, no identity guessing
         proposed = _with_extension(value)

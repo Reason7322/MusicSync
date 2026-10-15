@@ -63,7 +63,7 @@ def scan_root(root: os.PathLike | str) -> ScanResult:
     directory_count = 0
 
     def walk(rel_dir: str, dir_path: Path) -> None:
-        nonlocal other_file_count
+        nonlocal other_file_count, directory_count
         try:
             with os.scandir(dir_path) as it:
                 entries = sorted(it, key=lambda e: (e.is_symlink(), e.name))

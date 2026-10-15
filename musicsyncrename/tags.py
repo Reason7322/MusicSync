@@ -140,25 +140,24 @@ def apply_tag_edits(path: os.PathLike | str, edits: dict[str, Optional[str]]) ->
         audio.add_tags()
     tags = audio.tags
     changed = False
-    try:
-        for frame_id, value in edits.items():
-            current = tuple(
-                text.strip()
-                for frame in tags.getall(frame_id)
-                for part in getattr(frame, "text", [])
-                if (text := str(part).strip())
-            )
-            target: tuple[str, ...] | None
-            if value is None or str(value).strip() == "":
-                target = None
-            else:
-                target = (str(value).strip(),)
-            if current != target:
-                for key in list(tags.keys()):
-                    if key == frame_id or key.startswith(frame_id + ":"):
-                        del tags[key]
-                if target is not None:
-                    tags.add(_EDITABLE_FRAMES[frame_id](encoding=3, text=[target[0]]))
-                changed = True
-        if changed:
-            audio.save()
+    for frame_id, value in edits.items():
+        current = tuple(
+            text.strip()
+            for frame in tags.getall(frame_id)
+            for part in getattr(frame, "text", [])
+            if (text := str(part).strip())
+        )
+        target: tuple[str, ...] | None
+        if value is None or str(value).strip() == "":
+            target = None
+        else:
+            target = (str(value).strip(),)
+        if current != target:
+            for key in list(tags.keys()):
+                if key == frame_id or key.startswith(frame_id + ":"):
+                    del tags[key]
+            if target is not None:
+                tags.add(_EDITABLE_FRAMES[frame_id](encoding=3, text=[target[0]]))
+            changed = True
+    if changed:
+        audio.save()
