@@ -112,14 +112,15 @@ class Preview:
 
 @dataclass(frozen=True)
 class ApplyReport:
-    session_id: str
+    session_id: str  # "" when nothing passed validation (no journal was created)
     applied: tuple[tuple[str, Optional[str]], ...]  # (rel_path, new_name|None=tags-only)
-    rejected: tuple[tuple[str, str], ...]  # (rel_path, reason_code)
-    canceled: tuple[str, ...] = ()
+    rejected: tuple[tuple[str, str], ...]  # (rel_path, reason_code); pre-mutation rejections
+    partial: tuple[tuple[str, str], ...] = ()  # (rel_path, abort_code): started, not completed
+    canceled: tuple[str, ...] = ()  # approved but never started after stop; untouched on disk
 
     @property
     def ok(self) -> bool:
-        return not self.rejected and not self.canceled
+        return not self.rejected and not self.partial and not self.canceled
 
 
 @dataclass(frozen=True)
@@ -471,255 +472,38 @@ def _join(parent: str, name: str) -> str:
 # ---------------------------------------------------------------------------
 # Apply
 # ---------------------------------------------------------------------------
+def _apply_unsafe_code(proposed: str) -> Optional[str]:
+    """Apply-time name safety gate; returns a stable rejection code or None.
 
-_SAFE_NAME_RE = re.compile(r"^[^\x00/\\]+$")
-
-
-def apply_changes(
-    root: os.PathLike | str,
-    preview: Preview,
-    approved: Iterable[str],
-    cancel_check: Optional[Callable[[], bool]] = None,
-) -> ApplyReport:
-    """Apply ONLY explicitly approved items from ``preview``.
-
-    Each approval is a rel_path present in the preview. Validation happens
-    against live state at call time (the preview may be stale). On any failure
-    the remaining work stops and an undoable session id is returned; nothing
-    after the failing step is attempted.
+    Preview already flags these names (``name_contains_unsafe_chars``); apply is
+    where the decision becomes a hard per-item rejection, because the preview
+    may be stale and caller-provided overrides/hints are untrusted input.
     """
-    root_abs = Path(os.path.abspath(os.fspath(root)))
-    if not root_abs.is_dir():
-        raise EngineError(f"root is not a directory: {root}")
-
-    items_by_rel = {item.rel_path: item for item in preview.items}
-    approved_list = list(dict.fromkeys(approved))  # de-duplicate, keep order
-
-    rejected: list[tuple[str, str]] = []
-    candidates: dict[str, ItemPlan] = {}
-    for rel in approved_list:
-        item = items_by_rel.get(rel)
-        if item is None:
-            rejected.append((rel, "not_in_preview"))
-            continue
-        has_rename = bool(item.proposed_name and item.proposed_name != item.current_name)
-        if not has_rename and not item.tag_edits:
-            rejected.append((rel, "nothing_to_do"))
-            continue
-        if item.status in ("ambiguous", "error"):
-            rejected.append((rel, f"status_{item.status}_not_applicable"))
-            continue
-        candidates[rel] = item
-
-    # --- per-item live validation -------------------------------------------
-    validated: dict[str, ItemPlan] = {}
-    for rel in sorted(candidates):
-        code = _validate_item(root_abs, candidates[rel])
-        if code is None:
-            validated[rel] = candidates[rel]
-        else:
-            rejected.append((rel, code))
-
-    # --- cross-item checks with LIVE directory listings ----------------------
-    final_items: dict[str, ItemPlan] = {}
-    grouped: dict[str, list[ItemPlan]] = {}
-    for rel in sorted(validated):
-        grouped.setdefault(validated[rel].rel_dir, []).append(validated[rel])
-
-    for rel_dir, group in grouped.items():
-        dir_path = root_abs / rel_dir if rel_dir else root_abs
-        try:
-            live_keys = {name_key(n) for n in os.listdir(dir_path)}
-        except OSError as exc:
-            for item in group:
-                rejected.append((item.rel_path, f"dir_unreadable:{exc.strerror or exc}"))
-            continue
-
-        # target key uniqueness within this directory batch
-        by_target_key: dict[str, list[ItemPlan]] = {}
-        moving_away_keys: set[str] = {name_key(i.current_name) for i in group}
-        for item in group:
-            if not item.proposed_name or name_key(item.proposed_name) == name_key(item.current_name):
-                continue  # tags-only content
-            by_target_key.setdefault(name_key(item.proposed_name), []).append(item)
-
-        colliding_items = []
-        for key, owners in by_target_key.items():
-            if len(owners) > 1:
-                colliding_items.extend(owners)
-        for item in group:
-            rel_ = item.rel_path
-            if any(i is item for i in colliding_items):
-                rejected.append((rel_, "proposal_collision"))
-                continue
-            if (
-                item.proposed_name
-                and name_key(item.proposed_name) != name_key(item.current_name)
-                and name_key(item.proposed_name) in live_keys
-                and not _target_freed_by_batch(live_keys, name_key(item.proposed_name), group, item)
-            ):
-                rejected.append((rel_, "target_exists"))
-                continue
-            final_items[rel_] = item
-
-    if not final_items:
-        return ApplyReport(str(uuid.uuid4())[:32], (), tuple(rejected))
-
-    # --- session setup + backups BEFORE any mutation --------------------------
-    session_id = uuid.uuid4().hex
-    sessions_dir = journal_root(root_abs) / "sessions"
-    backups_dir = journal_root(root_abs) / "backups" / session_id
-    try:
-        sessions_dir.mkdir(parents=True, exist_ok=True)
-    except OSError as exc:
-        raise EngineError(f"cannot create journal dir: {exc}") from exc
-
-    for rel in sorted(final_items):
-        item = final_items[rel]
-        if not item.tag_edits:
-            continue
-        backup_file = _backup_path(root_abs, session_id, rel)
-        try:
-            backup_file.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(root_abs / rel, backup_file)
-            with open(backup_file, "rb") as handle:
-                os.fsync(handle.fileno())
-        except OSError as exc:
-            _safe_unlink(backup_file)
-            raise EngineError(f"failed to back up {rel} before editing tags: {exc}") from exc
-
-    session_file = sessions_dir / f"{session_id}.jsonl"
-    try:
-        _append_event(session_file, {"type": "header", "id": session_id, "root": str(root_abs), "started": _utc_now_iso()})
-    except OSError as exc:
-        raise EngineError(f"cannot write journal: {exc}") from exc
-
-    # --- plan moves per directory --------------------------------------------
-    all_steps: list[_Step] = []
-    steps_by_dir: dict[str, list[_Step]] = {}
-    for rel_dir in sorted(grouped):
-        if rel_dir not in _dirs_of(final_items):
-            continue
-        ops = [
-            (rel_, (rel_, _join(rel_dir, final_items[rel_].proposed_name)))  # type: ignore[arg-type]
-            for rel_ in sorted(final_items)
-            if final_items[rel_].rel_dir == rel_dir
-            and final_items[rel_].proposed_name
-            and name_key(final_items[rel_].proposed_name) != name_key(final_items[rel_].current_name)
-        ]
-        tags_only_here = [
-            rel_ for rel_ in sorted(final_items)
-            if final_items[rel_].rel_dir == rel_dir
-            and (not final_items[rel_].proposed_name
-                 or name_key(final_items[rel_].proposed_name) == name_key(final_items[rel_].current_name))
-        ]
-        try:
-            steps = plan_moves(ops)
-        except EngineError as exc:
-            for rel_ in [r for r in final_items if _dirs_of_one(rel_, rel_dir)]:
-                rejected.append((rel_, "planning_failed"))
-            continue
-        for step in steps:
-            all_steps.append(step)
-        # tags-only pseudo steps execute after the moves of their directory
-        for rel_ in tags_only_here:
-            item = final_items[rel_]
-            if item.tag_edits or (item.proposed_name and item.proposed_name != item.current_name):
-                steps.append(_Step(rel_, item.rel_path, item.rel_path, "tag_edit"))
-        steps_by_dir[rel_dir] = steps
-
-    # --- execute -------------------------------------------------------------
-    applied: list[tuple[str, Optional[str]]] = []
-    canceled: list[str] = []
-    aborted_reason: Optional[str] = None
-    done_contents: set[str] = set()
-    final_name_for: dict[str, str] = {rel_: (final_items[rel_].proposed_name or final_items[rel_].current_name) for rel_ in final_items}
-
-    ordered_steps: list[_Step] = []
-    for rel_dir in sorted(steps_by_dir):
-        ordered_steps.extend(steps_by_dir[rel_dir])
-
-    content_final_step: dict[str, _Step] = {}
-    for step in ordered_steps:
-        if step.kind == "rename":
-            content_final_step[step.content] = step  # last rename per content wins (chains end at target)
-
-    try:
-        for step in ordered_steps:
-            if cancel_check is not None and cancel_check():
-                aborted_reason = "canceled"
-                break
-            item = final_items.get(step.content)
-            if item is None:
-                continue  # already rejected/aborted bookkeeping elsewhere
-            _append_event(session_file, {
-                "type": "op", "content": step.content,
-                "from": step.from_rel, "to": step.to_rel, "kind": step.kind,
-            })
-            try:
-                if step.kind == "temp" or step.kind == "rename":
-                    os.rename(root_abs / step.from_rel, root_abs / step.to_rel)
-                if step.kind == "rename" and step in content_final_step.values() and item.tag_edits:
-                    apply_tag_edits(root_abs / step.to_rel, {frame: new for frame, _old, new in item.tag_edits})
-                elif step.kind == "tag_edit" and item.tag_edits:
-                    apply_tag_edits(root_abs / step.from_rel, {frame: new for frame, _old, new in item.tag_edits})
-            except (OSError, ParseError, ValueError) as exc:
-                aborted_reason = f"{step.kind}_failed:{exc.strerror if isinstance(exc, OSError) else str(exc)}"
-                break
-            _append_event(session_file, {"type": "done", "content": step.content, "kind": step.kind})
-            if step.kind == "tag_edit" or (step.kind == "rename" and step is content_final_step.get(step.content)):
-                done_contents.add(step.content)
-        else:
-            aborted_reason = None
-
-        for rel_ in sorted(final_items):
-            if rel_ not in done_contents and canceled or aborted_reason:
-                pass  # bookkeeping below
-    finally:
-        if aborted_reason is None:
-            try:
-                _append_event(session_file, {"type": "closed"})
-            except OSError as exc:
-                raise EngineError(f"cannot close journal: {exc}") from exc
-        else:
-            try:
-                _append_event(session_file, {"type": "aborted", "reason": aborted_reason})
-            except OSError:
-                pass  # journal fs is broken; caller still gets the session id
-
-    for rel_ in sorted(final_items):
-        if rel_ not in done_contents:
-            canceled.append(rel_)
-        else:
-            applied.append((rel_, None if final_name_for[rel_] == items_by_rel[rel_].current_name and not _has_rename(final_items[rel_]) else final_name_for[rel_]))
-
-    return ApplyReport(session_id, tuple(applied), tuple(rejected), tuple(canceled))
+    if not proposed or proposed in (".", ".."):
+        return "unsafe_name_chars"
+    for ch in proposed:
+        codepoint = ord(ch)
+        if ch == "\x00" or ch == "/" or ch == "\\" or codepoint < 0x20:
+            return "unsafe_name_chars"
+    return None
 
 
-def _dirs_of(items: dict[str, ItemPlan]) -> set[str]:
-    return {i.rel_dir for i in items.values()}
+def _is_renamed(item: ItemPlan) -> bool:
+    """True when the plan moves this item (case/normalization-insensitive)."""
+    return bool(
+        item.proposed_name
+        and name_key(item.proposed_name) != name_key(item.current_name)
+    )
 
 
-def _dirs_of_one(rel_: str, rel_dir: str) -> bool:
-    return Path(rel_).parent.as_posix() == rel_dir
-
-
-def _has_rename(item: ItemPlan) -> bool:
-    return bool(item.proposed_name and item.proposed_name != item.current_name)
-
-
-def _target_freed_by_batch(
-    live_keys: set[str], target_key: str, group: Sequence[ItemPlan], item: ItemPlan
-) -> bool:
-    """True when the only occupant of ``target_key`` in this directory is itself
-    being renamed away by another approved item in the same batch."""
-    for other in group:
-        if other is not item and name_key(other.current_name) == target_key:
-            return True
-    return False
+def _rel_parent(rel: str) -> str:
+    """Directory part of a rel path ('' for root); tolerates './' prefixes."""
+    parent = Path(rel).parent  # pathlib normalizes a leading './' component
+    return "" if str(parent) == "." else str(parent)
 
 
 def _validate_item(root_abs: Path, item: ItemPlan) -> Optional[str]:
+    """Re-check one approved item against live state; stable code or None."""
     rel = item.rel_path
     parent_rel = rel.rpartition("/")[0]
     parent = root_abs / parent_rel if parent_rel else root_abs
@@ -742,16 +526,295 @@ def _validate_item(root_abs: Path, item: ItemPlan) -> Optional[str]:
     if (st.st_size, st.st_mtime_ns) != (item.size, item.mtime_ns):
         return "changed_since_preview"
 
-    proposed = item.proposed_name
-    if proposed and proposed != item.current_name:
-        if not _SAFE_NAME_RE.match(proposed) or proposed in (".", ".."):
-            return "unsafe_name_chars"
-        if len(proposed.encode("utf-8")) > MAX_NAME_BYTES:
+    if _is_renamed(item):
+        code = _apply_unsafe_code(item.proposed_name)  # type: ignore[arg-type]
+        if code is not None:
+            return code
+        if len(item.proposed_name.encode("utf-8")) > MAX_NAME_BYTES:
             return "name_too_long"
     return None
 
 
+def _target_freed_by_batch(target_key: str, group: Sequence[ItemPlan], item: ItemPlan) -> bool:
+    """True only when the live occupant of ``target_key`` is ANOTHER approved
+    item in this batch that is itself being renamed away (frees the slot)."""
+    for other in group:
+        if (
+            other is not item
+            and _is_renamed(other)
+            and name_key(other.current_name) == target_key
+        ):
+            return True
+    return False
+
+
+def apply_changes(
+    root: os.PathLike | str,
+    preview: Preview,
+    approved: Iterable[str],
+    cancel_check: Optional[Callable[[], bool]] = None,
+) -> ApplyReport:
+    """Apply ONLY the explicitly approved items from ``preview``.
+
+    Each approval is a rel_path present in the preview; anything else is
+    rejected with one of the stable reason codes and nothing is mutated for it:
+    not_in_preview, status_ambiguous_not_applicable /
+    status_error_not_applicable, nothing_to_do, parent_missing,
+    parent_not_plain_dir, source_missing, is_symlink, not_regular_file,
+    changed_since_preview (size+mtime_ns vs preview snapshot),
+    unsafe_name_chars, name_too_long (>255 UTF-8 bytes), proposal_collision,
+    target_exists, planning_failed.
+
+    All validation and per-directory planning finish BEFORE any mutation. A
+    session journal (``<root>/.musicsyncrename/sessions/<id>.jsonl``, fsync
+    after every event) is opened first; full-file backups of every
+    tag-edited item are written before any tag is touched; then renames run in
+    planner order with an ``op``/``done`` pair per step. Cancellation (via
+    ``cancel_check`` between steps) or a failure stops the rest of the work:
+    already-completed items stay applied, started-but-unfinished items are
+    reported as partial, never-started ones as canceled - and every one of
+    them is recoverable via ``undo_session(root, report.session_id)``.
+
+    A new apply is refused while any existing session is not in a terminal
+    state (closed/undone), so two sessions can never mutate the same library.
+    """
+    root_abs = Path(os.path.abspath(os.fspath(root)))
+    if not root_abs.is_dir():
+        raise EngineError(f"root is not a directory: {root}")
+
+    # Concurrency guard: an unresolved (open/aborted/corrupt) session means the
+    # library may be mid-mutation; undo it before starting new work.
+    for sess in list_sessions(root_abs):
+        state = sess.get("state")
+        if sess.get("corrupt") or state in ("open", "aborted"):
+            raise EngineError(
+                f"cannot start a new apply while session {sess['session_id']!r} is still "
+                f"unresolved (state: {state or 'unresolvable'}); undo it first"
+            )
+
+    items_by_rel = {item.rel_path: item for item in preview.items}
+    approved_list = list(dict.fromkeys(approved))  # de-duplicate, keep order
+
+    rejected: list[tuple[str, str]] = []
+    candidates: dict[str, ItemPlan] = {}
+    for rel in approved_list:
+        item = items_by_rel.get(rel)
+        if item is None:
+            rejected.append((rel, "not_in_preview"))
+            continue
+        if item.status in ("ambiguous", "error"):
+            rejected.append((rel, f"status_{item.status}_not_applicable"))
+            continue
+        if not _is_renamed(item) and not item.tag_edits:
+            rejected.append((rel, "nothing_to_do"))
+            continue
+        candidates[rel] = item
+
+    # --- per-item live validation (no cross-item knowledge yet) ---------------
+    validated: dict[str, ItemPlan] = {}
+    for rel in sorted(candidates):
+        code = _validate_item(root_abs, candidates[rel])
+        if code is None:
+            validated[rel] = candidates[rel]
+        else:
+            rejected.append((rel, code))
+
+    # --- cross-item checks against LIVE directory listings --------------------
+    grouped: dict[str, list[ItemPlan]] = {}
+    for rel in sorted(validated):
+        grouped.setdefault(validated[rel].rel_dir, []).append(validated[rel])
+
+    final_items: dict[str, ItemPlan] = {}
+    for rel_dir, group in sorted(grouped.items()):
+        dir_path = root_abs / rel_dir if rel_dir else root_abs
+        try:
+            st_dir = os.lstat(dir_path)
+        except OSError:
+            for item in group:
+                rejected.append((item.rel_path, "parent_missing"))
+            continue
+        if stat.S_ISLNK(st_dir.st_mode) or not stat.S_ISDIR(st_dir.st_mode):
+            for item in group:
+                rejected.append((item.rel_path, "parent_not_plain_dir"))
+            continue
+        try:
+            live_keys = {name_key(n) for n in os.listdir(dir_path)}
+        except OSError:  # dir vanished/perm race after the check above
+            for item in group:
+                rejected.append((item.rel_path, "planning_failed"))
+            continue
+
+        by_target_key: dict[str, list[ItemPlan]] = {}
+        for item in group:
+            if _is_renamed(item):
+                by_target_key.setdefault(name_key(item.proposed_name), []).append(item)
+        colliding = {
+            item.rel_path
+            for owners in by_target_key.values()
+            if len(owners) > 1
+            for item in owners
+        }
+
+        for item in group:
+            rel_ = item.rel_path
+            if rel_ in colliding:
+                rejected.append((rel_, "proposal_collision"))
+                continue
+            target_key = name_key(item.proposed_name) if _is_renamed(item) else None
+            if (
+                target_key is not None
+                and target_key in live_keys
+                and not _target_freed_by_batch(target_key, group, item)
+            ):
+                rejected.append((rel_, "target_exists"))
+                continue
+            final_items[rel_] = item
+
+    # --- per-directory planning through the verified planner (no journal yet) --
+    planned_dirs: dict[str, list[_Step]] = {}
+    for rel_dir in sorted(grouped):
+        ops = [
+            (rel_, (rel_, _join(rel_dir, final_items[rel_].proposed_name)))  # type: ignore[arg-type]
+            for rel_ in sorted(final_items)
+            if final_items[rel_].rel_dir == rel_dir and _is_renamed(final_items[rel_])
+        ]
+        try:
+            planned_dirs[rel_dir] = plan_moves(ops)
+        except EngineError:  # structural failure confined to this directory
+            for rel_ in sorted(r for r, i in final_items.items() if i.rel_dir == rel_dir):
+                rejected.append((rel_, "planning_failed"))
+
+    ordered_steps: list[_Step] = []
+    for rel_dir in sorted({i.rel_dir for i in final_items.values()} | set(planned_dirs)):
+        # Move steps first (safe order from the planner), then this directory's
+        # tag edits - each file's metadata is written only once its content has
+        # reached its final slot.
+        ordered_steps.extend(planned_dirs.get(rel_dir, ()))
+        for rel_ in sorted(final_items):
+            item = final_items[rel_]
+            if item.rel_dir != rel_dir or not item.tag_edits:
+                continue
+            where = _join(rel_dir, item.proposed_name) if _is_renamed(item) else rel_  # type: ignore[arg-type]
+            ordered_steps.append(_Step(rel_, where, where, "tag_edit"))
+
+    if not final_items:
+        return ApplyReport("", (), tuple(rejected))
+
+    # --- session setup: journal header FIRST, backups BEFORE any mutation -----
+    session_id = uuid.uuid4().hex
+    sessions_dir = journal_root(root_abs) / "sessions"
+    try:
+        sessions_dir.mkdir(parents=True, exist_ok=True)
+        session_file = sessions_dir / f"{session_id}.jsonl"
+        _append_event(
+            session_file,
+            {"type": "header", "id": session_id, "root": str(root_abs), "started": _utc_now_iso()},
+        )
+    except OSError as exc:
+        raise EngineError(f"cannot write journal header: {exc}") from exc
+
+    for rel in sorted(final_items):
+        item = final_items[rel]
+        if not item.tag_edits:
+            continue
+        backup_file = _backup_path(root_abs, session_id, rel)
+        try:
+            backup_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(root_abs / rel, backup_file)
+        except OSError as exc:
+            raise EngineError(
+                f"failed to back up {rel} before tag edits; journal for session "
+                f"{session_id} is open (undo it or delete the file): {exc}"
+            ) from exc
+        with open(backup_file, "rb") as handle:  # fsync the backup itself
+            os.fsync(handle.fileno())
+
+    # --- execute ----------------------------------------------------------------
+    steps_of: dict[str, list[_Step]] = {}
+    for step in ordered_steps:
+        steps_of.setdefault(step.content, []).append(step)
+    op_journal: dict[str, int] = {c: 0 for c in steps_of}
+    done_count: dict[str, int] = {c: 0 for c in steps_of}
+
+    abort_reason: Optional[str] = None
+    for step in ordered_steps:
+        if cancel_check is not None and cancel_check():
+            abort_reason = "canceled"
+            break
+        item = final_items[step.content]
+        try:
+            _append_event(
+                session_file,
+                {
+                    "type": "op",
+                    "content": step.content,
+                    "from": step.from_rel,
+                    "to": step.to_rel,
+                    "kind": step.kind,
+                },
+            )
+            op_journal[step.content] += 1
+        except OSError as exc:
+            abort_reason = f"journal_op_failed:{exc.strerror or exc}"
+            break
+        try:
+            if step.kind in ("rename", "temp"):
+                os.rename(root_abs / step.from_rel, root_abs / step.to_rel)
+            else:  # tag_edit - file already at its final slot for this directory
+                apply_tag_edits(
+                    root_abs / step.from_rel,
+                    {frame: new for frame, _old, new in item.tag_edits},
+                )
+        except (OSError, ParseError, ValueError) as exc:
+            abort_reason = f"{step.kind}_failed:{getattr(exc, 'strerror', None) or str(exc)}"
+            break
+        try:
+            _append_event(
+                session_file, {"type": "done", "content": step.content, "kind": step.kind}
+            )
+            done_count[step.content] += 1
+        except OSError as exc:
+            # The mutation happened but could not be recorded; recovery probes
+            # the live filesystem anyway (the op is journaled without its done).
+            abort_reason = f"journal_done_failed:{exc.strerror or exc}"
+            break
+
+    try:
+        if abort_reason is None:
+            _append_event(session_file, {"type": "closed"})
+        else:
+            _append_event(session_file, {"type": "aborted", "reason": abort_reason})
+    except OSError:
+        pass  # journal filesystem dead; events written so far still stand
+
+    applied: list[tuple[str, Optional[str]]] = []
+    partial: list[tuple[str, str]] = []
+    canceled: list[str] = []
+    short_code = abort_reason.split(":", 1)[0] if abort_reason else ""
+    for rel in sorted(final_items):
+        total = len(steps_of[rel])
+        if done_count[rel] == total:
+            item = final_items[rel]
+            applied.append((rel, item.proposed_name if _is_renamed(item) else None))
+        elif op_journal[rel] > 0 and abort_reason is not None:
+            partial.append((rel, short_code))
+        elif abort_reason is not None:
+            canceled.append(rel)
+
+    return ApplyReport(session_id, tuple(applied), tuple(rejected), tuple(partial), tuple(canceled))
+
+
+def _is_plain_file(path: Path) -> bool:
+    """True for an existing regular file (lstat: symlinks never qualify)."""
+    try:
+        st = os.lstat(path)
+    except OSError:
+        return False
+    return stat.S_ISREG(st.st_mode)
+
+
 def _safe_unlink(path: Path) -> None:
+    """Unlink ignoring absence/errors (best-effort temp-file cleanup)."""
     try:
         path.unlink()
     except OSError:
@@ -764,10 +827,17 @@ def _safe_unlink(path: Path) -> None:
 
 
 def list_sessions(root: os.PathLike | str) -> list[dict]:
+    """Introspect every journal under ``<root>/.musicsyncrename/sessions``.
+
+    One dict per session: session_id, root, started, ops (op+undo_op events),
+    done_ops, and state - the last terminal event (closed/aborted/undone) or
+    "open" when none was ever written (crash). Unparseable journals are
+    reported with ``corrupt=True``.
+    """
     sessions_dir = journal_root(root) / "sessions"
     if not sessions_dir.is_dir():
         return []
-    out = []
+    out: list[dict] = []
     for entry in sorted(os.listdir(sessions_dir)):
         if not entry.endswith(".jsonl"):
             continue
@@ -778,187 +848,255 @@ def list_sessions(root: os.PathLike | str) -> list[dict]:
             out.append({"session_id": entry[:-6], "corrupt": True})
             continue
         header = next((e for e in events if e.get("type") == "header"), {})
-        op_count = sum(1 for e in events if e.get("type") == "op")
-        done_count = sum(1 for e in events if e.get("type") == "done" and e.get("kind") != "tag_edit")
-        last = next((e for e in reversed(events) if e.get("type") in ("closed", "aborted", "undone")), None)
-        out.append({
-            "session_id": entry[:-6],
-            "root": header.get("root"),
-            "started": header.get("started"),
-            "ops": op_count,
-            "done_ops": done_count,
-            "state": last.get("type") if last else "open",
-        })
+        op_count = sum(1 for e in events if e.get("type") in ("op", "undo_op"))
+        done_count = sum(1 for e in events if e.get("type") in ("done", "undo_done"))
+        terminal = next(
+            (e for e in reversed(events) if e.get("type") in ("closed", "aborted", "undone")),
+            None,
+        )
+        out.append(
+            {
+                "session_id": entry[:-6],
+                "root": header.get("root"),
+                "started": header.get("started"),
+                "ops": op_count,
+                "done_ops": done_count,
+                "state": terminal.get("type") if terminal else "open",
+            }
+        )
     return out
 
 
 def undo_session(root: os.PathLike | str, session_id: str) -> UndoReport:
     """Restore the library to its pre-session state for ``session_id``.
 
-    - Works on complete, canceled and crash-interrupted sessions alike (the
-      journal plus live filesystem probes resolve every file's true position).
-    - Validation phase first: nothing changes if any file is in an unexpected
-      state; anomalies are reported without partial restoration.
-    - Original filenames AND original bytes (for metadata-edited files, from
-      the session backup) are restored. Backups and journals are preserved for
-      audit after undo.
+    - Works on completed (closed), aborted and crash-interrupted sessions alike:
+      per-content op chains are rebuilt from the journal ("done" marks the
+      latest pending op; an interrupted op is resolved by probing the live
+      filesystem at its from/to positions).
+    - Validation phase first: every displaced file must be a regular non-symlink
+      and every original slot must be free or freed by another undo move in the
+      same directory batch. ANY anomaly aborts with no changes at all.
+    - The per-directory undo plan goes through the SAME verified planner (the
+      undo of a swap is itself a cycle), appending ``undo_begin`` /
+      ``undo_op``/``undo_done`` events as it runs; then bytes are restored from
+      the session backups via tmp+``os.replace`` only where they differ, so an
+      already-restored file can never be clobbered by a repeated undo.
+    - A session that was already undone is left untouched (idempotent).
+    Backups and journals are preserved for audit after undo. If execution stops
+    early the journal stays non-terminal so a later retry completes recovery.
     """
     root_abs = Path(os.path.abspath(os.fspath(root)))
-    session_file = _session_path(root_abs, session_id)
+    session_file = _session_path(root_abs, session_id)  # raises on malformed id
     if not session_file.is_file():
         raise EngineError(f"unknown session {session_id!r}")
     events = _read_session(session_file)
 
-    # Rebuild per-content op chains in journal order.
+    terminal = next(
+        (e for e in reversed(events) if e.get("type") in ("closed", "aborted", "undone")),
+        None,
+    )
+    if terminal is not None and terminal.get("type") == "undone":
+        # Already restored: a repeated undo must never touch the files again.
+        return UndoReport(session_id, (), ())
+
+    # Rebuild per-content op chains in journal order. Apply-phase ops and
+    # undo-phase ops share one chain: an interrupted undo op resolves against
+    # the live filesystem exactly like an interrupted apply op does.
     chain: dict[str, list[dict]] = {}
     for ev in events:
-        t = ev.get("type")
-        if t == "op":
-            chain.setdefault(ev["content"], []).append(ev | {"done": False})
-        elif t == "done":
-            ops_for_content = chain.get(ev.get("content"))
-            if not ops_for_content:
-                continue
-            for op in reversed(ops_for_content):
+        etype = ev.get("type")
+        if etype in ("op", "undo_op"):
+            chain.setdefault(ev["content"], []).append(
+                {"from": ev["from"], "to": ev["to"], "kind": ev.get("kind"), "done": False}
+            )
+        elif etype in ("done", "undo_done"):
+            for op in reversed(chain.get(ev.get("content"), ())):
                 if not op["done"]:
                     op["done"] = True
                     break
 
-    tagged_contents = {ev["content"] for ev in events if ev.get("type") == "op" and False}  # refined below
-    tagged_contents = set()
-    # A content had metadata edits when a backup exists; that is the source of truth.
-    backups_dir = journal_root(root_abs) / "backups" / session_id
-
     anomalies: list[tuple[str, str]] = []
-    positions: dict[str, str] = {}  # content -> current rel path
-    originals: dict[str, str] = {}
+    positions: dict[str, str] = {}  # content -> resolved current rel path
+    originals: dict[str, str] = {}  # content -> pre-session rel path
     for content in sorted(chain):
         ops_list = chain[content]
-        original = ops_list[0]["from"]
+        original = ops_list[0]["from"]  # first apply op: the pre-session slot
         originals[content] = original
         pos = original
         consistent = True
         for op in ops_list:
-            if not op["done"]:
-                # Crashed mid-op: probe the live filesystem.
-                at_to = (root_abs / op["to"]).is_file() and not os.path.islink(root_abs / op["to"])
-                at_from = (root_abs / op["from"]).is_file() and not os.path.islink(root_abs / op["from"])
-                if at_to:
-                    pos = op["to"]
-                elif at_from:
-                    pass  # stays where it was
-                else:
-                    anomalies.append((content, "missing_after_interrupted_op"))
-                    consistent = False
-                    break
-            else:
+            if op["done"]:
                 pos = op["to"]
+                continue
+            # Interrupted op (apply or undo phase): probe the live filesystem.
+            at_from = _is_plain_file(root_abs / op["from"])
+            if op["from"] == op["to"]:  # tag edit: position unchanged either way
+                continue
+            at_to = _is_plain_file(root_abs / op["to"])
+            if at_from and at_to:
+                anomalies.append((content, "ambiguous_position"))
+                consistent = False
+                break
+            if not at_from and not at_to:
+                anomalies.append((content, "missing_after_interrupted_op"))
+                consistent = False
+                break
+            pos = op["to"] if at_to else op["from"]
         if consistent:
             positions[content] = pos
 
     displaced = {c: p for c, p in positions.items() if p != originals[c]}
-    byte_restore_needed = [
-        c for c in sorted(positions)
-        if _backup_path(root_abs, session_id, originals[c]).is_file() and c not in anomalies[0][0]  # type: ignore[index]
-        or False
-    ]
 
-    # ---- validation phase (no changes yet) ---------------------------------
-    moved_targets: dict[str, set[str]] = {}
-    for content, pos in displaced.items():
-        target_rel = originals[content]
-        dir_key = Path(target_rel).parent.as_posix()
-        moved_targets.setdefault(dir_key, set()).add(name_key(Path(pos).name))
-
-    validation_ok = not anomalies
+    # ---- validation phase (nothing below may change until this is clean) -----
     for content in sorted(displaced):
-        target_path = root_abs / originals[content]
-        current_path = root_abs / positions[content]
         try:
-            st_cur = os.lstat(current_path)
-            if stat.S_ISLNK(st_cur.st_mode) or not stat.S_ISREG(st_cur.st_mode):
-                anomalies.append((content, "current_not_regular_file"))
-                validation_ok = False
-                continue
+            st_cur = os.lstat(root_abs / positions[content])
         except OSError:
             anomalies.append((content, "current_missing"))
-            validation_ok = False
             continue
-        if target_path.exists() or os.path.islink(target_path):
-            dir_key = Path(originals[content]).parent.as_posix()
-            target_key = name_key(Path(originals[content]).name)
-            # The slot may be freed by another undo move in this batch.
-            frees_it = False
-            for other_content, other_pos in displaced.items():
-                if other_content == content:
-                    continue
-                if Path(other_pos).parent.as_posix() == dir_key and name_key(Path(other_pos).name) == target_key \
-                        and name_key(Path(originals[other_content]).name) != target_key:
-                    frees_it = True
-                    break
-            if not frees_it:
-                anomalies.append((content, "target_occupied"))
-                validation_ok = False
-    for content in anomalies and [a[0] for a in anomalies] or []:
-        pass
+        if not stat.S_ISREG(st_cur.st_mode):  # lstat: a symlink is S_ISLNK here
+            anomalies.append((content, "current_not_regular_file"))
 
-    restored_names: list[str] = []
-    restored_bytes: list[str] = []
-    if not validation_ok:
-        return UndoReport(session_id, (), tuple(anomalies))
+    for content in sorted(displaced):
+        target_rel = originals[content]
+        try:
+            os.lstat(root_abs / target_rel)
+        except OSError:
+            continue  # original slot free: fine
+        freed_by_batch = any(
+            other != content and positions.get(other) == target_rel for other in displaced
+        )
+        if not freed_by_batch:
+            anomalies.append((content, "target_occupied"))
 
-    # ---- execution phase ----------------------------------------------------
-    _append_event(session_file, {"type": "undo_begin"})
+    if anomalies:
+        return UndoReport(session_id, (), tuple(anomalies))  # NO changes made
 
-    per_dir_ops: dict[str, list[tuple[str, str, str]]] = {}  # dir -> (content, from_rel, to_rel)
-    for content in displaced:
-        d = Path(positions[content]).parent.as_posix()
-        per_dir_ops.setdefault(d, []).append((content, positions[content], originals[content]))
+    # ---- execution phase -------------------------------------------------------
+    undo_total: dict[str, int] = {}
+    undo_done_count: dict[str, int] = {}
+    exec_failed = False
+    if displaced:
+        try:
+            _append_event(session_file, {"type": "undo_begin"})
+        except OSError:
+            return UndoReport(
+                session_id, (), (("__journal__", "undo_journal_failed"),)
+            )
 
-    undo_steps: list[_Step] = []
-    try:
-        for d in sorted(per_dir_ops):
-            ops = [(c, (frm, to)) for c, frm, to in per_dir_ops[d]]
-            undo_steps.extend(plan_moves(ops))
-    except EngineError as exc:
-        anomalies.append(("__plan__", str(exc)))
-        return UndoReport(session_id, (), tuple(anomalies))
+        per_dir: dict[str, list[tuple[str, str, str]]] = {}
+        for content in sorted(displaced):
+            pos = displaced[content]
+            per_dir.setdefault(_rel_parent(pos), []).append((content, pos, originals[content]))
 
-    try:
-        for step in undo_steps:
-            _append_event(session_file, {
-                "type": "undo_op", "content": step.content, "from": step.from_rel, "to": step.to_rel, "kind": step.kind,
-            })
-            os.rename(root_abs / step.from_rel, root_abs / step.to_rel)
-            _append_event(session_file, {"type": "undo_done", "content": step.content, "kind": step.kind})
-
-        # Byte-exact restore of metadata-edited files from session backups.
-        for content in sorted(positions):
-            backup = _backup_path(root_abs, session_id, originals[content])
-            if not backup.is_file():
-                continue
-            target = root_abs / originals[content]
-            tmp = Path(os.path.join(str(target.parent), f".restore-{uuid.uuid4().hex}"))
+        undo_steps: list[_Step] = []
+        planning_ok = True
+        for rel_dir in sorted(per_dir):
             try:
-                shutil.copy2(backup, tmp)
-                with open(tmp, "rb") as handle:
-                    os.fsync(handle.fileno())
-                same_bytes = target.is_file() and _same_content(target, backup)
-                if not same_bytes:
-                    os.replace(tmp, target)
-            finally:
-                _safe_unlink(tmp)
-            restored_bytes.append(content)
-        _append_event(session_file, {"type": "undone"})
-    except OSError as exc:
-        anomalies.append(("__execute__", f"{exc.strerror or exc}"))
+                ops = [(c, (frm, to)) for c, frm, to in per_dir[rel_dir]]
+                undo_steps.extend(plan_moves(ops))
+            except EngineError:  # e.g. case-variant originals sharing a key
+                anomalies.append(("__plan__", "planning_failed"))
+                planning_ok = False
+                break
+        if not planning_ok:
+            return UndoReport(session_id, (), tuple(anomalies))
 
-    restored = sorted(set(restored_names | [c for c in displaced])) if displaced else []
-    return UndoReport(
-        session_id,
-        tuple(sorted(displaced)),
-        tuple(anomalies),
-    )
+        for step in undo_steps:
+            undo_total[step.content] = undo_total.get(step.content, 0) + 1
+        undo_done_count = {c: 0 for c in undo_total}
+
+        for step in undo_steps:
+            try:
+                _append_event(
+                    session_file,
+                    {
+                        "type": "undo_op",
+                        "content": step.content,
+                        "from": step.from_rel,
+                        "to": step.to_rel,
+                        "kind": step.kind,
+                    },
+                )
+            except OSError:
+                anomalies.append((step.content, "undo_journal_failed"))
+                exec_failed = True
+                break
+            try:
+                os.rename(root_abs / step.from_rel, root_abs / step.to_rel)
+            except OSError:
+                anomalies.append((step.content, f"undo_{step.kind}_failed"))
+                exec_failed = True
+                break
+            try:
+                _append_event(
+                    session_file, {"type": "undo_done", "content": step.content, "kind": step.kind}
+                )
+                undo_done_count[step.content] += 1
+            except OSError:
+                # The rename happened but could not be recorded; a retry probes
+                # the live filesystem and converges on the same state.
+                anomalies.append((step.content, "undo_journal_failed"))
+                exec_failed = True
+                break
+
+    final_pos: dict[str, str] = {}
+    for content in positions:
+        if (
+            content in displaced
+            and undo_done_count.get(content, 0) < undo_total.get(content, 1)
+        ):
+            final_pos[content] = positions[content]  # still away; retry later
+        else:
+            final_pos[content] = originals[content]
+
+    # Byte-exact restore from backups for every content now at its original slot.
+    restored: list[str] = []
+    for content in sorted(chain):
+        original = originals[content]
+        if final_pos.get(content) != original:
+            continue  # never write into a slot whose live file is still elsewhere
+        backup = _backup_path(root_abs, session_id, original)
+        target = root_abs / original
+        if backup.is_file():
+            try:
+                st_target = os.lstat(target)
+            except OSError:
+                anomalies.append((content, "restore_target_missing"))
+                continue
+            if not stat.S_ISREG(st_target.st_mode):
+                anomalies.append((content, "restore_target_not_regular"))
+                continue
+            if not _same_content(target, backup):  # idempotent for never-edited files
+                tmp = target.parent / f".restore-musicsync-{uuid.uuid4().hex}"
+                try:
+                    shutil.copy2(backup, tmp)
+                    with open(tmp, "rb") as handle:
+                        os.fsync(handle.fileno())
+                    os.replace(tmp, target)
+                except OSError:
+                    anomalies.append((content, "restore_failed"))
+                    continue
+                finally:
+                    _safe_unlink(tmp)  # no-op once replaced; cleanup on failure
+        restored.append(content)
+
+    if anomalies:
+        # Leave the journal non-terminal: retrying undo_session resumes here.
+        return UndoReport(
+            session_id, tuple(sorted(originals[c] for c in restored)), tuple(anomalies)
+        )
+
+    try:
+        _append_event(session_file, {"type": "undone"})
+    except OSError:
+        return UndoReport(
+            session_id,
+            tuple(sorted(originals[c] for c in restored)),
+            (("__journal__", "undo_journal_failed"),),
+        )
+    return UndoReport(session_id, tuple(sorted(originals[c] for c in restored)), ())
 
 
 def _same_content(a: Path, b: Path) -> bool:
@@ -969,4 +1107,6 @@ def _same_content(a: Path, b: Path) -> bool:
             if chunk_a != chunk_b:
                 return False
             if not chunk_a:
+                return True
+
                 return True
