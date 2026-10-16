@@ -8,7 +8,7 @@ icon = /work/project/musicsync/icons/io.github.reason7322.MusicSync.svg
 
 [python]
 python_path = /opt/build-python/bin/python
-packages = Nuitka==4.2.1
+packages = Nuitka==4.2.1, mutagen==1.47.0
 
 [qt]
 qml_files =

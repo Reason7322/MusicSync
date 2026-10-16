@@ -395,11 +395,29 @@ class MainWindow(QMainWindow):
         if dialog.exec() and dialog.value:
             self.settings = dialog.value
             self._paths()
-            self.table.setRowCount(0)
-            self.summary_label.setText('')
-            self._empty('Ready to compare', 'Settings changed. Preview to see the new comparison.')
-            self.status_label.setText('Settings changed. Preview to compare these libraries.')
-            self.refresh(True)
+            if dialog.bulk_rename_requested and self.settings.source:
+                from musicsync.bulk_rename import BulkRenameDialog  # local: keep startup imports light
+                rename_dialog = BulkRenameDialog(self.settings.source, self)
+                rename_dialog.exec()
+                changed = rename_dialog.applied_changed
+                if changed:
+                    # Library contents changed on disk; re-inspect read-only state.
+                    self.table.setRowCount(0)
+                    self.summary_label.setText('')
+                    self._empty('Library renamed', 'Bulk Rename finished. Preview again to see the sync comparison.')
+                    self.status_label.setText('Bulk rename finished. Preview to compare these libraries.')
+                else:
+                    self.table.setRowCount(0)
+                    self.summary_label.setText('')
+                    self._empty('Ready to compare', 'Settings changed. Preview to see the new comparison.')
+                    self.status_label.setText('Settings changed. Preview to compare these libraries.')
+                self.refresh(True)
+            else:
+                self.table.setRowCount(0)
+                self.summary_label.setText('')
+                self._empty('Ready to compare', 'Settings changed. Preview to see the new comparison.')
+                self.status_label.setText('Settings changed. Preview to compare these libraries.')
+                self.refresh(True)
 
     def closeEvent(self, event):
         if self.controller.active:

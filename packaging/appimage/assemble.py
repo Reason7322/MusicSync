@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 
 SOURCE, WORK, OUT = Path('/source'), Path('/work'), Path('/out')
 APP_ID = 'io.github.reason7322.MusicSync'
-VERSION = '0.1.3'
+VERSION = '0.2.0'
 APPDIR = WORK / 'MusicSync.AppDir'
 # System ABI / driver entry points belong to the desktop, not a private libc stack.
 SYSTEM_LIBS = {'libc.so.6', 'libm.so.6', 'libdl.so.2', 'libpthread.so.0', 'librt.so.1',

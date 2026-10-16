@@ -29,4 +29,5 @@ def main():
         program = executable(args[1])
         os.execv(program, [program, '--version'])
     from musicsync.app import main as app_main
-    return app_main(test_mode=args[0] if args in (['--smoke-test'], ['--preview-test']) else None)
+    return app_main(test_mode=args[0] if args in (['--smoke-test'], ['--preview-test'],
+                                                  ['--bulk-rename-test']) else None)

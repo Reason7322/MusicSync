@@ -164,7 +164,27 @@ def collect_licenses(appdir, provenance, pins, version):
                 original = metadata.locate_file(file)
                 if original.is_file():
                     shutil.copy2(original, dest / file.name)
+    # mutagen is pure Python (Nuitka-compiled into musicsync.bin for Bulk Rename
+    # Title/Artist cleanup); preserve its MIT license and exact sdist too.
+    mutagen_dest = notices / 'python-packages' / 'mutagen'
+    mutagen_dest.mkdir(parents=True)
+    try:
+        metadata = importlib.metadata.distribution('mutagen')
+        (mutagen_dest / 'METADATA').write_text(metadata.read_text('METADATA') or '')
+        for file in metadata.files or ():
+            if any(p.lower().startswith(('license', 'copying', 'notice')) for p in file.parts):
+                original = metadata.locate_file(file)
+                if original.is_file():
+                    shutil.copy2(original, mutagen_dest / file.name)
+    except Exception:
+        (mutagen_dest / 'METADATA').write_text('Name: mutagen\nLicense: MIT\n')
     run(['python', '-m', 'pip', 'download', '--no-deps', '--no-binary=:all:', 'Nuitka==4.2.1', '-d', upstream], stdout=subprocess.DEVNULL)
+    run(['python', '-m', 'pip', 'download', '--no-deps', '--no-binary=:all:', 'mutagen==1.47.0', '-d', upstream], stdout=subprocess.DEVNULL)
+    mutagen_sdist = next((p for p in upstream.iterdir() if p.name.startswith('mutagen-1.47.0')), None)
+    if mutagen_sdist is not None:
+        extract_notices(mutagen_sdist, mutagen_dest)
+    if not any(p.is_file() and p.name.lower().startswith(('license', 'copying')) for p in mutagen_dest.iterdir()):
+        raise RuntimeError('Missing mutagen license; refusing to package without it.')
     application = sources / 'MusicSync'
     application.mkdir(exist_ok=True)
     for name in ('src', 'scripts', 'packaging', 'tests', 'resources', 'docs'):
@@ -180,6 +200,7 @@ def collect_licenses(appdir, provenance, pins, version):
                      runtime=dict(**pins['runtime'], note='Official static runtime: libfuse 3.15.0 and squashfuse 0.5.2 are pinned in its recipe. Binary strings identify zstd 1.5.6 and zlib 1.3.2. musl/mimalloc sources follow the Alpine 3.21 recipe; exact APK revisions are not provided in the binary release.'),
                      qt='6.11.2 LGPL-3.0-only plus third-party notices; QtPdf excluded',
                      python='3.12.3 Ubuntu patched build; PSF and bundled notices',
+                     mutagen='1.47.0 MIT, compiled into musicsync.bin for Bulk Rename tag editing',
                      musicsync='MIT', nuitka='4.2.1 Apache-2.0 with runtime exception')
     for target in (notices / 'BUNDLED-COMPONENTS.json', OUT / 'bundled-components.json'):
         target.write_text(json.dumps(inventory, indent=2) + '\n')

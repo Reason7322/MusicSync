@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "musicsync"
-version = "0.1.3"
+version = "0.2.0"
 description = "Safe KDE Connect music mirroring for Linux"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{name = "Reason7322"}]
 requires-python = ">=3.11"
-dependencies = ["PySide6>=6.8,<7"]
+dependencies = ["PySide6>=6.8,<7", "Mutagen>=1.47,<2"]
 
 [project.gui-scripts]
 musicsync = "musicsync.app:main"

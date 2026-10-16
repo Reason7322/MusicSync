@@ -35,6 +35,9 @@ preserves wheel metadata and Nuitka's runtime license/exception.
   replace them. Build-only Extra CMake Modules and KWidgetsAddons sources/notices
   are included for reproducibility, although their libraries/tools are not shipped.
 * Nuitka generated runtime: Apache-2.0 with the supplied runtime exception.
+* mutagen 1.47.0: MIT. Pure-Python ID3/audio tag library, compiled into
+  musicsync.bin and used only by Settings → Bulk Rename for Title/Artist cleanup.
+  Its exact source distribution is included; no host installation is required.
 * rsync: GPLv3-or-later. Its independently invoked executable remains GPL software.
 * rsgain/preset: BSD-2-Clause; CRC++ BSD-3-Clause. The linked distribution FFmpeg
   and codec libraries carry additional GPL/LGPL and permissive obligations;
@@ -48,7 +51,7 @@ preserves wheel metadata and Nuitka's runtime license/exception.
 
 ## Redistribution and replacement
 
-Distribute `MusicSync-0.1.3-x86_64-sources.tar.gz` alongside the matching AppImage
+Distribute `MusicSync-0.2.0-x86_64-sources.tar.gz` alongside the matching AppImage
 with equally accessible download links and no extra charge. It contains the
 application/build scripts, exact Ubuntu source packages including patches/build
 rules, Qt/PySide module sources, qt6ct/KDE sources and the applied patch,
@@ -58,7 +61,7 @@ a link to an upstream project alone is not a replacement for corresponding sourc
 No promise to fulfill a future written source offer is made on the owner's behalf.
 
 LGPL libraries are dynamically linked in the extracted AppDir and can be replaced
-with compatible modified versions. Run `./MusicSync-0.1.3-x86_64.AppImage
+with compatible modified versions. Run `./MusicSync-0.2.0-x86_64.AppImage
 --appimage-extract`, replace the relevant libraries in `squashfs-root/usr/lib/`,
 then run `squashfs-root/AppRun`. Rebuild using the accompanying source to change
 ABI or the statically linked AppImage mount runtime. MusicSync imposes no

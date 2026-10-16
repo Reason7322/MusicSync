@@ -36,7 +36,7 @@ def relocated_tree():
 
 
 class PackagingReleaseTests(unittest.TestCase):
-    def test_v013_version_is_consistent_across_source_and_appimage_outputs(self):
+    def test_version_is_consistent_across_source_and_appimage_outputs(self):
         from musicsync import __version__
         metadata = tomllib.loads((ROOT / 'pyproject.toml').read_text())
         assemble = (ROOT / 'packaging/appimage/assemble.py').read_text()
@@ -44,11 +44,11 @@ class PackagingReleaseTests(unittest.TestCase):
         notices = (ROOT / 'packaging/appimage/THIRD-PARTY-NOTICES.md').read_text()
         readme = (ROOT / 'README.md').read_text()
 
-        self.assertEqual(__version__, '0.1.3')
+        self.assertEqual(__version__, '0.2.0')
         self.assertEqual(metadata['project']['version'], __version__)
         for text in (assemble, licenses, notices, readme):
             self.assertNotIn('0.1.0', text)
-        self.assertIn('MusicSync-0.1.3-x86_64.AppImage', readme)
+        self.assertIn('MusicSync-0.2.0-x86_64.AppImage', readme)
         self.assertNotIn('binary, version, source, source_version', licenses)
         self.assertNotIn('for source, version in unique_sources', licenses)
 

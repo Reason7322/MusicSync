@@ -1,10 +1,12 @@
 """Explicit packaged-runtime checks. Never initiates a real synchronization."""
 from dataclasses import asdict
+import hashlib
 import json
 import os
 from pathlib import Path
 import platform
 import shutil
+import time
 
 from PySide6 import __version__ as pyside_version
 from PySide6.QtCore import QLibraryInfo, QTimer
@@ -63,6 +65,10 @@ def install_check(app, window, mode):
     def ready(status):
         nonlocal triggered
         if triggered:
+            return
+        if mode == '--bulk-rename-test':
+            # The bulk rename flow is phone-independent; it drives its own timers.
+            evidence.setdefault('device_status', status.get('device_status'))
             return
         triggered = True
         evidence['device_status'] = status.get('device_status')
