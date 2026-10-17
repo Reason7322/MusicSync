@@ -150,6 +150,12 @@ class BulkRenameDialog(QDialog):
         self.cancel_button.clicked.connect(self._cancel_operation)
         self.cancel_button.hide()
         bottom.addWidget(self.cancel_button)
+        self.apply_button = QPushButton('Apply Selected…')
+        self.apply_button.setObjectName('apply_selected_button')
+        self.apply_button.setToolTip('Show the confirmation for the changes you ticked in the Apply column. '
+                                     'Only selected rows are applied; nothing happens without your explicit Yes.')
+        self.apply_button.clicked.connect(self._on_apply)
+        bottom.addWidget(self.apply_button)
         close_button = QPushButton('Close')
         close_button.clicked.connect(self.close)
         bottom.addWidget(close_button)
@@ -251,7 +257,7 @@ class BulkRenameDialog(QDialog):
         for row in range(self.preview_table.rowCount()):
             item = self.preview_table.item(row, 0)
             if item is not None and (item.flags() & Qt.ItemFlag.ItemIsUserCheckable) \
-                    and item.checkState(Qt.CheckStateRole.CheckStateRole) == Qt.CheckState.Checked:
+                    and item.checkState() == Qt.CheckState.Checked:
                 approved.append(str(item.data(Qt.ItemDataRole.UserRole)))
         return approved
 
@@ -404,7 +410,7 @@ class BulkRenameDialog(QDialog):
         if text:
             self.status_label.setText(text)
         for button in (self.preview_button, self.select_all_button, self.clear_selection_button,
-                       self.undo_button, self.refresh_sessions_button):
+                       self.apply_button, self.undo_button, self.refresh_sessions_button):
             button.setEnabled(not busy)
         self.progress_bar.setVisible(busy)
         self.cancel_button.setVisible(cancellable and busy)
