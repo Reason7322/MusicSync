@@ -241,7 +241,9 @@ def build_preview(
 
     Performs no writes of any kind.
     """
-    scan: ScanResult = scan_root(root)
+    # Prune the engine's own journal directory so backups and session files are
+    # never presented as rename candidates.
+    scan: ScanResult = scan_root(root, prune_dirnames=(JOURNAL_DIRNAME,))
     override_by_rel = {o.rel_path: o for o in (overrides or ())}
     ost_hints = dict(ost_hints or {})
 

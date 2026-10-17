@@ -69,7 +69,7 @@ class RenameWorker(QThread):
             else:  # pragma: no cover - guarded by callers
                 raise ValueError(f'unknown rename operation {self.kind!r}')
         except (EngineError, OSError, ValueError) as error:
-            payload_error = f'{type(error).__name__}: {clean(error)}'
+            payload_error = f'{type(error).__name__}: {clean(str(error))}'
         except Exception as error:  # never leave the GUI thread stuck busy
             logging.getLogger('musicsync').exception('Bulk rename %s crashed', self.kind)
             payload_error = f'Internal error in {self.kind} operation: {type(error).__name__}. See log.'

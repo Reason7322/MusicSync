@@ -50,11 +50,17 @@ class ScanResult:
         return None
 
 
-def scan_root(root: os.PathLike | str) -> ScanResult:
-    """Scan ``root`` recursively without following symlinks. Read-only."""
+def scan_root(root: os.PathLike | str, prune_dirnames=()) -> ScanResult:
+    """Scan ``root`` recursively without following symlinks. Read-only.
+
+    Directories named in ``prune_dirnames`` are listed but never entered; the
+    engine uses this to keep its own journal directory (backups included) out
+    of previews and rename candidates.
+    """
     root_path = Path(os.path.abspath(os.fspath(root)))
     if not root_path.is_dir():
         raise NotADirectoryError(f"scan root is not a directory: {root}")
+    prune_set = frozenset(prune_dirnames)
 
     files: list[ScannedFile] = []
     symlinks_skipped: list[str] = []
@@ -83,7 +89,8 @@ def scan_root(root: os.PathLike | str) -> ScanResult:
                 continue  # never traverse or rename through links
             if is_dir:
                 directory_count += 1
-                walk(rel, dir_path / entry.name)
+                if entry.name not in prune_set:
+                    walk(rel, dir_path / entry.name)
                 continue
             try:
                 info = entry.stat(follow_symlinks=False)

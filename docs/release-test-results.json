@@ -1,10 +1,10 @@
 {
-  "at": "2026-10-13T17:12:02+02:00",
-  "tests_run": 161,
-  "failures": 0,
-  "errors": 0,
+  "at": "2026-10-17T21:48:59+02:00",
+  "tests_run": 173,
+  "failures": 10,
+  "errors": 7,
   "skipped": 0,
-  "seconds": 17.761,
+  "seconds": 86.164,
   "tests": [
     {
       "test": "test_android_names.AndroidFilenameTests.test_android_invalid_characters_are_replaced_but_unicode_is_preserved",
@@ -15,7 +15,7 @@
     {
       "test": "test_android_names.AndroidFilenameTests.test_colon_translation_is_readable_and_preserves_extension",
       "status": "PASS",
-      "seconds": 0.0001,
+      "seconds": 0.0,
       "detail": ""
     },
     {
@@ -57,37 +57,37 @@
     {
       "test": "test_app.ApplicationIconTests.test_theme_lookup_uses_app_id_and_bundled_svg_fallback",
       "status": "PASS",
-      "seconds": 0.0031,
+      "seconds": 0.003,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_build_configuration_is_standalone_and_metadata_consistent",
       "status": "PASS",
-      "seconds": 0.0011,
+      "seconds": 0.0008,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_dependency_helper_reports_host_setup_and_missing_private_tools",
       "status": "PASS",
-      "seconds": 0.0011,
+      "seconds": 0.0009,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_frozen_worker_uses_kernel_executable_not_python_or_cwd",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0006,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_host_environment_restored_without_changing_parent",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_host_gsettings_environment_is_restored",
       "status": "PASS",
-      "seconds": 0.0005,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -99,19 +99,19 @@
     {
       "test": "test_appimage.AppImageTests.test_missing_host_dependency_stops_startup_before_scan_or_mount",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_native_launcher_preserves_appearance_and_external_xdg",
-      "status": "PASS",
-      "seconds": 0.1146,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0048,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_appimage.py\", line 128, in test_native_launcher_preserves_appearance_and_external_xdg\n    subprocess.run(['gcc', '-o', str(launcher), str(source)], check=True, capture_output=True)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 578, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['gcc', '-o', '/tmp/musicsync-bundle-opuognu1/AppDir \u03a9 $cash ; literal/AppRun', '/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/packaging/appimage/AppRun.c']' returned non-zero exit status 1.\n"
     },
     {
       "test": "test_appimage.AppImageTests.test_preset_relative_resolution_preserves_custom_and_serialized_default",
       "status": "PASS",
-      "seconds": 0.0008,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
@@ -123,20 +123,20 @@
     {
       "test": "test_appimage.AppImageTests.test_private_tools_do_not_fall_back_to_path (name='rsgain')",
       "status": "PASS",
-      "seconds": 0.0004,
+      "seconds": 0.0003,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_private_tools_do_not_fall_back_to_path",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
       "test": "test_appimage.AppImageTests.test_qprocess_uses_private_executable_even_with_host_tool_present",
-      "status": "PASS",
-      "seconds": 0.0113,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0013,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_appimage.py\", line 49, in test_qprocess_uses_private_executable_even_with_host_tool_present\n    self.assertEqual(result.code, 0, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -1 != 0 : Child process set up failed: execve: Exec format error\n"
     },
     {
       "test": "test_appimage.AppImageTests.test_source_and_unrelated_appdir_use_host_defaults",
@@ -157,6 +157,78 @@
       "detail": ""
     },
     {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_apply_with_nothing_approved_is_a_noop",
+      "status": "PASS",
+      "seconds": 0.0565,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_busy_guard_blocks_overlapping_operations",
+      "status": "PASS",
+      "seconds": 0.0299,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_collision_pair_rejected_together_but_single_side_applies",
+      "status": "PASS",
+      "seconds": 0.1786,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_declined_confirmation_applies_nothing",
+      "status": "PASS",
+      "seconds": 0.0529,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_file_changed_after_preview_is_rejected_while_others_apply",
+      "status": "PASS",
+      "seconds": 0.125,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_mid_apply_cancellation_keeps_files_and_aborted_session_is_recoverable",
+      "status": "PASS",
+      "seconds": 0.1483,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_preview_is_read_only_with_deterministic_statuses_and_no_default_approval",
+      "status": "PASS",
+      "seconds": 0.0289,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_programmatic_approval_of_ambiguous_row_is_rejected",
+      "status": "PASS",
+      "seconds": 0.0591,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_select_apply_verify_undo_restores_bytes_exactly",
+      "status": "PASS",
+      "seconds": 0.1606,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_settings_bulk_rename_save_works_without_configured_phone",
+      "status": "PASS",
+      "seconds": 0.0046,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_unresolved_crash_journal_blocks_apply_and_undo_recovers_it",
+      "status": "PASS",
+      "seconds": 0.1726,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.ResponderBoxHandlingTests.test_responder_dismisses_info_box_and_yes_no_confirmations",
+      "status": "PASS",
+      "seconds": 0.1026,
+      "detail": ""
+    },
+    {
       "test": "test_controller.ControllerTests.test_streamed_change_uses_workflow_filename_translation",
       "status": "PASS",
       "seconds": 0.0003,
@@ -165,43 +237,43 @@
     {
       "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='preview')",
       "status": "PASS",
-      "seconds": 0.0011,
+      "seconds": 0.0014,
       "detail": ""
     },
     {
       "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='success')",
       "status": "PASS",
-      "seconds": 0.003,
+      "seconds": 0.0033,
       "detail": ""
     },
     {
       "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='failure')",
       "status": "PASS",
-      "seconds": 0.0042,
+      "seconds": 0.0043,
       "detail": ""
     },
     {
       "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='cancel')",
       "status": "PASS",
-      "seconds": 0.0051,
+      "seconds": 0.0052,
       "detail": ""
     },
     {
       "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules",
       "status": "PASS",
-      "seconds": 0.0051,
+      "seconds": 0.0052,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_desktop_spec_validation_and_gio_launch_preserve_literal_unicode_path",
-      "status": "PASS",
-      "seconds": 0.0305,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 5.0379,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_desktop_integration.py\", line 73, in test_desktop_spec_validation_and_gio_launch_preserve_literal_unicode_path\n    self.assertEqual(json.loads(result.read_text()), [str(self.image)])\n                                ~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib64/python3.14/pathlib/__init__.py\", line 787, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/pathlib/__init__.py\", line 771, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/tmp/musicsync-desktop-a_m2wvhz/launched.json'\n"
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_entry_dispatch_is_explicit_and_does_not_initialize_gui",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.0018,
       "detail": ""
     },
     {
@@ -213,73 +285,73 @@
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_missing_runtime_or_appdir_target_never_installs",
       "status": "PASS",
-      "seconds": 0.0021,
+      "seconds": 0.0015,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-2j2vdx5e/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), uninstall=False)",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), uninstall=False)",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.0017,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-2j2vdx5e/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), uninstall=True)",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), uninstall=True)",
       "status": "PASS",
-      "seconds": 0.0021,
+      "seconds": 0.0023,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-2j2vdx5e/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), uninstall=False)",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), uninstall=False)",
       "status": "PASS",
-      "seconds": 0.0029,
+      "seconds": 0.0032,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-2j2vdx5e/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), uninstall=True)",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), uninstall=True)",
       "status": "PASS",
-      "seconds": 0.0034,
+      "seconds": 0.0039,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-2j2vdx5e/data \u03a9/musicsync/appimage-desktop.json'), uninstall=False)",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/musicsync/appimage-desktop.json'), uninstall=False)",
       "status": "PASS",
-      "seconds": 0.0042,
+      "seconds": 0.005,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-2j2vdx5e/data \u03a9/musicsync/appimage-desktop.json'), uninstall=True)",
-      "status": "PASS",
-      "seconds": 0.0048,
-      "detail": ""
-    },
-    {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/musicsync/appimage-desktop.json'), uninstall=True)",
       "status": "PASS",
       "seconds": 0.0056,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-arcwzz1g/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), content=b'unrelated')",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.0062,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-arcwzz1g/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), content=b'unrelated')",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-n3nk6dz6/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), content=b'unrelated')",
       "status": "PASS",
-      "seconds": 0.0028,
+      "seconds": 0.0015,
       "detail": ""
     },
     {
-      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-arcwzz1g/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), content=b'<svg xmlns=\"')",
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-n3nk6dz6/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), content=b'unrelated')",
       "status": "PASS",
-      "seconds": 0.0037,
+      "seconds": 0.0025,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-n3nk6dz6/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), content=b'<svg xmlns=\"')",
+      "status": "PASS",
+      "seconds": 0.0035,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed",
       "status": "PASS",
-      "seconds": 0.0041,
+      "seconds": 0.0038,
       "detail": ""
     },
     {
@@ -297,13 +369,13 @@
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\nfile')",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\x00file')",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
@@ -345,25 +417,25 @@
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (name='XDG_DATA_HOME', value='relative')",
       "status": "PASS",
-      "seconds": 0.0012,
+      "seconds": 0.0011,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (name='XDG_DATA_HOME', value='/tmp/bad\\npath')",
       "status": "PASS",
-      "seconds": 0.0014,
+      "seconds": 0.0013,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.0015,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_symlink_artifacts_are_never_followed",
       "status": "PASS",
-      "seconds": 0.0028,
+      "seconds": 0.0027,
       "detail": ""
     },
     {
@@ -375,25 +447,25 @@
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_xdg_default_and_empty_value_use_user_data_directory (value='')",
       "status": "PASS",
-      "seconds": 0.0029,
+      "seconds": 0.0027,
       "detail": ""
     },
     {
       "test": "test_desktop_integration.DesktopIntegrationTests.test_xdg_default_and_empty_value_use_user_data_directory",
       "status": "PASS",
-      "seconds": 0.0033,
+      "seconds": 0.0031,
       "detail": ""
     },
     {
       "test": "test_filesystem.FilesystemTests.test_empty_and_missing_source",
       "status": "PASS",
-      "seconds": 0.0001,
+      "seconds": 0.0002,
       "detail": ""
     },
     {
       "test": "test_filesystem.FilesystemTests.test_inventory_snapshot_and_protection",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -411,7 +483,7 @@
     {
       "test": "test_filesystem.FilesystemTests.test_partial_staging_failure_removes_stage_and_closes_files",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0008,
       "detail": ""
     },
     {
@@ -423,7 +495,7 @@
     {
       "test": "test_filesystem.FilesystemTests.test_source_inventory_has_stable_android_mapping_digest",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -435,7 +507,7 @@
     {
       "test": "test_filesystem.FilesystemTests.test_staging_rejects_source_file_or_parent_swapped_to_symlink (swapped='file')",
       "status": "PASS",
-      "seconds": 0.0004,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
@@ -453,31 +525,31 @@
     {
       "test": "test_first_run.FirstRunTests.test_discovered_device_selection_saves_real_selection_and_retains_it",
       "status": "PASS",
-      "seconds": 0.0288,
+      "seconds": 0.0136,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device (listing='')",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device (listing='test-phone Example phone\\nother-phone Other phone\\n')",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.0008,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device",
       "status": "PASS",
-      "seconds": 0.0112,
+      "seconds": 0.0111,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_first_run_widgets_require_selection_then_enable_operations",
       "status": "PASS",
-      "seconds": 0.0576,
+      "seconds": 0.055,
       "detail": ""
     },
     {
@@ -495,7 +567,7 @@
     {
       "test": "test_first_run.FirstRunTests.test_mirror_defaults_off_and_saved_values_are_preserved_without_writing",
       "status": "PASS",
-      "seconds": 0.0112,
+      "seconds": 0.0111,
       "detail": ""
     },
     {
@@ -513,7 +585,7 @@
     {
       "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='')",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.0008,
       "detail": ""
     },
     {
@@ -523,13 +595,13 @@
       "detail": ""
     },
     {
-      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-nvai57i0')",
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-h349ou_1')",
       "status": "PASS",
-      "seconds": 0.0013,
+      "seconds": 0.0014,
       "detail": ""
     },
     {
-      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-nvai57i0/')",
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-h349ou_1/')",
       "status": "PASS",
       "seconds": 0.0016,
       "detail": ""
@@ -537,79 +609,79 @@
     {
       "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='relative')",
       "status": "PASS",
-      "seconds": 0.0018,
+      "seconds": 0.0019,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/../music')",
       "status": "PASS",
-      "seconds": 0.002,
+      "seconds": 0.0022,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/bad\\npath')",
       "status": "PASS",
-      "seconds": 0.0022,
+      "seconds": 0.0025,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source",
       "status": "PASS",
-      "seconds": 0.0125,
+      "seconds": 0.0128,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'source': '/'})",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'remote_dir': '/storage/emulated/0/../Music'})",
       "status": "PASS",
-      "seconds": 0.0012,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'device_id': 'test-phone'})",
       "status": "PASS",
-      "seconds": 0.0013,
+      "seconds": 0.0008,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'device_name': 'Phone'})",
       "status": "PASS",
-      "seconds": 0.0015,
+      "seconds": 0.0009,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'threads': 0})",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.001,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'exclusions': []})",
       "status": "PASS",
-      "seconds": 0.0018,
+      "seconds": 0.0012,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices",
       "status": "PASS",
-      "seconds": 0.0122,
+      "seconds": 0.0115,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command (preview=True)",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
       "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command (preview=False)",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0006,
       "detail": ""
     },
     {
@@ -627,55 +699,55 @@
     {
       "test": "test_guards.GuardTests.test_cancelled_translated_rsync_cleans_stage_before_returning",
       "status": "PASS",
-      "seconds": 0.0019,
+      "seconds": 0.0017,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='changed')",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.0011,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='empty')",
       "status": "PASS",
-      "seconds": 0.0018,
+      "seconds": 0.0019,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='phone_changed')",
       "status": "PASS",
-      "seconds": 0.0027,
+      "seconds": 0.0029,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes",
       "status": "PASS",
-      "seconds": 0.0027,
+      "seconds": 0.0029,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_mapping_change_never_starts_rsync",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.001,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_real_translated_mirror_is_repeatable_and_stable_after_unrelated_add",
       "status": "PASS",
-      "seconds": 0.1412,
+      "seconds": 0.1398,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_rsync_uses_pinned_directories_and_delete_cap",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.0014,
       "detail": ""
     },
     {
       "test": "test_guards.GuardTests.test_translated_source_uses_copy_links_and_pinned_file_descriptors",
       "status": "PASS",
-      "seconds": 0.0013,
+      "seconds": 0.0017,
       "detail": ""
     },
     {
@@ -722,44 +794,44 @@
     },
     {
       "test": "test_process.ProcessTests.test_cancel_and_kill_escalation",
-      "status": "PASS",
-      "seconds": 3.0226,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 15.0,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_process.py\", line 52, in test_cancel_and_kill_escalation\n    self.assertTrue(result.cancelled)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
     },
     {
       "test": "test_process.ProcessTests.test_delete_cap_blocks_unpreviewed_deletion",
       "status": "PASS",
-      "seconds": 0.146,
+      "seconds": 0.1452,
       "detail": ""
     },
     {
       "test": "test_process.ProcessTests.test_failed_to_start",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0006,
       "detail": ""
     },
     {
       "test": "test_process.ProcessTests.test_incremental_channels_and_cr",
-      "status": "PASS",
-      "seconds": 0.0622,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 14.8451,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_process.py\", line 41, in test_incremental_channels_and_cr\n    self.assertEqual(result.code, 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: -1 != 0\n"
     },
     {
       "test": "test_process.ProcessTests.test_real_rsync_in_temporary_directories",
       "status": "PASS",
-      "seconds": 0.1359,
+      "seconds": 0.1355,
       "detail": ""
     },
     {
       "test": "test_process.ProcessTests.test_timeout",
-      "status": "PASS",
-      "seconds": 0.0971,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 14.8733,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_process.py\", line 57, in test_timeout\n    self.assertTrue(result.timed_out)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
     },
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_atomic_settings_failure_preserves_previous_content",
       "status": "PASS",
-      "seconds": 0.0008,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
@@ -933,7 +1005,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='//storage/emulated/0/Music')",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
@@ -951,7 +1023,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=0)",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0006,
       "detail": ""
     },
     {
@@ -963,13 +1035,13 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=True)",
       "status": "PASS",
-      "seconds": 0.0008,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value='4')",
       "status": "PASS",
-      "seconds": 0.0008,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
@@ -981,7 +1053,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='mirror', value=1)",
       "status": "PASS",
-      "seconds": 0.0009,
+      "seconds": 0.0008,
       "detail": ""
     },
     {
@@ -993,7 +1065,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='replaygain', value=1)",
       "status": "PASS",
-      "seconds": 0.001,
+      "seconds": 0.0009,
       "detail": ""
     },
     {
@@ -1011,7 +1083,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=['/.thumbnails/', '/a/b/'])",
       "status": "PASS",
-      "seconds": 0.0011,
+      "seconds": 0.001,
       "detail": ""
     },
     {
@@ -1071,7 +1143,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='rsgain')",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
@@ -1113,7 +1185,7 @@
     {
       "test": "test_release_core.ParsingSettingsReleaseTests.test_roundtrip_all_settings_and_config_file_permissions",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -1143,19 +1215,19 @@
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - fuse.sshfs other@host:/ rw\\n')",
       "status": "PASS",
-      "seconds": 0.0006,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id",
       "status": "PASS",
-      "seconds": 0.0007,
+      "seconds": 0.0005,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_fifo_and_unix_socket_rejected_without_blocking",
       "status": "PASS",
-      "seconds": 0.0004,
+      "seconds": 0.0003,
       "detail": ""
     },
     {
@@ -1173,49 +1245,49 @@
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": []}')",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0001,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}, {\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}]}')",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0001,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/other\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}]}')",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0001,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": \"bad\"}]}')",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0001,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0001,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected (ids=[124])",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected (ids=[123, 124])",
       "status": "PASS",
-      "seconds": 0.0005,
+      "seconds": 0.0006,
       "detail": ""
     },
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected",
       "status": "PASS",
-      "seconds": 0.0005,
+      "seconds": 0.0007,
       "detail": ""
     },
     {
@@ -1227,7 +1299,7 @@
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_remote_readonly_and_delete_denied_probe_errors",
       "status": "PASS",
-      "seconds": 0.0005,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -1239,7 +1311,7 @@
     {
       "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='file')",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0002,
       "detail": ""
     },
     {
@@ -1299,31 +1371,31 @@
     {
       "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Verify phone write and delete capability')",
       "status": "PASS",
-      "seconds": 0.001,
+      "seconds": 0.0009,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='rsync preview')",
       "status": "PASS",
-      "seconds": 0.0013,
+      "seconds": 0.0011,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Final phone write/delete check')",
       "status": "PASS",
-      "seconds": 0.0016,
+      "seconds": 0.0015,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='rsync mirror')",
       "status": "PASS",
-      "seconds": 0.002,
+      "seconds": 0.0018,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate",
       "status": "PASS",
-      "seconds": 0.002,
+      "seconds": 0.0018,
       "detail": ""
     },
     {
@@ -1371,7 +1443,7 @@
     {
       "test": "test_release_core.WorkflowReleaseTests.test_missing_mountpoint_directory_can_be_created_only_by_kdeconnect",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0003,
       "detail": ""
     },
     {
@@ -1389,7 +1461,7 @@
     {
       "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned (cancelled=True)",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -1413,151 +1485,151 @@
     {
       "test": "test_release_core.WorkflowReleaseTests.test_replaygain_disabled_does_not_require_or_invoke_it",
       "status": "PASS",
-      "seconds": 0.0004,
+      "seconds": 0.0006,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_stale_detach_failure_no_remount_or_sync",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0003,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_stale_detach_that_did_not_detach_stops",
       "status": "PASS",
-      "seconds": 0.0002,
+      "seconds": 0.0003,
       "detail": ""
     },
     {
       "test": "test_release_core.WorkflowReleaseTests.test_stale_storage_timeout_uses_one_recovery",
       "status": "PASS",
-      "seconds": 0.0005,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_close_during_cleanup_waits_for_unmount",
-      "status": "PASS",
-      "seconds": 0.3129,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0631,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 199, in test_close_during_cleanup_waits_for_unmount\n    self.assertTrue(window.controller.active)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_close_during_mount_cleans_partial_mount",
       "status": "PASS",
-      "seconds": 0.0932,
+      "seconds": 0.0834,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_close_during_replaygain_cancels_process_and_never_mounts",
-      "status": "PASS",
-      "seconds": 0.0956,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0514,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 171, in test_close_during_replaygain_cancels_process_and_never_mounts\n    self.assertEqual(window.controller.state, State.CANCELLED)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: <State.FAILED: 'Failed'> != <State.CANCELLED: 'Cancelled'>\n"
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_close_during_rsync_cancels_and_cleans_owned_mount",
-      "status": "PASS",
-      "seconds": 0.1049,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0731,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 182, in test_close_during_rsync_cancels_and_cleans_owned_mount\n    self.assertEqual(window.controller.state, State.CANCELLED)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: <State.FAILED: 'Failed'> != <State.CANCELLED: 'Cancelled'>\n"
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_close_while_approval_pending_stops_without_sync",
       "status": "PASS",
-      "seconds": 0.1053,
+      "seconds": 0.1163,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_large_delete_dialog_defaults_to_cancel_and_lists_files",
       "status": "PASS",
-      "seconds": 0.1053,
+      "seconds": 0.1072,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_large_preview_table_10000_rows_and_return_to_event_loop",
       "status": "PASS",
-      "seconds": 0.2155,
+      "seconds": 0.2081,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_liquid_glass_ui_keeps_qt_theme_and_shows_results_only_after_preview",
       "status": "PASS",
-      "seconds": 0.071,
+      "seconds": 0.0706,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_preview_and_live_status_show_destination_filename_translation",
       "status": "PASS",
-      "seconds": 0.0707,
+      "seconds": 0.0703,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_progress_and_log_widgets_update_while_subprocess_runs",
-      "status": "PASS",
-      "seconds": 0.145,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0619,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 239, in test_progress_and_log_widgets_update_while_subprocess_runs\n    self.assertEqual(window.progress_bar.value(), 42)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -1 != 42\n"
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_repeated_clicks_and_controller_starts_cannot_overlap",
-      "status": "PASS",
-      "seconds": 0.0943,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 0.0625,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 160, in test_repeated_clicks_and_controller_starts_cannot_overlap\n    self.assertEqual(window.controller.state, State.CANCELLED)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: <State.FAILED: 'Failed'> != <State.CANCELLED: 'Cancelled'>\n"
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_settings_dialog_saves_all_controls_to_isolated_xdg",
       "status": "PASS",
-      "seconds": 0.0713,
+      "seconds": 0.0705,
       "detail": ""
     },
     {
       "test": "test_release_gui.GUIReleaseTests.test_startup_is_idle_and_does_not_begin_sync",
       "status": "PASS",
-      "seconds": 0.0688,
+      "seconds": 0.0694,
       "detail": ""
     },
     {
       "test": "test_release_history_status.HistoryReleaseTests.test_history_write_failure_is_visible_and_does_not_erase_prior_success",
       "status": "PASS",
-      "seconds": 0.0026,
+      "seconds": 0.0028,
       "detail": ""
     },
     {
       "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='preview')",
       "status": "PASS",
-      "seconds": 0.0012,
+      "seconds": 0.0013,
       "detail": ""
     },
     {
       "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='failure')",
       "status": "PASS",
-      "seconds": 0.0029,
+      "seconds": 0.0032,
       "detail": ""
     },
     {
       "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='cancel')",
       "status": "PASS",
-      "seconds": 0.0037,
+      "seconds": 0.0039,
       "detail": ""
     },
     {
       "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes",
       "status": "PASS",
-      "seconds": 0.0037,
+      "seconds": 0.0039,
       "detail": ""
     },
     {
       "test": "test_release_history_status.HistoryReleaseTests.test_success_fields_counts_timezone_and_cleanup_warning",
       "status": "PASS",
-      "seconds": 0.0026,
+      "seconds": 0.0023,
       "detail": ""
     },
     {
       "test": "test_release_history_status.TimeoutStatusReleaseTests.test_absent_mount_directory_is_unmounted_without_creating_it",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0002,
       "detail": ""
     },
     {
       "test": "test_release_history_status.TimeoutStatusReleaseTests.test_cancelled_startup_stops_without_followup_commands",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0009,
       "detail": ""
     },
     {
@@ -1569,19 +1641,19 @@
     {
       "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_path_timeout_or_existing_path_never_claims_absence (reply=Result(code=0, stdout='{\"exists\": false}', stderr='', cancelled=False, timed_out=True))",
       "status": "PASS",
-      "seconds": 0.0011,
+      "seconds": 0.0002,
       "detail": ""
     },
     {
       "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_path_timeout_or_existing_path_never_claims_absence (reply=Result(code=0, stdout='{\"exists\": true}', stderr='', cancelled=False, timed_out=False))",
       "status": "PASS",
-      "seconds": 0.0013,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
       "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_path_timeout_or_existing_path_never_claims_absence",
       "status": "PASS",
-      "seconds": 0.0013,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -1604,110 +1676,110 @@
     },
     {
       "test": "test_release_io.ProcessLifecycleReleaseTests.test_cancel_does_not_leave_a_child_process_running",
-      "status": "PASS",
-      "seconds": 3.4583,
-      "detail": ""
+      "status": "FAIL",
+      "seconds": 14.6888,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_io.py\", line 129, in test_cancel_does_not_leave_a_child_process_running\n    pid = int(result.stdout.strip())\nValueError: invalid literal for int() with base 10: ''\n"
     },
     {
       "test": "test_release_io.ProcessLifecycleReleaseTests.test_cancel_from_started_signal_does_not_launch_command",
-      "status": "PASS",
-      "seconds": 0.0006,
-      "detail": ""
-    },
-    {
-      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_actual_rsync_cancel_before_delete_after_keeps_extra_file",
-      "status": "PASS",
-      "seconds": 3.1049,
-      "detail": ""
-    },
-    {
-      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_failed_sender_io_does_not_delete_phone_only_file",
-      "status": "PASS",
-      "seconds": 0.1458,
-      "detail": ""
-    },
-    {
-      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_large_library_worker_and_parser_10000_files",
-      "status": "PASS",
-      "seconds": 0.5447,
-      "detail": ""
-    },
-    {
-      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_real_preview_is_byte_and_mtime_unchanged_with_unusual_names",
-      "status": "PASS",
-      "seconds": 0.0927,
-      "detail": ""
-    },
-    {
-      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_root_thumbnails_protected_but_nested_thumbnails_follow_mirror",
-      "status": "PASS",
-      "seconds": 0.0455,
-      "detail": ""
-    },
-    {
-      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_update_only_keeps_extra_files_and_updates_changed_files",
-      "status": "PASS",
-      "seconds": 0.0453,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_application_identity_is_consistent",
-      "status": "PASS",
-      "seconds": 0.0018,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_desktop_template_and_pyproject_metadata",
-      "status": "PASS",
-      "seconds": 0.0027,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_external_command_ast_has_no_shell_interpolation_or_gui_waits",
-      "status": "PASS",
-      "seconds": 0.0291,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_first_run_without_saved_config",
-      "status": "PASS",
-      "seconds": 2.2008,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_setup_and_launch_from_unrelated_cwd",
-      "status": "PASS",
-      "seconds": 1.9516,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_installer_is_relocatable_and_does_not_modify_real_home",
-      "status": "PASS",
-      "seconds": 0.1673,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_installer_refuses_unrelated_existing_files_before_any_write",
-      "status": "PASS",
-      "seconds": 0.0031,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_real_qt_honors_isolated_xdg_music_directory",
-      "status": "PASS",
-      "seconds": 0.0945,
-      "detail": ""
-    },
-    {
-      "test": "test_release_packaging.PackagingReleaseTests.test_v013_version_is_consistent_across_source_and_appimage_outputs",
       "status": "PASS",
       "seconds": 0.0005,
       "detail": ""
     },
     {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_actual_rsync_cancel_before_delete_after_keeps_extra_file",
+      "status": "PASS",
+      "seconds": 3.0926,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_failed_sender_io_does_not_delete_phone_only_file",
+      "status": "PASS",
+      "seconds": 0.1459,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_large_library_worker_and_parser_10000_files",
+      "status": "FAIL",
+      "seconds": 14.8047,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_io.py\", line 112, in test_large_library_worker_and_parser_10000_files\n    self.assertEqual(result.code, 0, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -1 != 0 : No program defined\n"
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_real_preview_is_byte_and_mtime_unchanged_with_unusual_names",
+      "status": "PASS",
+      "seconds": 0.0925,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_root_thumbnails_protected_but_nested_thumbnails_follow_mirror",
+      "status": "PASS",
+      "seconds": 0.0465,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_update_only_keeps_extra_files_and_updates_changed_files",
+      "status": "PASS",
+      "seconds": 0.0456,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_application_identity_is_consistent",
+      "status": "PASS",
+      "seconds": 0.0023,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_desktop_template_and_pyproject_metadata",
+      "status": "PASS",
+      "seconds": 0.0024,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_external_command_ast_has_no_shell_interpolation_or_gui_waits",
+      "status": "PASS",
+      "seconds": 0.0577,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_first_run_without_saved_config",
+      "status": "FAIL",
+      "seconds": 0.0147,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 155, in test_fresh_source_copy_first_run_without_saved_config\n    self.fresh_source_launch(configured=False)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 160, in fresh_source_launch\n    setup = subprocess.run([sys.executable, '-m', 'venv', '--system-site-packages', str(root / '.venv')], capture_output=True, text=True, timeout=60)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_setup_and_launch_from_unrelated_cwd",
+      "status": "FAIL",
+      "seconds": 0.0112,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 152, in test_fresh_source_copy_setup_and_launch_from_unrelated_cwd\n    self.fresh_source_launch(configured=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 160, in fresh_source_launch\n    setup = subprocess.run([sys.executable, '-m', 'venv', '--system-site-packages', str(root / '.venv')], capture_output=True, text=True, timeout=60)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_installer_is_relocatable_and_does_not_modify_real_home",
+      "status": "FAIL",
+      "seconds": 0.0119,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 58, in test_installer_is_relocatable_and_does_not_modify_real_home\n    result = subprocess.run([sys.executable, str(root / 'scripts/install_desktop.py')], env=env, capture_output=True, text=True, timeout=20)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_installer_refuses_unrelated_existing_files_before_any_write",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_real_qt_honors_isolated_xdg_music_directory",
+      "status": "FAIL",
+      "seconds": 0.001,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 128, in test_real_qt_honors_isolated_xdg_music_directory\n    result = subprocess.run([sys.executable, '-c', code], env=env, capture_output=True, text=True, timeout=10)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_version_is_consistent_across_source_and_appimage_outputs",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
       "test": "test_replaygain_integration.ReplayGainIntegrationTests.test_new_track_tagged_then_skipped_byte_for_byte",
       "status": "PASS",
-      "seconds": 0.2837,
+      "seconds": 0.3092,
       "detail": ""
     },
     {
@@ -1731,7 +1803,7 @@
     {
       "test": "test_workflow.WorkflowTests.test_changed_cleanup_mount_left_untouched",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0004,
       "detail": ""
     },
     {
@@ -1785,13 +1857,13 @@
     {
       "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Verify phone write and delete capability')",
       "status": "PASS",
-      "seconds": 0.0012,
+      "seconds": 0.0011,
       "detail": ""
     },
     {
       "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='rsync preview')",
       "status": "PASS",
-      "seconds": 0.0014,
+      "seconds": 0.0013,
       "detail": ""
     },
     {
@@ -1803,7 +1875,7 @@
     {
       "test": "test_workflow.WorkflowTests.test_failures_block_sync",
       "status": "PASS",
-      "seconds": 0.0017,
+      "seconds": 0.0016,
       "detail": ""
     },
     {
@@ -1821,13 +1893,13 @@
     {
       "test": "test_workflow.WorkflowTests.test_preview_no_tagging_probe_or_real_rsync",
       "status": "PASS",
-      "seconds": 0.0003,
+      "seconds": 0.0002,
       "detail": ""
     },
     {
       "test": "test_workflow.WorkflowTests.test_real_order",
       "status": "PASS",
-      "seconds": 0.0004,
+      "seconds": 0.0003,
       "detail": ""
     },
     {

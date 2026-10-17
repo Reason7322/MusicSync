@@ -395,6 +395,7 @@ class BulkRenameDialogTests(unittest.TestCase):
     def test_select_apply_verify_undo_restores_bytes_exactly(self):
         dialog = self.open_dialog()
         self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+        orig_f1 = (self.library / F1).read_bytes()  # audio-tail reference for f1
 
         dialog.select_all_button.click()
         self.assertEqual(set(dialog._checked_rels()), set(APPROVABLE_RELS))
@@ -420,11 +421,13 @@ class BulkRenameDialogTests(unittest.TestCase):
         self.assertEqual(len(report.canceled), 0, f'canceled: {report.canceled}')
         self.assertTrue(report.session_id)
 
-        # On-disk state after apply.
+        # On-disk state after apply. f1 also received its TIT2 tag edit, so its
+        # ID3 area legitimately differs from the original; audio frames intact.
         new_f1 = self.library / EXPECTED_PROPOSALS[F1]
         self.assertTrue(new_f1.is_file(), 'f1 not renamed on disk')
-        self.assertEqual(hashlib.sha256(new_f1.read_bytes()).hexdigest(),
-                         self.pre_snapshot[F1][0], 'rename changed file bytes')
+        self.assertTrue(
+            new_f1.read_bytes().endswith(orig_f1[-8 * len(_mpeg_frame()):]),
+            'f1 audio frames changed by rename/tag edit')
         snapshot = read_tag_snapshot(new_f1)
         self.assertEqual(snapshot.titles, ('Dream On',), 'TIT2 not cleaned on disk')
         self.assertEqual(snapshot.artists, ('Junk Artist',))
@@ -554,6 +557,7 @@ class BulkRenameDialogTests(unittest.TestCase):
     def test_file_changed_after_preview_is_rejected_while_others_apply(self):
         dialog = self.open_dialog()
         self.assertTrue(wait_idle(dialog))
+        orig_f1 = (self.library / F1).read_bytes()  # audio-tail reference for f1
 
         # Mutate f8 after the scan but before apply (size + mtime both change).
         with open(self.library / F8, 'ab') as handle:
@@ -576,14 +580,22 @@ class BulkRenameDialogTests(unittest.TestCase):
         self.assertNotIn(F8, applied, f'f8 must not apply after preview change: {report.applied}')
         self.assertTrue(report.session_id)
 
-        # f8 is byte-identical to its mutated form; the rest of the tree matches.
+        # f8 stays in its mutated form; the rename-only file keeps exact bytes,
+        # and f1's tag edit touches only its ID3 area.
         post = snapshot_tree(self.library)
         self.assertEqual(post[F8], mid[F8], 'f8 bytes changed despite rejection')
         for rel in (F1, F2):
-            new_name = EXPECTED_PROPOSALS[rel]
-            self.assertTrue((self.library / new_name).is_file())
-            self.assertEqual(hashlib.sha256(
-                (self.library / new_name).read_bytes()).hexdigest(), mid[rel][0])
+            self.assertTrue((self.library / EXPECTED_PROPOSALS[rel]).is_file())
+        f2_new = (self.library / EXPECTED_PROPOSALS[F2]).read_bytes()
+        self.assertEqual(hashlib.sha256(f2_new).hexdigest(), mid[F2][0],
+                         'rename-only file changed bytes')
+        snap_f1 = read_tag_snapshot(self.library / EXPECTED_PROPOSALS[F1])
+        self.assertEqual(snap_f1.titles, ('Dream On',), 'TIT2 not cleaned on disk')
+        self.assertEqual(snap_f1.artists, ('Junk Artist',))
+        self.assertTrue(
+            (self.library / EXPECTED_PROPOSALS[F1]).read_bytes().endswith(
+                orig_f1[-8 * len(_mpeg_frame()):]),
+            'f1 audio frames changed by rename/tag edit')
 
         # Undo brings f1/f2 back; f8 stays in its mutated (pre-apply) state.
         sessions = list_sessions(str(self.library))
@@ -623,8 +635,9 @@ class BulkRenameDialogTests(unittest.TestCase):
             assert_same_tree(self, pre, snapshot_tree(root), label='after rejected collision apply')
 
             # One side only -> the target slot is free; that file renames.
-            row_b = find_row(dialog, TWIN_B)
-            dialog.preview_table.item(row_b, 0).setCheckState(Qt.CheckState.Unchecked)
+            # The re-scan after an operation resets checkbox state, so select again.
+            row_a = find_row(dialog, TWIN_A)
+            dialog.preview_table.item(row_a, 0).setCheckState(Qt.CheckState.Checked)
             self.assertEqual(set(dialog._checked_rels()), {TWIN_A})
             dialog.apply_button.click()
             self.assertTrue(wait_operation(dialog, 'report'), 'second apply did not finish')
