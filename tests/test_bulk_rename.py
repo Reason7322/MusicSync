@@ -6,12 +6,14 @@ no rsync, no network. A message-box auto-responder is installed only here so
 the confirmation workflow (which requires an explicit Yes) can be exercised
 deterministically without a human.
 """
+import faulthandler
 import hashlib
 import json
 import os
 from pathlib import Path
 import shutil
 import tempfile
+import threading
 import time
 import unittest
 from unittest import mock
@@ -748,6 +750,88 @@ class BulkRenameDialogTests(unittest.TestCase):
             data = json.loads(saved.read_text())
             self.assertEqual(data['source'], str(self.library))
             self.assertEqual(data['device_id'], '')
+
+
+class ResponderBoxHandlingTests(unittest.TestCase):
+    """Focused BoxAutoResponder coverage for production box shapes (offscreen).
+
+    The dialog is never .show()ed here - exactly like the rest of this suite -
+    so every box is parented to a hidden top-level window, which is the shape
+    BoxAutoResponder must reliably dismiss. Each blocking interaction runs under
+    a bounded watchdog: if the responder fails to close a box the process exits
+    non-zero with the stuck stack printed instead of hanging indefinitely.
+    """
+
+    def setUp(self):
+        self._tempdir = tempfile.TemporaryDirectory(prefix='musicsync-responder-')
+        library = Path(self._tempdir.name) / 'library'
+        library.mkdir()
+        build_library(library)
+        self.dialog = BulkRenameDialog(str(library), None)
+        self.assertTrue(wait_idle(self.dialog), 'initial scan did not finish')
+        self.responder = BoxAutoResponder(interval_ms=25)
+        self.responder.start()
+        self._watchdog = threading.Timer(20.0, self._hang_failure)
+        self._watchdog.daemon = True
+
+    def tearDown(self):
+        if getattr(self, '_watchdog', None) is not None:
+            self._watchdog.cancel()
+        self.responder.stop()
+        try:
+            if self.dialog is not None:
+                self.dialog.close()
+        except Exception:  # noqa: BLE001 - teardown must never mask the verdict
+            pass
+        self._tempdir.cleanup()
+
+    def _hang_failure(self):
+        faulthandler.dump_traceback()
+        print(f'RESPONDER WATCHDOG TIMEOUT - BoxAutoResponder did not close a box; '
+              f'recorded so far: {self.responder.boxes}', flush=True)
+        os._exit(2)
+
+    def _confirmation_box(self):
+        # Exactly the shape BulkRenameDialog._on_apply builds (default button No).
+        box = QMessageBox(self.dialog)
+        box.setIcon(QMessageBox.Icon.Question)
+        box.setWindowTitle('Apply bulk rename')
+        box.setTextFormat(Qt.TextFormat.PlainText)
+        box.setText('Apply 1 selected change(s) to your PC music library?')
+        box.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        box.setDefaultButton(QMessageBox.StandardButton.No)
+        return box
+
+    def test_responder_dismisses_info_box_and_yes_no_confirmations(self):
+        self._watchdog.start()
+
+        # 1. Informational message box (static convenience shape, the no-approved path).
+        QMessageBox.information(
+            self.dialog, 'Nothing approved',
+            'No changes are currently selected.\n'
+            'Tick the "Apply" column for each change you accept; nothing is applied until you confirm.')
+        entry = self.responder.box_with('Nothing approved')
+        self.assertIsNotNone(entry, f'missing info box record: {self.responder.boxes}')
+        self.assertEqual(entry['chosen'], 'Ok', f'info box not dismissed with Ok: {entry}')
+
+        # 2. Yes/No confirmation whose default is No: the responder must pick Yes explicitly.
+        code = self._confirmation_box().exec()
+        self.assertEqual(code, QMessageBox.StandardButton.Yes)
+        entries = [b for b in self.responder.boxes if b['title'] == 'Apply bulk rename']
+        self.assertEqual(len(entries), 1, f'confirm box not recorded: {self.responder.boxes}')
+        self.assertEqual(entries[0]['chosen'], 'Yes')
+
+        # 3. A deliberately declined confirmation picks No; a repeated title must be
+        #    treated as a NEW box, never deduped against the previous one.
+        self.responder.reject_titles.add('Apply bulk rename')
+        code = self._confirmation_box().exec()
+        self.assertEqual(code, QMessageBox.StandardButton.No)
+        entries = [b for b in self.responder.boxes if b['title'] == 'Apply bulk rename']
+        self.assertEqual(len(entries), 2, f'expected two recorded confirmations: {self.responder.boxes}')
+        self.assertEqual([e['chosen'] for e in entries], ['Yes', 'No'])
+
+        # Nothing left busy on the dialog side.
+        self.assertFalse(self.dialog.busy)
 
 
 if __name__ == '__main__':
