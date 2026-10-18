@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import urllib.request
 import xml.etree.ElementTree as ET
 
@@ -33,8 +34,25 @@ def download(url, destination, digest=None):
     if not destination.exists():
         print('Download', url, flush=True)
         temporary = destination.with_suffix(destination.suffix + '.part')
-        with urllib.request.urlopen(url, timeout=180) as source, temporary.open('wb') as target:
-            shutil.copyfileobj(source, target)
+        last_error = None
+        for attempt in range(1, 6):
+            try:
+                with urllib.request.urlopen(url, timeout=180) as source, temporary.open('wb') as target:
+                    shutil.copyfileobj(source, target)
+                break
+            except OSError as error:
+                # Transient mirror/routing failures (e.g. kde.org 302-rotating to an
+                # unreachable mirror: ENETUNREACH/ECONNRESET mid-stream) are retried;
+                # each attempt re-requests the origin URL and may land on another
+                # mirror. The .part file is truncated fresh on every attempt.
+                last_error = error
+                if attempt < 5:
+                    wait_s = min(2 ** attempt, 30)
+                    print(f'Network failure ({error}); retry {attempt}/4 in {wait_s}s', flush=True)
+                    time.sleep(wait_s)
+        else:
+            temporary.unlink(missing_ok=True)
+            raise RuntimeError('Download failed after retries: ' + url) from last_error
         temporary.replace(destination)
     if digest and sha(destination) != digest:
         raise RuntimeError(f'Checksum mismatch: {destination.name}. Refusing updated or corrupt build input.')

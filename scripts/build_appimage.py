@@ -19,7 +19,13 @@ def main():
     if not args.skip_container_build:
         subprocess.run(['podman', 'build', '-t', image, '-f', str(ROOT / 'packaging/appimage/Containerfile'),
                         str(ROOT / 'packaging/appimage')], check=True)
-    subprocess.run(['podman', 'run', '--rm', '--security-opt=label=disable',
+    # --network=host: on this rootless host podman's default netavark path fails
+    # ("could not find pasta": slirp4netns is absent and the pasta lookup fails
+    # inside podman despite /usr/bin/pasta being on PATH). The build container
+    # needs outbound network (apt source packages, pinned tool/runtime downloads,
+    # license collection) but exposes no ports; host netns gives DNS+egress with
+    # no helper binary and no system-wide configuration change.
+    subprocess.run(['podman', 'run', '--rm', '--network=host', '--security-opt=label=disable',
                     '-v', f'{ROOT}:/source:ro', '-v', f'{work}:/work:rw',
                     '-v', f'{ROOT / "dist"}:/out:rw', image,
                     'python', '/source/packaging/appimage/build.py', args.stage], check=True)
