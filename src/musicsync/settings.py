@@ -11,6 +11,24 @@ DELETE_FRACTION = 0.20
 DELETE_ABSOLUTE = 50
 PHONE_STORAGE = "/storage/emulated/0"
 
+# Root-level directories MusicSync itself creates inside the user's library.
+# Their contents are internal bulk-rename recovery data (backup audio files,
+# session journals): never music content. They must be excluded from every
+# synchronization decision - inventory, destination mapping, preview, transfer
+# and mirror deletion - and their bytes/tags must never be altered. Protection
+# is mandatory at the inventory/transfer level: settings.json files saved by
+# earlier versions predate it and must remain loadable and safe.
+PROTECTED_ROOTS = ("/.musicsyncrename/",)
+
+
+def sync_exclusions(exclusions):
+    """Root-level exclusion patterns for every synchronization decision.
+
+    Mandatory protected roots come first; user-configured root exclusions are
+    appended, duplicates removed. Old settings JSONs lacking a protected-root
+    entry therefore stay valid while the protection itself cannot be lost."""
+    return [*PROTECTED_ROOTS] + [e for e in exclusions if e not in PROTECTED_ROOTS]
+
 
 def default_source() -> str:
     """Use Qt's XDG-aware suggestion without creating or scanning directories.

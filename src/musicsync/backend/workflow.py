@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass, replace
 import json
 
 from musicsync.backend import kdeconnect, replaygain, rsync
+from musicsync.backend.filesystem import replaygain_stage
 from musicsync.backend.mounts import mount_query, parse_findmnt, validate_mountpoint
 from musicsync.models import Command, Outcome, State, Summary
 from musicsync.settings import DELETE_ABSOLUTE, suspicious_deletions
@@ -180,7 +181,11 @@ class Workflow:
         yield from self._device()
         if tagging:
             yield Event(State.REPLAYGAIN, "Checking independent per-track ReplayGain tags…")
-            result = yield from self._call(replaygain.command(self.settings), "ReplayGain processing failed. The phone will not be synchronized.")
+            # Scan a symlink stage of the library's top-level entries: rsgain takes one
+            # directory and cannot exclude subdirectories, so pointing it at the raw root
+            # would tag recovery backups inside .musicsyncrename/, altering their bytes.
+            with replaygain_stage(self.settings.source, inventory) as stage:
+                result = yield from self._call(replaygain.command(self.settings, scan_root=stage), "ReplayGain processing failed. The phone will not be synchronized.")
             self.replaygain_processed = replaygain.processed_tracks(result.stdout + result.stderr)
             yield from self._source()
         yield from self._device()

@@ -1,5 +1,6 @@
 import re
 from musicsync.models import Change
+from musicsync.settings import sync_exclusions
 
 PREFIX = "MUSICSYNC|"
 ESCAPE = re.compile(r"\\#([0-7]{3})")
@@ -55,7 +56,9 @@ def arguments(settings, source, destination, dry_run, max_delete=None, copy_link
         args.append("--delete-after")
         if max_delete is not None:
             args.append(f"--max-delete={max_delete}")
-    args.extend(f"--exclude={e}" for e in settings.exclusions)
+    # Protected roots are mandatory exclusions: never copied, and (without the
+    # --delete-excluded flag) never removed by mirror-mode deletion either.
+    args.extend(f"--exclude={e}" for e in sync_exclusions(settings.exclusions))
     if dry_run:
         args.append("--dry-run")
     return args + ["--", source.rstrip("/") + "/", destination.rstrip("/") + "/"]

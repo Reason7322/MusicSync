@@ -12,7 +12,7 @@ from musicsync.backend.status import StatusService
 from musicsync.backend.sync_controller import SyncController
 from musicsync.logging import clean
 from musicsync.models import State
-from musicsync.settings import state_dir
+from musicsync.settings import state_dir, sync_exclusions
 from musicsync.settings_dialog import SettingsDialog
 
 
@@ -238,7 +238,7 @@ class MainWindow(QMainWindow):
         self.remote_label.setText(self.settings.remote_dir)
         self.gain_label.setText(f'ReplayGain: {"Enabled · independent tracks · skip existing tags · " + str(self.settings.threads) + " workers" if self.settings.replaygain else "Disabled"}')
         self.sync_group.setTitle('Synchronization · ' + ('Mirror PC → Phone' if self.settings.mirror else 'Update only · PC → Phone'))
-        self.ignored_label.setText('Ignored and protected: ' + ', '.join(self.settings.exclusions))
+        self.ignored_label.setText('Ignored and protected: ' + ', '.join(sync_exclusions(self.settings.exclusions)))
 
     def _last(self):
         try:

@@ -14,6 +14,7 @@ from contextlib import contextmanager
 
 from musicsync.backend.android_names import destination_paths
 from musicsync.backend.mounts import proc_mounts
+from musicsync.settings import sync_exclusions
 
 TRACK_EXTENSIONS = {".mp3", ".flac", ".ogg", ".opus", ".m4a", ".aac", ".wav", ".aiff", ".aif", ".wv", ".ape", ".mp2", ".wma", ".mka"}
 DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
@@ -61,7 +62,9 @@ def remote_directory(target, remote, expected_id):
 
 def inventory(root, exclusions=(), require_files=False, mount_id=None):
     files, directories, tracks, size = {}, [], 0, 0
-    excluded = {e.strip("/") for e in exclusions}
+    # Protected roots are mandatory even when the caller's list (possibly loaded
+    # from an older settings.json) predates them.
+    excluded = {e.strip("/") for e in sync_exclusions(exclusions)}
     # fwalk accepts a pinned fd through dir_fd and does not follow directory symlinks.
     base_fd = root if isinstance(root, int) else os.open(root, DIR_FLAGS)
     try:
@@ -106,6 +109,26 @@ def source_inventory(root, exclusions=(), require_files=False):
         json.dumps(mapping, sort_keys=True, ensure_ascii=True).encode()
     ).hexdigest()
     return result
+
+
+@contextmanager
+def replaygain_stage(source, inventory):
+    """Temporary symlink view of the library's top-level entries for ReplayGain.
+
+    rsgain accepts exactly one directory and has no exclusion option; pointing it
+    at the raw root would let it tag recovery backups inside .musicsyncrename/,
+    altering their bytes. This stage links every ordinary top-level entry (loose
+    files AND album directories) from a fresh source inventory, so normal content
+    is scanned exactly as before while internal recovery data stays invisible.
+    Symlinks only: the library itself is never copied or moved.
+    """
+    names = {p for p in inventory["files"] if "/" not in p} | {d for d in inventory["directories"] if "/" not in d}
+    with tempfile.TemporaryDirectory(prefix="musicsync-rgain-stage-") as temporary:
+        stage = Path(temporary)
+        for name in sorted(names):
+            os.symlink(str(Path(source) / name), str(stage / name))
+        # TemporaryDirectory removes the staging tree on exit: symlinks only, never targets.
+        yield stage
 
 
 def _open_pinned_file(root_fd, relative, expected):
