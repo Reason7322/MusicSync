@@ -46,11 +46,13 @@ See the [v0.1.3 Kvantum integration report](docs/kvantum-appimage-v013-report.md
 
 
 ## Download and run
-Download the latest AppImage from the [Releases](https://github.com/Reason7322/MusicSync/releases) page.
+Download the latest **published** AppImage from the [MusicSync Releases](https://github.com/Reason7322/MusicSync/releases) page. As of 2026-10-18, the latest published release is **v0.1.3**; the local v0.2.0 AppImage is a development candidate and is not available from Releases.
 
-Then run these commands in your terminal:
+For the published v0.1.3 AppImage, run:
 ```bash
 cd ~/Downloads
-chmod +x MusicSync-0.2.0-x86_64.AppImage
-./MusicSync-0.2.0-x86_64.AppImage
+chmod +x MusicSync-0.1.3-x86_64.AppImage
+./MusicSync-0.1.3-x86_64.AppImage
 ```
+
+When a newer release is published, substitute its actual downloaded filename. The packaged GUI for this settings-integration development branch has not been independently runtime-verified.
