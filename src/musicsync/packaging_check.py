@@ -252,8 +252,20 @@ def install_check(app, window, mode):
                         failures.append('settings button is disabled')
                         conclude()
                         return
-                    window.settings_button.click()  # blocks until the whole chain closes
-                    return
+                    # Enter the modal chain from an idle event-loop slot, NOT from this
+                    # timer callback: on PySide6 6.11.2 (offscreen) a QTimer whose timeout
+                    # handler synchronously enters QDialog.exec() gets no further timeouts
+                    # dispatched for its whole nested-exec lifetime, freezing every later
+                    # stage. Deferred via singleShot(0): the click still blocks until the
+                    # Settings -> Bulk Rename chain closes, but tick() has returned first,
+                    # so this timer keeps firing inside each nested event loop.
+                    def _open_settings_chain():
+                        try:
+                            window.settings_button.click()  # blocks until the whole chain closes
+                        except RuntimeError as error:
+                            failures.append(f'settings click failed: {error}')
+                            conclude()
+                    QTimer.singleShot(0, _open_settings_chain)
                 elif stage == 'find_settings':
                     settings_dialog = find_widget(SettingsDialog)
                     if settings_dialog is not None and not st.get('settings_done'):
