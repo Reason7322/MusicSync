@@ -3,10 +3,13 @@
 Design constraints (Phase 1):
 - Reading is pure observation; nothing here writes unless :func:`apply_tag_edits`
   is called explicitly by the engine during an approved apply step.
-- Edits are limited to replacing TIT2/TPE1 text frames with caller-supplied
-  cleaned values (or deleting a frame). mutagen rewrites only the ID3v2 region
-  on save; audio bytes, cover art (APIC), ReplayGain (RVRB / TXXX:REPLAYGAIN_*)
-  and all other frames are preserved (verified by tests).
+- Edits are limited to the single-value text frames supported by the manual
+  editor and automatic cleanup (TIT2/TPE1/TALB/TPE2/TCON/TRCK/TDRC/TCOM), set
+  to caller-supplied values or deleted when the value is empty/None. mutagen
+  rewrites only the ID3v2 region on save; audio bytes, cover art (APIC),
+  ReplayGain (RVRB / TXXX:REPLAYGAIN_*) and all other frames are preserved
+  (verified by tests). Any frame id outside the supported set is refused with
+  ValueError rather than guessed at.
 """
 
 from __future__ import annotations
@@ -16,7 +19,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 try:
-    from mutagen.id3 import ID3, TIT2, TPE1
+    from mutagen.id3 import ID3, TALB, TCOM, TDRC, TIT2, TPE1, TPE2, TCON, TRCK
 except ImportError as exc:  # pragma: no cover - dependency guard
     raise ImportError(
         "musicsyncrename requires the 'mutagen' package (pip install mutagen)."
@@ -114,15 +117,29 @@ def read_tag_snapshot(path: os.PathLike | str) -> TagSnapshot:
     )
 
 
-_EDITABLE_FRAMES = {"TIT2": TIT2, "TPE1": TPE1}
+# Text frames the engine may set or delete through :func:`apply_tag_edits`.
+# Deliberately a fixed, documented allow-list: automatic cleanup uses TIT2/TPE1,
+# the manual editor adds the other seven. Everything else (APIC artwork,
+# ReplayGain, unknown/proprietary frames) is never touched and survives saves.
+_EDITABLE_FRAMES = {
+    "TIT2": TIT2,  # Title
+    "TPE1": TPE1,  # Artist
+    "TALB": TALB,  # Album
+    "TPE2": TPE2,  # Album artist
+    "TCON": TCON,  # Genre (stored as plain text; no () search terms)
+    "TRCK": TRCK,  # Track number ("7" or "7/12" as entered by the caller)
+    "TDRC": TDRC,  # Date / year
+    "TCOM": TCOM,  # Composer
+}
 
 
 def apply_tag_edits(path: os.PathLike | str, edits: dict[str, Optional[str]]) -> None:
-    """Replace TIT2/TPE1 frame text in-place.
+    """Set or delete supported ID3 text frames in-place.
 
-    ``edits`` maps a frame id to the cleaned value (empty/None deletes the
-    frame). Only listed frames change; every other frame and all audio bytes
-    are preserved. Refuses any other frame id rather than guessing.
+    ``edits`` maps a frame id from :data:`_EDITABLE_FRAMES` to the new value
+    (empty/None deletes the frame). Only listed frames change; every other
+    frame and all audio bytes are preserved. Refuses any unsupported frame id
+    rather than guessing.
     """
     from mutagen.mp3 import MP3
 

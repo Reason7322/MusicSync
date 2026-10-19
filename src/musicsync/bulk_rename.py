@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (QDialog, QHBoxLayout, QHeaderView, QLabel, QMessa
                                QTableWidgetItem, QVBoxLayout, QWidget)
 
 from musicsync.logging import clean
+from musicsync.manual_edit import ManualEditDialog  # noqa: E402 - no cycle: manual_edit imports bulk_rename lazily only
 from musicsync.vendored.engine import EngineError, apply_changes, build_preview, list_sessions, undo_session
 
 TAG_FRAME_NAMES = {'TIT2': 'Title', 'TPE1': 'Artist'}
@@ -107,6 +108,11 @@ class BulkRenameDialog(QDialog):
         self.preview_button = QPushButton('Preview Changes')
         self.preview_button.setToolTip('Rescan the library; never modifies files.')
         self.preview_button.clicked.connect(self._start_preview)
+        self.manual_edit_button = QPushButton('Manual Edit…')
+        self.manual_edit_button.setObjectName('manual_edit_button')
+        self.manual_edit_button.setToolTip('Open the single-track manual editor for the selected row: '
+                                           'filename and supported ID3 fields. Nothing changes until you confirm inside.')
+        self.manual_edit_button.clicked.connect(self._on_manual_edit)
         self.select_all_button = QPushButton('Approve All Safe')
         self.select_all_button.setToolTip('Select every change that can be applied safely. Ambiguous and error rows are never selected.')
         self.select_all_button.clicked.connect(lambda: self._select_all(True))
@@ -251,6 +257,25 @@ class BulkRenameDialog(QDialog):
         self.sessions = list_sessions_safe(self.source)
         self._fill_sessions()
         self._session_status_line()
+
+    def _on_manual_edit(self):
+        """Open the single-track manual editor for the selected preview row."""
+        if self.busy:
+            return
+        row = self.preview_table.currentRow()
+        item = self.preview_table.item(row, 0) if row >= 0 else None
+        rel = str(item.data(Qt.ItemDataRole.UserRole)) if item is not None else ''
+        if not rel:
+            QMessageBox.information(self, 'No file selected',
+                                    'Select a single file in the Rename Preview table first.')
+            return
+        editor = ManualEditDialog(str(self.source), rel, self)
+        editor.exec()  # modal; returns after Cancel or after Apply and its result box
+        if editor.changes_applied:
+            # The engine journaled a session: surface it and re-scan the table so
+            # names/rows reflect the on-disk state.
+            self._refresh_sessions_sync()
+            self._start_preview()
 
     def _checked_rels(self):
         approved = []
@@ -409,7 +434,8 @@ class BulkRenameDialog(QDialog):
         self.busy = busy
         if text:
             self.status_label.setText(text)
-        for button in (self.preview_button, self.select_all_button, self.clear_selection_button,
+        for button in (self.preview_button, self.manual_edit_button,
+                       self.select_all_button, self.clear_selection_button,
                        self.apply_button, self.undo_button, self.refresh_sessions_button):
             button.setEnabled(not busy)
         self.progress_bar.setVisible(busy)
