@@ -495,5 +495,127 @@ class ManualEditorSmokeTests(unittest.TestCase):
                          'deleted frame not restored by undo')
 
 
+    # V14 safety cases ----------------------------------------------------------
+
+    def test_unsafe_filenames_are_rejected_and_cannot_bypass(self):
+        """Every invalid filename input is refused: error shown, Apply disabled, disk untouched."""
+        root, name, path, original_bytes, pre_snapshot, orig_mtime_ns = self._fresh_track('case-unsafe-names')
+        editor = ManualEditDialog(str(root), name)
+        self.dialogs.append(editor)
+        APP.processEvents()
+
+        unsafe_cases = (
+            ('empty filename', ''),
+            ('whitespace-only filename', '     '),
+            ('missing stem (.mp3)', '.mp3'),
+            ('extension changed to .flac', 'renamed.flac'),
+            ('forward slash / traversal', '../escape.mp3'),
+            ('backslash separator', 'bad\\name.mp3'),
+            ('control character', 'ctrl\x01char.mp3'),
+            ('longer than 255 UTF-8 bytes', 'a' * 300 + '.mp3'),
+        )
+        for case_name, proposed in unsafe_cases:
+            with self.subTest(name=case_name):
+                editor.filename_edit.setText(proposed)
+                APP.processEvents()
+
+                # 1. Validation reports an error (direct API, live label and preview line).
+                self.assertTrue(editor.validate_filename(proposed),
+                                'validate_filename must reject this name')
+                self.assertNotEqual(editor.filename_error.text(), '',
+                                    'the filename error label must show the problem')
+                lines, error, _edits, _proposed_out = editor.pending_changes()
+                self.assertTrue(error, f'pending_changes must carry an error, got {error!r}')
+                self.assertIn('Filename: INVALID', '\n'.join(lines))
+
+                # 2. Apply is disabled while the name is invalid.
+                self.assertFalse(editor.apply_button.isEnabled())
+
+                # 3. The original file's bytes and mtime are unchanged; no renamed file appears.
+                self.assertEqual(path.read_bytes(), original_bytes, 'bytes changed without an apply')
+                self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), orig_mtime_ns,
+                                 'mtime changed without an apply')
+                self.assertEqual(set(os.listdir(root)), {name}, 'a renamed or extra entry appeared')
+
+                # 4. No journal and no session was created.
+                self.assertFalse((root / JOURNAL_DIR).exists(), 'journal dir created by a refused edit')
+                self.assertEqual(list_sessions(str(root)), [])
+
+        with self.subTest(name='metadata change cannot bypass an invalid filename'):
+            editor.filename_edit.setText('traversal/bypass.mp3')
+            editor.field_edits['title'].setText('Bypass Title')  # pending metadata diff alongside
+            APP.processEvents()
+            lines, error, _edits, _proposed_out = editor.pending_changes()
+            text_lines = '\n'.join(lines)
+            self.assertIn('Filename: INVALID', text_lines, 'the invalid name must still be flagged')
+            self.assertIn('Title', text_lines, 'the metadata change is pending alongside the error')
+            self.assertTrue(error)
+            self.assertFalse(editor.apply_button.isEnabled(),
+                             'a metadata edit must not enable Apply over an invalid filename')
+
+            # Even if the apply slot were reached directly it is fail-closed: no mutation.
+            editor.apply_button.click()
+            wait_no_visible_boxes(4000)  # drain any surfaced refusal box
+            self.assertIsNone(editor.applied_report, 'an apply must not have run')
+            self.assertEqual(path.read_bytes(), original_bytes)
+            self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), orig_mtime_ns)
+            self.assertEqual(set(os.listdir(root)), {name})
+            self.assertFalse((root / JOURNAL_DIR).exists())
+            self.assertEqual(list_sessions(str(root)), [])
+
+        assert_same_tree(self, pre_snapshot, snapshot_tree(root), label='after all unsafe-name rejections')
+
+    def test_existing_file_collisions_are_rejected(self):
+        """Renaming onto an existing file (exact or case-equivalent name_key) is refused."""
+        root, name, path, original_bytes, _pre_snapshot, orig_mtime_ns = self._fresh_track('case-collision')
+        # Second MP3 inside the same isolated fixture directory.
+        second_name = 'target existing.mp3'
+        with open(str(root / second_name), 'wb') as handle:
+            for _ in range(8):
+                handle.write(_MPEG_FRAME)
+        second_path = root / second_name
+        second_bytes = second_path.read_bytes()
+        second_mtime_ns = int(os.lstat(str(second_path)).st_mtime_ns)
+        pre_snapshot = snapshot_tree(root)  # both files present
+
+        editor = ManualEditDialog(str(root), name)
+        self.dialogs.append(editor)
+        APP.processEvents()
+
+        def check_collision(case_name, proposed):
+            with self.subTest(name=case_name):
+                editor.filename_edit.setText(proposed)
+                APP.processEvents()
+
+                # The live directory already holds a colliding name (name_key comparison).
+                collision = editor.filename_collision(proposed)
+                self.assertTrue(collision, 'filename_collision must identify the existing file')
+                self.assertIn('already exists', collision)
+                self.assertNotEqual(editor.filename_error.text(), '', 'the collision must be shown in the form')
+
+                lines, error, _edits, proposed_out = editor.pending_changes()
+                self.assertTrue(error, 'the collision must block the pending change')
+                self.assertEqual(proposed_out, proposed,
+                                 'the rename intent is previewed but blocked by the collision')
+
+                # Apply is disabled; neither MP3 changes at all.
+                self.assertFalse(editor.apply_button.isEnabled())
+                self.assertEqual(path.read_bytes(), original_bytes)
+                self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), orig_mtime_ns)
+                self.assertEqual(second_path.read_bytes(), second_bytes, 'the existing target file was touched')
+                self.assertEqual(int(os.lstat(str(second_path)).st_mtime_ns), second_mtime_ns)
+                self.assertEqual(set(os.listdir(root)), {name, second_name}, 'names on disk changed')
+
+                # No journal and no session was created.
+                self.assertFalse((root / JOURNAL_DIR).exists())
+                self.assertEqual(list_sessions(str(root)), [])
+
+        check_collision('exact existing filename', second_name)
+        case_equiv = 'TARGET EXISTING.mp3'  # same name_key as the existing file (case-insensitive FS rule)
+        check_collision('case-equivalent existing filename', case_equiv)
+
+        assert_same_tree(self, pre_snapshot, snapshot_tree(root), label='after collision rejections')
+
+
 if __name__ == '__main__':
     unittest.main()

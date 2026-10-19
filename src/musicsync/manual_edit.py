@@ -305,6 +305,7 @@ class ManualEditDialog(QDialog):
         lines = []
         edits = []
         renamed = bool(file_error) is False and name_key(proposed) != name_key(self.current_name)
+        proposed_out = None  # default; the INVALID branch returns no rename target
         if file_error:
             lines.append(f'Filename: INVALID — {file_error}')
         elif renamed:
