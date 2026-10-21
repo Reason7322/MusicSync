@@ -20,11 +20,11 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 
 from test_process import APP  # noqa: E402,F401 - shared QApplication, imports first
 
-from PySide6.QtCore import QEventLoop, QTimer  # noqa: E402
-from PySide6.QtWidgets import QMessageBox  # noqa: E402
+from PySide6.QtCore import QEventLoop, Qt, QTimer  # noqa: E402
+from PySide6.QtWidgets import QMessageBox, QPushButton  # noqa: E402
 
-from test_bulk_rename import (BoxAutoResponder, assert_same_tree, find_row, pump_until,  # noqa: E402
-                              snapshot_tree)
+from test_bulk_rename import (BoxAutoResponder, assert_same_tree, build_library, F4, find_row,  # noqa: E402
+                              pump_until, session_row, snapshot_tree, wait_idle, wait_operation)
 from musicsync.bulk_rename import BulkRenameDialog  # noqa: E402
 from musicsync.manual_edit import ManualEditDialog, MANUAL_FIELDS  # noqa: E402
 from musicsync.vendored.engine import list_sessions, undo_session  # noqa: E402
@@ -615,6 +615,314 @@ class ManualEditorSmokeTests(unittest.TestCase):
         check_collision('case-equivalent existing filename', case_equiv)
 
         assert_same_tree(self, pre_snapshot, snapshot_tree(root), label='after collision rejections')
+
+    # V15 acceptance case A ---------------------------------------------------
+
+    def test_unchanged_input_noop_changes_nothing(self):
+        """No-op safety: unchanged input modifies nothing and creates no journal/session."""
+        orig_mtime_ns = int(os.lstat(str(self.track_path)).st_mtime_ns)
+        before_titles = list(self.responder.titles())
+        editor = ManualEditDialog(str(self.library), self.track_name)
+        self.dialogs.append(editor)
+        APP.processEvents()
+
+        # The form reflects the stored values; there is no pending diff at all.
+        lines, error, edits, proposed_out = editor.pending_changes()
+        self.assertEqual(lines, [], 'unchanged input must produce no preview lines')
+        self.assertEqual(error, '')
+        self.assertEqual(edits, ())
+        self.assertIsNone(proposed_out)
+        self.assertFalse(editor.apply_button.isEnabled(), 'Apply is disabled with an empty diff')
+
+        # Click the (disabled) Apply control directly. Whether this Qt build forwards a
+        # programmatic click to a disabled button or not, nothing may happen: the slot's
+        # own zero-diff guard only surfaces a 'No changes' information box.
+        editor.apply_button.click()
+        wait_no_visible_boxes(4000)
+        new_titles = self.responder.titles()[len(before_titles):]
+        self.assertTrue(all(t == 'No changes' for t in new_titles),
+                        f'unexpected boxes after a no-op Apply: {new_titles}')
+
+        # Nothing modified; nothing journaled.
+        self.assertEqual(self.track_path.read_bytes(), self.original_bytes,
+                         'bytes changed although the input was unchanged')
+        self.assertEqual(int(os.lstat(str(self.track_path)).st_mtime_ns), orig_mtime_ns)
+        assert_same_tree(self, self.pre_snapshot, snapshot_tree(self.library), label='after no-op apply')
+        self.assertFalse((self.library / JOURNAL_DIR).exists(), 'journal dir created by a no-op click')
+        self.assertEqual(list_sessions(str(self.library)), [])
+        self.assertIsNone(editor.applied_report)
+        self.assertFalse(editor.changes_applied)
+        self.assertFalse(editor.busy)
+
+    # V15 acceptance case B ---------------------------------------------------
+
+    def test_stale_file_modified_while_open_is_rejected_and_not_overwritten(self):
+        """Stale-file protection: a file modified externally after the dialog's snapshot is
+        rejected (changed_since_preview), never overwritten."""
+        root, name, path, original_bytes, _pre_snapshot, _mtime_ns = self._fresh_track('case-stale')
+
+        editor = ManualEditDialog(str(root), name)  # open_stat snapshot taken here
+        self.dialogs.append(editor)
+        APP.processEvents()
+
+        # Pending change in the form: rename + Title edit.
+        new_name = 'externally owned.mp3'
+        editor.filename_edit.setText(new_name)
+        editor.field_edits['title'].setText('Stale Title')
+        APP.processEvents()
+        self.assertTrue(editor.apply_button.isEnabled(), 'Apply must enable once a diff exists')
+
+        # External modification AFTER the dialog's snapshot: another tool rewrote the tags.
+        from mutagen.id3 import TIT2
+        from mutagen.mp3 import MP3
+        audio = MP3(str(path))
+        for key in list(audio.tags.keys()):
+            if key == 'TIT2':
+                del audio.tags[key]
+        audio.tags.add(TIT2(encoding=3, text=['External Owner']))
+        audio.save()
+        external_bytes = path.read_bytes()
+        ext_mtime_ns = int(os.lstat(str(path)).st_mtime_ns)
+        self.assertNotEqual(external_bytes, original_bytes, 'fixture: external edit must change bytes')
+
+        prior_boxes = len(self.responder.boxes)
+        editor.apply_button.click()  # explicit Yes|No confirmation; responder answers Yes
+        self.assertTrue(pump_until(lambda: len(self.responder.boxes) > prior_boxes, 8000),
+                        f'no confirmation box recorded: {self.responder.boxes}')
+        confirm = self.responder.boxes[prior_boxes]
+        self.assertEqual(confirm['title'], 'Apply manual changes',
+                         f'expected the apply-confirmation box first, got {confirm!r}')
+        self.assertEqual(confirm['chosen'], 'Yes', 'the explicit confirmation must be answered Yes')
+
+        # The journaled worker re-validates against the live file and refuses the stale op.
+        self.assertTrue(pump_until(lambda: editor.applied_report is not None, 15000),
+                        'apply worker did not finish')
+        report = editor.applied_report
+        wait_no_visible_boxes(8000)  # drain the surfaced rejection box
+
+        # The outdated operation is rejected with the stable code; no journal at all.
+        self.assertEqual(report.session_id, '', 'an all-rejected apply must not create a session')
+        self.assertEqual(tuple(report.applied), (), f'applied={report.applied}')
+        self.assertEqual(tuple(report.rejected), ((name, 'changed_since_preview'),),
+                         f'rejected={report.rejected}')
+        self.assertEqual(tuple(report.partial), ())
+
+        # The rejection is reported through the real GUI, not only in the report.
+        notice = self.responder.box_with('Nothing applied')
+        self.assertIsNotNone(notice, 'the stale apply must surface a refusal box')
+        self.assertIn(name, notice['text'])
+        self.assertIn('changed_since_preview', notice['text'])
+
+        # The external modification was NOT overwritten by the stale proposal.
+        final_bytes = path.read_bytes()
+        self.assertEqual(hashlib.sha256(final_bytes).hexdigest(),
+                         hashlib.sha256(external_bytes).hexdigest(),
+                         'the externally modified file was altered despite rejection')
+        self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), ext_mtime_ns)
+        self.assertFalse((root / new_name).exists(), 'a rejected rename must not appear on disk')
+        self.assertEqual(set(os.listdir(root)), {name})
+
+        # No journal/session anywhere; the dialog reports failure and stays editable.
+        self.assertFalse((root / JOURNAL_DIR).exists())
+        self.assertEqual(list_sessions(str(root)), [])
+        self.assertFalse(editor.changes_applied)
+        self.assertTrue(editor.filename_edit.isEnabled(), 'form must stay usable after a refused apply')
+
+
+class ManualEditorGuiIntegrationTests(unittest.TestCase):
+    """Real GUI acceptance (Mission 15, case C).
+
+    Drives the ACTUAL BulkRenameDialog: preview of the synthetic library containing an
+    ambiguous MP3 -> select that row -> real 'Manual Edit…' button -> correct filename and
+    metadata -> Apply with explicit Yes -> verify file + journal session -> locate the
+    session in the real Sessions tab -> real Undo control -> byte-exact restoration.
+    """
+
+    NEW_NAME = 'manual review fixed.mp3'
+    NEW_TITLE = 'Corrected Title'
+    NEW_ARTIST = 'Corrected Artist'
+
+    def setUp(self):
+        self._tempdir = tempfile.TemporaryDirectory(prefix='musicsync-manualedit-gui-')
+        self.library = Path(self._tempdir.name) / 'library'
+        self.library.mkdir()
+        build_library(self.library)  # the established deterministic 8-file fixture
+        self.orig_f4_bytes = (self.library / F4).read_bytes()
+        self.pre_snapshot = snapshot_tree(self.library)
+        self.responder = BoxAutoResponder()
+        self.responder.start()
+        self.dialog = None
+        self.editors = []
+
+    def tearDown(self):
+        for editor in self.editors:
+            try:
+                wait_no_visible_boxes(3000)
+                if not editor.isHidden():
+                    editor.reject()
+            except Exception:
+                pass
+        if self.dialog is not None:
+            try:
+                wait_idle(self.dialog, 10000)
+                self.dialog.close()
+            except Exception:
+                pass
+        self.responder.stop()
+        self._tempdir.cleanup()
+
+    def test_manual_edit_button_fixes_ambiguous_row_and_sessions_undo_restores_exactly(self):
+        dialog = BulkRenameDialog(str(self.library), None)
+        self.dialog = dialog
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+
+        # Mission 15 fix verification: both controls live in their intended layouts —
+        # the same container as their row siblings (orphaned buttons would parent to the top level).
+        self.assertIsNotNone(dialog.manual_edit_button.parent())
+        self.assertEqual(dialog.manual_edit_button.parent(), dialog.preview_button.parent(),
+                         'Manual Edit… button is not placed in the preview actions layout')
+        self.assertIsNotNone(dialog.undo_button.parent())
+        self.assertEqual(dialog.undo_button.parent(), dialog.refresh_sessions_button.parent(),
+                         'Undo control is not placed in the sessions tab layout')
+
+        # Preview a synthetic library containing an ambiguous MP3 (F4: multiple separators,
+        # no ID3). It is NOT approvable in the bulk flow.
+        items = {item.rel_path: item for item in dialog.preview.items}
+        self.assertEqual(items[F4].status, 'ambiguous', f'status={items[F4].status}')
+        self.assertIn('multiple_separators', [f.code for f in items[F4].flags])
+        row_f4 = find_row(dialog, F4)
+        cell0 = dialog.preview_table.item(row_f4, 0)
+        self.assertFalse(cell0.flags() & Qt.ItemFlag.ItemIsUserCheckable,
+                         'the ambiguous row must not be bulk-approvable')
+
+        # Select the row and start the drive timer BEFORE clicking: the click blocks in
+        # the editor's modal exec(), so only a running GUI-thread timer can drive it.
+        dialog.preview_table.setCurrentCell(row_f4, 0)
+        old_preview = dialog.preview
+        found = {'editor': None}
+        state = {'apply_clicked': False, 'cancelled': False, 'error': None}
+
+        def drive():
+            if state['error'] is not None:
+                return
+            try:
+                if found['editor'] is None:
+                    for obj in APP.allWidgets():
+                        try:
+                            if isinstance(obj, ManualEditDialog):
+                                found['editor'] = obj
+                                break
+                        except RuntimeError:  # C++ object deleted mid-iteration
+                            continue
+                    return
+                editor = found['editor']
+                if not state['apply_clicked']:
+                    self.assertEqual(editor.rel_path, F4)
+                    self.assertEqual(editor.filename_edit.text(), F4)
+                    # Correct the ambiguous track's filename and metadata in the real form.
+                    editor.filename_edit.setText(self.NEW_NAME)
+                    editor.field_edits['title'].setText(self.NEW_TITLE)
+                    editor.field_edits['artist'].setText(self.NEW_ARTIST)
+                    if not editor.apply_button.isEnabled():
+                        return  # wait for the textChanged-driven refresh tick
+                    state['apply_clicked'] = True
+                    editor.apply_button.click()  # explicit Yes|No box; responder answers Yes
+                elif editor.changes_applied and not state['cancelled']:
+                    # Applied: its result box was drained by the responder. Close the still-open
+                    # form through its real Cancel button so exec() can return.
+                    cancel = next((b for b in editor.findChildren(QPushButton)
+                                   if b.objectName() == 'cancel_button'), None)
+                    if cancel is not None:
+                        cancel.click()
+                    else:  # structural fallback, identical to the button's own slot
+                        editor.reject()
+                    state['cancelled'] = True
+            except Exception as exc:  # recorded and asserted after exec() returns
+                state['error'] = repr(exc)
+
+        drive_timer = QTimer()
+        drive_timer.setInterval(25)
+        drive_timer.timeout.connect(drive)
+        drive_timer.start()
+        try:
+            dialog.manual_edit_button.click()  # blocks while the editor's modal exec() runs
+        finally:
+            drive_timer.stop()
+
+        self.assertIsNone(state['error'], f'drive timer failed inside the modal editor: {state["error"]}')
+        editor = found['editor']
+        self.editors.append(editor)
+        self.assertIsNotNone(editor, 'ManualEditDialog was never opened by the real button')
+        self.assertTrue(state['cancelled'], 'the editor did not reach its applied-and-closed state')
+
+        # The apply confirmation existed and was answered explicitly; a result box followed.
+        confirm = self.responder.box_with('Apply manual changes')
+        self.assertIsNotNone(confirm, f'missing the apply-confirmation box: {self.responder.boxes}')
+        self.assertEqual(confirm['chosen'], 'Yes', 'the apply must be confirmed explicitly')
+        self.assertIsNotNone(self.responder.box_with('Manual edit result'),
+                             f'missing the editor result box: {self.responder.boxes}')
+
+        report = editor.applied_report
+        self.assertIsNotNone(report, 'no applied report from the manual editor')
+        self.assertEqual(tuple(report.rejected), (), f'rejected={report.rejected}')
+        self.assertEqual(tuple(report.partial), ())
+        self.assertTrue(report.session_id)
+        self.assertEqual(dict(report.applied).get(F4), self.NEW_NAME,
+                         f'applied must rename the ambiguous row: {report.applied}')
+
+        # The resulting file is verified on disk (name + corrected metadata; audio intact).
+        fixed = self.library / self.NEW_NAME
+        self.assertTrue(fixed.is_file(), 'renamed file missing after manual apply')
+        self.assertFalse((self.library / F4).exists(), 'original name still present after apply')
+        from mutagen.mp3 import MP3 as _MP3
+        from musicsync.manual_edit import _frame_values as fv
+        tags_now = _MP3(str(fixed)).tags
+        self.assertEqual(fv(tags_now, 'TIT2'), (self.NEW_TITLE,), 'Title not corrected on disk')
+        self.assertEqual(fv(tags_now, 'TPE1'), (self.NEW_ARTIST,), 'Artist not corrected on disk')
+        self.assertTrue(fixed.read_bytes().endswith(self.orig_f4_bytes),
+                        'audio frames altered by the manual edit')
+
+        # The engine journaled a complete session; the dialog re-scanned back to idle.
+        self.assertTrue(wait_operation(dialog, 'preview'),
+                        f'post-manual-edit rescan did not finish (old preview: {old_preview is None})')
+        sessions = list_sessions(str(self.library))
+        self.assertEqual(len(sessions), 1, f'sessions={sessions}')
+        sess = sessions[0]
+        self.assertEqual(sess['session_id'], report.session_id)
+        self.assertEqual(sess['state'], 'closed', f"session state: {sess}")
+        self.assertEqual(sess.get('done_ops'), sess.get('ops'),
+                         f"unfinished ops in closed session: {sess}")
+        self.assertTrue(sess.get('ops', 0) >= 1, f"no journaled ops recorded: {sess}")
+
+        # Locate the session through the REAL Sessions tab and click the real Undo control.
+        table = dialog.sessions_table
+        sess_row = session_row(table, report.session_id)  # raises when not listed in the tab
+        self.assertGreaterEqual(sess_row, 0)
+        table.selectRow(sess_row)
+        dialog.undo_button.click()  # 'Undo rename session' Yes|No (default No); responder: Yes
+        confirm_undo = self.responder.box_with('Undo rename session')
+        self.assertIsNotNone(confirm_undo, f'missing the undo-confirmation box: {self.responder.boxes}')
+        self.assertEqual(confirm_undo['chosen'], 'Yes', 'undo must be confirmed explicitly')
+
+        self.assertTrue(wait_operation(dialog, 'undo_report'), 'GUI undo did not finish')
+        wait_no_visible_boxes(8000)  # drain the 'Rename undo result' box
+        self.assertIsNotNone(self.responder.box_with('Rename undo result'),
+                             f'missing the undo result box: {self.responder.boxes}')
+
+        undo = dialog.undo_report
+        self.assertEqual(set(undo.restored), {F4}, f'restored={undo.restored}')
+        self.assertEqual(tuple(undo.anomalies), (), f'anomalies={undo.anomalies}')
+
+        # Exact original filename, bytes AND modification time restored (journal excluded).
+        assert_same_tree(self, self.pre_snapshot, snapshot_tree(self.library), label='after GUI undo')
+        self.assertTrue((self.library / F4).is_file(), 'original filename not restored by GUI undo')
+        self.assertFalse((self.library / self.NEW_NAME).exists())
+        self.assertEqual((self.library / F4).read_bytes(), self.orig_f4_bytes,
+                         'undo did not restore the exact original bytes')
+
+        sessions_after = {s['session_id']: s for s in list_sessions(str(self.library))}
+        self.assertEqual(sessions_after[report.session_id]['state'], 'undone',
+                         'the session must end terminal-undone after a byte-exact GUI undo')
 
 
 if __name__ == '__main__':
