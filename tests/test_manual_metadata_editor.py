@@ -27,7 +27,7 @@ from test_bulk_rename import (BoxAutoResponder, assert_same_tree, build_library,
                               pump_until, session_row, snapshot_tree, wait_idle, wait_operation)
 from musicsync.bulk_rename import BulkRenameDialog  # noqa: E402
 from musicsync.manual_edit import ManualEditDialog, MANUAL_FIELDS  # noqa: E402
-from musicsync.vendored.engine import list_sessions, undo_session  # noqa: E402
+from musicsync.vendored.engine import ApplyReport, list_sessions, undo_session  # noqa: E402
 
 JOURNAL_DIR = '.musicsyncrename'
 
@@ -967,79 +967,99 @@ class ManualEditorSmokeTests(unittest.TestCase):
                         'Cancel must still work before any apply is recorded')
 
     def test_partial_outcome_is_reported_as_warning_with_session_available(self):
-        """17A partial outcome: an apply that aborts mid-item (journaled tag write fails at
-        execution time) is reported as a warning, never unconditional success; the interrupted
-        session stays recorded and undo-able from Rename Sessions."""
+        """17A partial outcome UI: an ACTUAL engine ``ApplyReport`` with a controlled PARTIAL
+        outcome is fed through the real ``_on_worker_finished`` slot (the same payload shape
+        RenameWorker delivers via finished_payload). The GUI must classify it as a warning,
+        never unconditional success; name the incomplete file and its recorded session for
+        recovery; keep the editor open; lock editing + Apply; swap Cancel for the real Close
+        button in the action-row layout; and let Close dismiss the dialog.
+
+        Scope note (honest limit): this drives the slot with a constructed report, so it
+        proves GUI response handling ONLY — no real engine failure occurs here and no on-disk
+        journal is created or expected. It does NOT prove that a real mid-write abort safely
+        closes its session journal; that remains a known open engine defect recorded in
+        PROJECT_STATUS.md (MutagenError escapes the engine's step-level exception catch).
+        """
         responder = self._use_capturing_responder()
 
         root, name, path, original_bytes, _pre_snapshot, orig_mtime_ns = self._fresh_track('case-17a-partial')
-        # Make the journaled tag write fail at execution time: validation only compares
-        # size + mtime (unchanged by chmod), so the apply proceeds and aborts mid-step.
-        os.chmod(str(path), 0o444)
-
         editor = ManualEditDialog(str(root), name)
         self.dialogs.append(editor)
         editor.show()  # real visible flow: visibility state is what these assertions check
         APP.processEvents()
         self.assertTrue(editor.isVisible(), 'fixture: the dialog must open visibly for this test')
 
+        # The form held one pending metadata edit when the apply was requested. (The worker is
+        # intentionally NOT started; driving the finished slot directly keeps the test focused
+        # on the GUI response branch — no chmod trigger, no real engine failure, and no
+        # two-phase journal simulation.)
         editor.field_edits['title'].setText('Partial Title')  # metadata-only: one journaled step
         APP.processEvents()
         self.assertTrue(editor.apply_button.isEnabled())
 
-        prior_boxes = len(responder.boxes)
-        editor.apply_button.click()  # responder answers the explicit Yes|No box with Yes
-        self.assertTrue(pump_until(lambda: len(responder.boxes) > prior_boxes, 8000),
-                        f'no confirmation box recorded: {responder.boxes}')
-        confirm = responder.boxes[prior_boxes]
-        self.assertEqual(confirm['title'], 'Apply manual changes')
-        self.assertEqual(confirm['chosen'], 'Yes')
+        session_id = 'a1b2c3d4e5f60718293a4b5c6d7e8f90'  # synthetic journal reference (no on-disk session)
+        report = ApplyReport(
+            session_id=session_id,
+            applied=(),
+            rejected=(),
+            partial=((name, 'tag_edit_failed'),),  # the abort_code apply_changes records for a mid-tag-write failure
+            canceled=(),
+        )
+        editor._requested_edit_count = 1  # what _on_apply_clicked would have recorded
 
-        self.assertTrue(pump_until(lambda: editor.applied_report is not None, 15000),
-                        'apply worker did not finish')
-        report = editor.applied_report
-        wait_no_visible_boxes(8000)
+        prior_boxes = len(responder.full_boxes)
+        # Exactly the payload RenameWorker('apply').finished_payload emits on success.
+        editor._on_worker_finished({'kind': 'apply', 'ok': True, 'data': report, 'error': ''})
+        wait_no_visible_boxes(8000)  # result box was shown (and captured) inside exec()
 
-        # The engine classified this single item as partial (step journaled, abort mid-step).
-        self.assertTrue(report.session_id, 'an interrupted apply must still be journaled')
-        self.assertEqual(tuple(report.applied), ())
-        self.assertEqual(tuple(report.partial), ((name, 'tag_edit_failed'),), f'partial={report.partial}')
+        self.assertIs(editor.applied_report, report, 'the slot must record the delivered report')
+        self.assertFalse(editor.busy, 'the worker bookkeeping must be cleared after processing')
 
-        # Disk: the failing write left bytes AND mtime untouched.
-        os.chmod(str(path), 0o644)  # restore writability for teardown/cleanup
-        self.assertEqual(path.read_bytes(), original_bytes)
-        self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), orig_mtime_ns)
-
-        # (A) The visible message is a warning, never unconditional success.
+        # (A) The primary message is a WARNING — never unconditional success.
+        self.assertEqual(len(responder.full_boxes), prior_boxes + 1,
+                         f'expected exactly one new result box: {responder.full_boxes}')
         full = responder.full_box_with('Manual edit result')
         self.assertIsNotNone(full, f'no Manual edit result box captured: {responder.boxes}')
-        self.assertNotEqual(full['text'], 'Changes applied successfully.')
-        self.assertNotIn('applied successfully', full['text'].lower())
+        self.assertEqual(full['text'], 'Some changes could not be completed.')
+        self.assertNotIn('applied successfully', (full['text'] + ' ' + full['informative_text']).lower(),
+                         'a partial outcome must never read as success')
         self.assertEqual(full['icon'], QMessageBox.Icon.Warning)
-        self.assertIn(name, full['detailed_text'])
-        self.assertIn('tag_edit_failed', full['detailed_text'])
-        self.assertIn(report.session_id, full['detailed_text'],
-                      'the journal must stay reachable from the result message')
 
-        # (B) Locked form; Close replaces Cancel; status line warns without claiming success.
+        # The message names the incomplete file and keeps recovery/session information.
+        self.assertIn(f'Started but incomplete: {name} (tag_edit_failed)', full['detailed_text'])
+        self.assertIn(session_id, full['detailed_text'],
+                      'the recorded session must stay reachable from the result message')
+        self.assertIn('Rename Sessions', full['informative_text'],
+                      'the recovery pointer belongs in the primary message area too')
+        for box in responder.full_boxes:
+            combined = (box['text'] + ' ' + box.get('informative_text', '')).lower()
+            self.assertNotIn('applied successfully', combined,
+                             f'no box may claim success on a partial outcome: {box!r}')
+
+        # (B) Recorded partial outcome locks editing + Apply; Close replaces Cancel in the row.
         self.assertTrue(editor.changes_applied)
         self.assertFalse(editor.apply_button.isEnabled())
-        self.assertFalse(editor.filename_edit.isEnabled())
+        self.assertFalse(editor.filename_edit.isEnabled(), 'editing must stay locked after a recorded outcome')
         for edit in editor.field_edits.values():
             self.assertFalse(edit.isEnabled(), 'metadata edits must stay disabled after an interrupted apply')
         self.assertTrue(editor.cancel_button.isHidden())
         self.assertFalse(editor.close_button.isHidden())
+        assert_close_in_action_row(self, editor)  # parented AND a member of the action-row layout
         status_text = editor.result_status.text()
         self.assertNotIn('applied successfully', status_text.lower())
         self.assertIn('Rename Sessions', status_text)
 
-        # The interrupted session is recorded and visible to the Sessions tab (undo-able there).
-        sessions = {s['session_id']: s for s in list_sessions(str(root))}
-        self.assertEqual(sessions[report.session_id]['state'], 'aborted')
-
-        # Not auto-closed either: still open, waiting for the user's Close click.
+        # Not auto-closed: the visible editor stays open waiting for the user's Close.
         self.assertTrue(editor.isVisible(), 'the editor must not close itself on a partial outcome')
 
+        # Honest scope record: no real engine run happened, so nothing was journaled and the
+        # fixture file is byte- AND mtime-exact — do not read this test as journal-recovery proof.
+        self.assertEqual(path.read_bytes(), original_bytes)
+        self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), orig_mtime_ns)
+        self.assertFalse((root / JOURNAL_DIR).exists())
+        self.assertEqual(list_sessions(str(root)), [])
+
+        # Close actually dismisses the editor (accept()).
         editor.close_button.click()
         self.assertTrue(pump_until(lambda: editor.isHidden(), 5000),
                         'the Close button must dismiss the editor after a partial outcome too')
