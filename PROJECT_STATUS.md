@@ -1,8 +1,34 @@
 # MusicSyncSettingsIntegration — Project Status
 
-## PRODUCT STATUS: INCOMPLETE (packaging milestone V16 done — new V15-based AppImage 0.2.0 built, BOTH established packaged tests PASS; Fedora RPM, release regression and packaged manual-editor acceptance still open)
+## PRODUCT STATUS: INCOMPLETE (packaging milestone V16 done — new V15-based AppImage 0.2.0 built, BOTH established packaged tests PASS; Fedora RPM, release regression and packaged manual-editor acceptance still open; Mission 17A manual-editor UI source fix checkpointed WITH UNFINISHED ACCEPTANCE)
 
 Product goal (unchanged): MusicSync 0.2.0 with Bulk Rename inside Settings — Preview → Select → Apply → Sessions → Undo with byte-exact undo and no approved-changes default — plus manual filename/ID3 metadata editing, verified standalone AppImage on synthetic MP3s, Fedora 44 native RPM, preserved source/artifacts; live install only under separate authorization. `dist/MusicSync-0.2.0-x86_64.AppImage` is now the **V16 build** from source commit f94a643… (SHA-256 587ee62ca97d…, 127,695,352 bytes) and contains ALL V10–V15 source work including `manual_edit.py`. The previous V11 artifact is preserved as `dist/MusicSync-0.2.0-x86_64.AppImage.bak-d9865a3a` (SHA-256 d9865a3abdc66ae50ca3dca156094c0a02fb1b50c39b2b9baaf53eb9ac38e39e).
+
+## Continuation record — Mission 17A: manual editor result dialog + post-apply Close UX (2026-10-22) — CHECKPOINTED, ACCEPTANCE UNFINISHED
+
+Fixes the two user-confirmed manual-editor UI defects at source level. **Source changes only in `src/musicsync/manual_edit.py`** (bulk_rename.py and the vendored engine untouched):
+- **Task A (empty result dialog):** `_on_worker_finished` used to build the success QMessageBox with icon + title + detailedText but NO primary text. The outcome is now classified per-file from the ACTUAL ApplyReport: full success → visible primary "Changes applied successfully." + informative stating what changed (filename to its new name and/or N metadata field(s)) + Rename Sessions undo instruction; partial/canceled → warning wording ("Some changes could not be completed."), never unconditional success. Expandable details retained (`setDetailedText` unchanged). The all-rejected "Nothing applied" message is byte-for-byte the same as before (V15-B depends on it); a canceled-but-journaled apply now names the interrupted session instead of surfacing an empty box.
+- **Task B (post-apply state):** new bold `result_status` QLabel directly above the action row; new `close_button` placed IN the same action-row layout and hidden with `hide()` at construction (mission-15 orphaned-widget class). Once an apply is recorded: editing + Apply stay disabled, Cancel hidden, Close shown (`accept()` → dismisses back to Bulk Rename, whose existing `changes_applied` refresh-sessions + re-scan runs unchanged — NO bulk_rename.py change needed). Before any apply and on refused/failed-no-change outcomes the normal Cancel remains and the form stays editable for retry. No auto-close after success.
+
+Test file: new module helpers (`CapturingResponder(BoxAutoResponder)` capturing each live box's text/informative/detailed/icon before answering; `action_row_layout()` walking nested QLayouts via count()/itemAt(); `assert_close_in_action_row()` asserting parent + real layout membership), 3 new focused tests, and the V15 case-C integration test updated to dismiss through the real Close button (capturing the Cancel→Close swap WHILE the modal editor is still open) and to assert the primary success message.
+
+### Definitive test evidence this shift (each in a fresh offscreen process)
+- **PASS exit 0**: `ManualEditorSmokeTests.test_apply_success_shows_result_message_and_close_replaces_cancel` (OK, ~0.08 s wall).
+- **PASS exit 0**: `ManualEditorSmokeTests.test_refused_apply_keeps_retryable_state_without_false_success`.
+- **FAIL (current committed code)**: `ManualEditorSmokeTests.test_partial_outcome_is_reported_as_warning_with_session_available` — its chmod-444 trigger hits a pre-existing engine exception gap (below); the worker payload never reaches `applied_report` ("apply worker did not finish"). Full log preserved outside repo at `/home/reason/Temporary/QwenProjects/_probe_tmp/partial_run.log`.
+- **UNTESTED this shift** (file modified, not yet run after the src change): updated case-C integration test `ManualEditorGuiIntegrationTests.test_manual_edit_button_fixes_ambiguous_row_and_sessions_undo_restores_exactly`; V15-B `test_stale_file_modified_while_open_is_rejected_and_not_overwritten` (exercises the rewritten "Nothing applied" branch); and all remaining pre-existing smoke tests.
+
+### Confirmed pre-existing engine defect (NOT fixed — out of scope, engine untouched)
+A real mid-item tag-write failure raises mutagen's `MutagenError` (it wraps the underlying PermissionError/OSError), which is NOT in the engine step-level catch `(OSError, ParseError, ValueError)` inside `apply_changes`. Consequences proven this shift: the exception escapes to RenameWorker's broad except → GUI payload ok=False ("Internal error in apply operation: MutagenError. See log."), and the session journal is left OPEN without a closed/aborted event (recovery data at risk; subsequent applies would be blocked as unresolved). Deterministic real mid-item interruption is not achievable offline without modifying the vendored engine.
+
+### Unfinished acceptance + single next action
+Rewrite `test_partial_outcome_is_reported_as_warning_with_session_available` to use only REAL engine mechanics, then run it plus case-C and V15-B in fresh processes:
+- Phase 1 (real): deterministic cooperative cancellation — test-local worker subclass with `cancel_requested=True` pre-set (the established bulk-suite pattern) driving the real apply → genuine aborted journal on disk, zero mutations; assert "Nothing applied" + interrupted-session note, no success wording, form still editable.
+- Phase 2: feed the actual `_on_worker_finished` slot a genuine engine `ApplyReport` with this file in its PARTIAL partition (same session id as the real on-disk journal) and assert the live warning UI (no false success, locked form, Close replaces Cancel, session reachable); then `undo_session()` proves recovery.
+The design was settled during this shift; the rewrite itself is NOT written yet.
+
+### Artifact state — honest distinction
+Source-level only: the **V16 AppImage `dist/MusicSync-0.2.0-x86_64.AppImage` (SHA-256 587ee62ca97d… — see V16 record) was NOT rebuilt and does NOT contain these UI changes**. Any rebuild is separately authorized work (not done in this mission). PRODUCT STATUS: INCOMPLETE.
 
 ## Continuation record — V16: AppImage 0.2.0 rebuilt from the V15 checkpoint, BOTH established packaged tests PASS on the new artifact (2026-10-21)
 

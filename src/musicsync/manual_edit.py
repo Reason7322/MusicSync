@@ -87,6 +87,7 @@ class ManualEditDialog(QDialog):
         self.busy = False
         self._worker = None
         self.applied_report = None     # ApplyReport of the last apply attempt
+        self._requested_edit_count = 0  # metadata edits sent with the current apply (Task 17A)
         self._locked_display = {}      # form key -> display text for multi-value frames
         self._inspection_lines = []    # read-only frame listing built by _load()
 
@@ -138,17 +139,39 @@ class ManualEditDialog(QDialog):
         layout.addWidget(QLabel('Changes to apply (old → new):'))
         layout.addWidget(self.change_preview)
 
+        # Task 17A: a prominent outcome line directly above the action row, so the
+        # apply result is visible without scrolling once Apply has finished.
+        self.result_status = QLabel('')
+        self.result_status.setObjectName('result_status')
+        self.result_status.setWordWrap(True)
+        self.result_status.setStyleSheet('font-weight: bold;')
+        layout.addWidget(self.result_status)
+
         buttons = QHBoxLayout()
-        cancel_button = QPushButton('Cancel')
-        cancel_button.setObjectName('cancel_button')
+        # Cancel stays the normal action until an apply is recorded; afterwards it is
+        # replaced by Close (Task 17A), which dismisses the editor back to Bulk Rename.
+        self.cancel_button = QPushButton('Cancel')
+        self.cancel_button.setObjectName('cancel_button')
+        self.close_button = QPushButton('Close')
+        self.close_button.setObjectName('close_button')
+        self.close_button.setToolTip('The changes were applied and recorded. Close returns to Bulk '
+                                     'Rename; Undo stays available in the Rename Sessions tab.')
+        self.close_button.hide()  # only appears once an apply has been recorded (Task 17A)
         self.apply_button = QPushButton('Apply…')
         self.apply_button.setObjectName('apply_button')
         self.apply_button.setToolTip('Ask for confirmation, then apply through the journaled engine. '
                                      'The default answer is No; nothing happens without your Yes.')
         self.apply_button.clicked.connect(self._on_apply_clicked)
-        cancel_button.clicked.connect(self.reject)
+        self.cancel_button.clicked.connect(self.reject)
+        # Post-apply dismissal. accept() closes the modal editor; the parent only checks
+        # changes_applied afterwards to refresh Sessions and re-scan, so Accepted/Rejected
+        # makes no difference to Bulk Rename behaviour.
+        self.close_button.clicked.connect(self.accept)
+        # Close lives in the action row, taking over Cancel's position once an apply is
+        # recorded (Cancel stays visible until then; a hidden widget takes no space here).
         buttons.addStretch()
-        buttons.addWidget(cancel_button)
+        buttons.addWidget(self.close_button)
+        buttons.addWidget(self.cancel_button)
         buttons.addWidget(self.apply_button)
         layout.addLayout(buttons)
 
@@ -404,6 +427,7 @@ class ManualEditDialog(QDialog):
             self.logger.info('Manual edit apply declined by user for %s', self.rel_path)
             return
 
+        self._requested_edit_count = len(edits)  # what THIS apply asked for (Task 17A result message)
         item = self._build_item_plan(proposed_out, edits)
         preview = Preview(
             root=str(self.root_abs),
@@ -456,9 +480,15 @@ class ManualEditDialog(QDialog):
             lines.append(f'Rejected before mutation: {rel} ({code})')
         for rel, code in report.partial:
             lines.append(f'Started but incomplete: {rel} ({code}) — recover via Rename Sessions → Undo')
-        if not report.session_id or (not report.applied and not report.partial):
-            # Nothing passed validation; the file is untouched and stays editable.
+        for rel in report.canceled:
+            lines.append(f'Canceled before mutation: {rel}')
+        if not report.applied and not report.partial:
+            # Nothing passed validation or finished; the file is untouched and stays editable.
             self._set_fields_enabled(True)
+            if report.session_id:
+                lines.append('')
+                lines.append(f'Session {report.session_id} was recorded as interrupted; resolve it from '
+                             f'Bulk Rename → Rename Sessions (Undo) before applying again.')
             QMessageBox.warning(self, 'Nothing applied', '\n'.join(lines))
             return
 
@@ -466,14 +496,56 @@ class ManualEditDialog(QDialog):
         if report.session_id:
             lines.append('')
             lines.append(f'Session {report.session_id} recorded; undo is available in Bulk Rename → Rename Sessions.')
-        style = (QMessageBox.Icon.Information
-                 if not report.rejected and not report.partial else QMessageBox.Icon.Warning)
+
+        # Task 17A: classify the outcome for THIS file from the engine report, and never
+        # claim success unless every requested step of it actually completed.
+        applied_entry = next(((rel, new_name) for rel, new_name in report.applied
+                              if rel == self.rel_path), None)
+        partial_code = dict(report.partial).get(self.rel_path)
+        fully_applied = (applied_entry is not None and partial_code is None
+                         and not report.rejected and not report.canceled)
+
         for widget in [self.filename_edit, self.apply_button] + list(self.field_edits.values()):
             widget.setEnabled(False)
-        self.info_label.setText('Applied — the form is now locked. '
-                                'Use Bulk Rename → Rename Sessions to inspect or undo this session.')
+        # Post-apply state: Cancel is replaced by Close; editing stays disabled so the
+        # recorded session cannot be applied twice from this dialog.
+        self.cancel_button.hide()
+        self.close_button.show()
+
         box = QMessageBox(self)
-        box.setIcon(style)
         box.setWindowTitle('Manual edit result')
+        if fully_applied:
+            new_name = applied_entry[1]
+            n_edits = self._requested_edit_count
+            if new_name and n_edits:
+                what = (f'The filename was changed to “{new_name}” '
+                        f'and {n_edits} metadata field(s) were updated.')
+            elif new_name:
+                what = f'The filename was changed to “{new_name}”.'
+            else:
+                what = f'{n_edits} metadata field(s) were updated.'
+            box.setIcon(QMessageBox.Icon.Information)
+            box.setText('Changes applied successfully.')
+            box.setInformativeText(what + ' Undo is available from Bulk Rename → Rename Sessions; '
+                                      'Undo restores the original name and exact bytes.')
+            self.info_label.setText('Applied — the form is now locked. '
+                                    'Use Bulk Rename → Rename Sessions to inspect or undo this session.')
+            self.result_status.setText(
+                'Changes applied successfully — you can Undo this change from Bulk Rename → Rename Sessions.')
+        else:
+            box.setIcon(QMessageBox.Icon.Warning)
+            box.setText('Some changes could not be completed.')
+            if partial_code is not None and applied_entry is None:
+                what = 'The operation stopped part-way through; some steps may already be on disk.'
+            else:
+                what = 'See the details for which changes were rejected or left incomplete.'
+            box.setInformativeText(what + ' Review the recorded session from Bulk Rename → Rename Sessions; '
+                                      'Undo restores the original name and exact bytes.')
+            self.info_label.setText('The operation did not complete fully — the form is now locked. '
+                                    'Review the session in Bulk Rename → Rename Sessions '
+                                    '(Undo restores the original name and bytes).')
+            self.result_status.setText(
+                'Warning: the operation did not complete fully — review and Undo the session '
+                'in Bulk Rename → Rename Sessions.')
         box.setDetailedText('\n'.join(lines))
         box.exec()

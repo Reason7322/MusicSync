@@ -151,6 +151,74 @@ def wait_no_visible_boxes(timeout_ms=8000):
     guard.stop()
 
 
+class CapturingResponder(BoxAutoResponder):
+    """BoxAutoResponder that also captures each box's FULL widget state before answering.
+
+    The base responder records only the recorded text; Mission 17A needs the primary
+    message, informative line AND detailed text of the live QMessageBox (read from the
+    actual widget on its first sighting, i.e. in the same scan pass that closes it).
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.full_boxes = []  # [{'title','text','informative_text','detailed_text','icon'}]
+
+    def scan_and_respond(self):
+        for obj in APP.allWidgets():
+            try:
+                if isinstance(obj, QMessageBox) and obj.isVisible() \
+                        and id(obj) not in self._handled:
+                    self.full_boxes.append({
+                        'title': obj.windowTitle(),
+                        'text': obj.text(),
+                        'informative_text': obj.informativeText(),
+                        'detailed_text': obj.detailedText(),
+                        'icon': obj.icon(),  # QMessageBox.Icon; compare with ==, not int()
+                    })
+            except RuntimeError:  # C++ object deleted mid-iteration
+                continue
+        super().scan_and_respond()
+
+    def full_box_with(self, substring):
+        return next((b for b in self.full_boxes if substring in b['title']), None)
+
+
+def action_row_layout(dialog):
+    """The horizontal layout holding the editor's action buttons (the Cancel/Apply row).
+
+    Walks the dialog's nested QLayout tree via the public count()/itemAt() API and returns
+    the sub-layout that actually contains cancel_button — membership, not just parenting.
+    Returns None when no such layout exists (orphaned-widget defect).
+    """
+    sub_layouts = []
+    top = dialog.layout()
+    if top is not None:
+        stack = [top]
+        while stack:
+            lay = stack.pop()
+            for i in range(lay.count()):
+                sub = lay.itemAt(i).layout()
+                if sub is not None:
+                    sub_layouts.append(sub)
+    return next((l for l in sub_layouts
+                 if any(l.itemAt(i).widget() is dialog.cancel_button
+                        for i in range(l.count()))), None)
+
+
+def assert_close_in_action_row(testcase, editor):
+    """Mission 15 defect class, applied to the new Close button: parented into the dialog
+    AND a member of the same action-row layout as its siblings."""
+    testcase.assertIsNotNone(editor.close_button.parent(),
+                             'Close was never parented into the dialog (orphaned-button defect)')
+    testcase.assertIs(editor.close_button.parent(), editor.cancel_button.parent(),
+                      'Close and Cancel must share the dialog container')
+    row = action_row_layout(editor)
+    testcase.assertIsNotNone(row, 'the Cancel/Apply action-row layout must exist')
+    testcase.assertTrue(any(row.itemAt(i).widget() is editor.close_button
+                            for i in range(row.count())),
+                        'Close must be a member of the action-row layout, not just unhidden')
+
+
 class ManualEditorSmokeTests(unittest.TestCase):
     """Open / edit / apply (explicit Yes) / byte-exact undo on one synthetic MP3."""
 
@@ -728,6 +796,254 @@ class ManualEditorSmokeTests(unittest.TestCase):
         self.assertFalse(editor.changes_applied)
         self.assertTrue(editor.filename_edit.isEnabled(), 'form must stay usable after a refused apply')
 
+    # Mission 17A — result dialog + post-apply editor state -------------------
+
+    def _use_capturing_responder(self):
+        self.responder.stop()
+        responder = CapturingResponder()
+        responder.start()
+        self.responder = responder  # tearDown stops whichever instance is current
+        return responder
+
+    def test_apply_success_shows_result_message_and_close_replaces_cancel(self):
+        """17A (A+B) full success: visible primary message + retained details, form locked,
+        Cancel replaced by a working Close near the action row; no auto-close."""
+        responder = self._use_capturing_responder()
+
+        root, name, path, original_bytes, _pre_snapshot, _mtime_ns = self._fresh_track('case-17a-success')
+        editor = ManualEditDialog(str(root), name)
+        self.dialogs.append(editor)
+        editor.show()  # drive the real visible flow: Task B asserts on visibility state
+        APP.processEvents()
+        self.assertTrue(editor.isVisible(), 'fixture: the dialog must open visibly for this test')
+
+        new_name = 'success check.mp3'
+        editor.filename_edit.setText(new_name)
+        editor.field_edits['title'].setText('Success Title')
+        APP.processEvents()
+        self.assertTrue(editor.apply_button.isEnabled())
+
+        # Pre-apply state: normal Cancel visible, Close hidden, no outcome line.
+        self.assertFalse(editor.cancel_button.isHidden())
+        self.assertTrue(editor.close_button.isHidden())
+        self.assertEqual(editor.result_status.text(), '')
+
+        # Mission 15 defect class re-checked for the new Close button: it must be parented
+        # into the dialog and a real member of the action-row layout from construction on.
+        assert_close_in_action_row(self, editor)
+
+        report = self._apply_explicit_yes(editor)  # explicit Yes -> journaled apply; result box drained
+        applied = dict(report.applied)
+        self.assertEqual(applied.get(name), new_name, 'the engine must have applied the rename')
+
+        # (A) The result box carries a real PRIMARY message, not just details.
+        full = responder.full_box_with('Manual edit result')
+        self.assertIsNotNone(full, f'no Manual edit result box captured: {responder.boxes}')
+        self.assertEqual(full['text'], 'Changes applied successfully.',
+                         'the primary message must visibly identify the success')
+        self.assertIn(new_name, full['informative_text'], 'message must say what changed (filename)')
+        self.assertIn('metadata field', full['informative_text'])
+        self.assertIn(report.session_id, full['detailed_text'], 'technical details must be retained')
+        self.assertIn(f'Applied: {name}', full['detailed_text'])
+        self.assertEqual(full['icon'], QMessageBox.Icon.Information)
+
+        # (B) Post-apply editor state: locked form, Close replaces Cancel, prominent status.
+        self.assertTrue(editor.changes_applied)
+        self.assertFalse(editor.apply_button.isEnabled())
+        self.assertFalse(editor.filename_edit.isEnabled())
+        for edit in editor.field_edits.values():
+            self.assertFalse(edit.isEnabled(), 'metadata edits must stay disabled after success')
+        self.assertTrue(editor.cancel_button.isHidden(), 'Cancel must be replaced after a recorded apply')
+        self.assertFalse(editor.close_button.isHidden(), 'Close must replace Cancel after success')
+        status_text = editor.result_status.text()
+        self.assertIn('applied successfully', status_text)
+        self.assertIn('Rename Sessions', status_text, 'the undo instruction belongs near the actions')
+
+        # Not auto-closed: the visible editor stays open so the user can read the
+        # result and dismiss it themselves via Close.
+        self.assertTrue(editor.isVisible(), 'the editor must not close itself on success')
+
+        # On disk matches the report; the session is journaled for Undo.
+        renamed_path = root / new_name
+        self.assertTrue(renamed_path.is_file())
+        from mutagen.mp3 import MP3 as _MP3
+        from musicsync.manual_edit import _frame_values as fv
+        self.assertEqual(fv(_MP3(str(renamed_path)).tags, 'TIT2'), ('Success Title',))
+        sessions = {s['session_id']: s for s in list_sessions(str(root))}
+        self.assertEqual(sessions[report.session_id]['state'], 'closed')
+
+        # Close actually dismisses the editor.
+        editor.close_button.click()
+        self.assertTrue(pump_until(lambda: editor.isHidden(), 5000),
+                        'the Close button must dismiss the editor')
+
+    def test_refused_apply_keeps_retryable_state_without_false_success(self):
+        """17A failure path: a refused apply shows no success wording anywhere, keeps the form
+        editable for a retry, leaves Cancel (not Close) in place, and mutates nothing."""
+        responder = self._use_capturing_responder()
+
+        root, name, path, original_bytes, _pre_snapshot, orig_mtime_ns = self._fresh_track('case-17a-refused')
+        editor = ManualEditDialog(str(root), name)  # open_stat snapshot taken here
+        self.dialogs.append(editor)
+        editor.show()  # real visible flow: visibility state is what these assertions check
+        APP.processEvents()
+        self.assertTrue(editor.isVisible(), 'fixture: the dialog must open visibly for this test')
+
+        new_name = 'refused check.mp3'
+        editor.filename_edit.setText(new_name)
+        editor.field_edits['title'].setText('Refused Title')
+        APP.processEvents()
+        self.assertTrue(editor.apply_button.isEnabled())
+
+        # External modification AFTER the snapshot makes this apply stale.
+        from mutagen.id3 import TIT2
+        from mutagen.mp3 import MP3
+        audio = MP3(str(path))
+        for key in list(audio.tags.keys()):
+            if key == 'TIT2':
+                del audio.tags[key]
+        audio.tags.add(TIT2(encoding=3, text=['External Owner']))
+        audio.save()
+        external_bytes = path.read_bytes()
+        ext_mtime_ns = int(os.lstat(str(path)).st_mtime_ns)
+
+        prior_boxes = len(responder.boxes)
+        editor.apply_button.click()  # explicit Yes|No confirmation; responder answers Yes
+        self.assertTrue(pump_until(lambda: len(responder.boxes) > prior_boxes, 8000),
+                        f'no confirmation box recorded: {responder.boxes}')
+        confirm = responder.boxes[prior_boxes]
+        self.assertEqual(confirm['title'], 'Apply manual changes')
+        self.assertEqual(confirm['chosen'], 'Yes', 'the refusal must be tested through a real Yes')
+
+        self.assertTrue(pump_until(lambda: editor.applied_report is not None, 15000),
+                        'apply worker did not finish')
+        report = editor.applied_report
+        wait_no_visible_boxes(8000)  # drain the surfaced refusal box
+
+        # Rejected with the stable code; no journal or session at all.
+        self.assertEqual(report.session_id, '')
+        self.assertEqual(tuple(report.rejected), ((name, 'changed_since_preview'),))
+        self.assertFalse((root / JOURNAL_DIR).exists())
+        self.assertEqual(list_sessions(str(root)), [])
+
+        # (A) The refusal is surfaced with a visible primary message naming the problem...
+        full = responder.full_box_with('Nothing applied')
+        self.assertIsNotNone(full, f'no Nothing-applied box captured: {responder.boxes}')
+        self.assertTrue(full['text'].strip(), 'the refusal box needs a visible primary message')
+        self.assertIn(name, full['text'])
+        self.assertIn('changed_since_preview', full['text'])
+
+        # ...and NOTHING anywhere claims success.
+        for box in responder.full_boxes:
+            combined = (box['text'] + ' ' + box.get('informative_text', '')).lower()
+            self.assertNotIn('applied successfully', combined,
+                             f'a refused apply must never read as success: {box!r}')
+        self.assertNotIn('successfully', editor.result_status.text().lower())
+
+        # (B) Retry state preserved: form editable, Apply re-enabled, Cancel still the action.
+        self.assertFalse(editor.changes_applied)
+        self.assertTrue(editor.filename_edit.isEnabled(), 'form must stay editable for a retry')
+        for _key, edit in editor.field_edits.items():
+            if not edit.isReadOnly():
+                self.assertTrue(edit.isEnabled(),
+                                f'metadata field {edit.objectName()} must stay usable for a retry')
+        self.assertTrue(editor.apply_button.isEnabled(),
+                        'a retry with the same (still pending) diff must be possible')
+        self.assertFalse(editor.cancel_button.isHidden(), 'Cancel must remain before any recorded apply')
+        self.assertTrue(editor.close_button.isHidden(), 'Close belongs to the post-apply state only')
+
+        # Disk untouched by the refused attempt: exactly the externally modified state,
+        # byte- AND mtime-exact (the stale proposal never overwrote it).
+        final_bytes = path.read_bytes()
+        self.assertEqual(hashlib.sha256(final_bytes).hexdigest(),
+                         hashlib.sha256(external_bytes).hexdigest())
+        self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), ext_mtime_ns)
+        self.assertFalse((root / new_name).exists())
+        self.assertEqual(set(os.listdir(root)), {name})
+
+        # Cancel (pre-success state) still dismisses the editor.
+        editor.cancel_button.click()
+        self.assertTrue(pump_until(lambda: editor.isHidden(), 5000),
+                        'Cancel must still work before any apply is recorded')
+
+    def test_partial_outcome_is_reported_as_warning_with_session_available(self):
+        """17A partial outcome: an apply that aborts mid-item (journaled tag write fails at
+        execution time) is reported as a warning, never unconditional success; the interrupted
+        session stays recorded and undo-able from Rename Sessions."""
+        responder = self._use_capturing_responder()
+
+        root, name, path, original_bytes, _pre_snapshot, orig_mtime_ns = self._fresh_track('case-17a-partial')
+        # Make the journaled tag write fail at execution time: validation only compares
+        # size + mtime (unchanged by chmod), so the apply proceeds and aborts mid-step.
+        os.chmod(str(path), 0o444)
+
+        editor = ManualEditDialog(str(root), name)
+        self.dialogs.append(editor)
+        editor.show()  # real visible flow: visibility state is what these assertions check
+        APP.processEvents()
+        self.assertTrue(editor.isVisible(), 'fixture: the dialog must open visibly for this test')
+
+        editor.field_edits['title'].setText('Partial Title')  # metadata-only: one journaled step
+        APP.processEvents()
+        self.assertTrue(editor.apply_button.isEnabled())
+
+        prior_boxes = len(responder.boxes)
+        editor.apply_button.click()  # responder answers the explicit Yes|No box with Yes
+        self.assertTrue(pump_until(lambda: len(responder.boxes) > prior_boxes, 8000),
+                        f'no confirmation box recorded: {responder.boxes}')
+        confirm = responder.boxes[prior_boxes]
+        self.assertEqual(confirm['title'], 'Apply manual changes')
+        self.assertEqual(confirm['chosen'], 'Yes')
+
+        self.assertTrue(pump_until(lambda: editor.applied_report is not None, 15000),
+                        'apply worker did not finish')
+        report = editor.applied_report
+        wait_no_visible_boxes(8000)
+
+        # The engine classified this single item as partial (step journaled, abort mid-step).
+        self.assertTrue(report.session_id, 'an interrupted apply must still be journaled')
+        self.assertEqual(tuple(report.applied), ())
+        self.assertEqual(tuple(report.partial), ((name, 'tag_edit_failed'),), f'partial={report.partial}')
+
+        # Disk: the failing write left bytes AND mtime untouched.
+        os.chmod(str(path), 0o644)  # restore writability for teardown/cleanup
+        self.assertEqual(path.read_bytes(), original_bytes)
+        self.assertEqual(int(os.lstat(str(path)).st_mtime_ns), orig_mtime_ns)
+
+        # (A) The visible message is a warning, never unconditional success.
+        full = responder.full_box_with('Manual edit result')
+        self.assertIsNotNone(full, f'no Manual edit result box captured: {responder.boxes}')
+        self.assertNotEqual(full['text'], 'Changes applied successfully.')
+        self.assertNotIn('applied successfully', full['text'].lower())
+        self.assertEqual(full['icon'], QMessageBox.Icon.Warning)
+        self.assertIn(name, full['detailed_text'])
+        self.assertIn('tag_edit_failed', full['detailed_text'])
+        self.assertIn(report.session_id, full['detailed_text'],
+                      'the journal must stay reachable from the result message')
+
+        # (B) Locked form; Close replaces Cancel; status line warns without claiming success.
+        self.assertTrue(editor.changes_applied)
+        self.assertFalse(editor.apply_button.isEnabled())
+        self.assertFalse(editor.filename_edit.isEnabled())
+        for edit in editor.field_edits.values():
+            self.assertFalse(edit.isEnabled(), 'metadata edits must stay disabled after an interrupted apply')
+        self.assertTrue(editor.cancel_button.isHidden())
+        self.assertFalse(editor.close_button.isHidden())
+        status_text = editor.result_status.text()
+        self.assertNotIn('applied successfully', status_text.lower())
+        self.assertIn('Rename Sessions', status_text)
+
+        # The interrupted session is recorded and visible to the Sessions tab (undo-able there).
+        sessions = {s['session_id']: s for s in list_sessions(str(root))}
+        self.assertEqual(sessions[report.session_id]['state'], 'aborted')
+
+        # Not auto-closed either: still open, waiting for the user's Close click.
+        self.assertTrue(editor.isVisible(), 'the editor must not close itself on a partial outcome')
+
+        editor.close_button.click()
+        self.assertTrue(pump_until(lambda: editor.isHidden(), 5000),
+                        'the Close button must dismiss the editor after a partial outcome too')
+
 
 class ManualEditorGuiIntegrationTests(unittest.TestCase):
     """Real GUI acceptance (Mission 15, case C).
@@ -828,13 +1144,20 @@ class ManualEditorGuiIntegrationTests(unittest.TestCase):
                     state['apply_clicked'] = True
                     editor.apply_button.click()  # explicit Yes|No box; responder answers Yes
                 elif editor.changes_applied and not state['cancelled']:
-                    # Applied: its result box was drained by the responder. Close the still-open
-                    # form through its real Cancel button so exec() can return.
-                    cancel = next((b for b in editor.findChildren(QPushButton)
-                                   if b.objectName() == 'cancel_button'), None)
-                    if cancel is not None:
-                        cancel.click()
-                    else:  # structural fallback, identical to the button's own slot
+                    # Applied. Task 17A replaced Cancel with Close once an apply was recorded:
+                    # capture that swap WHILE THE EDITOR IS STILL OPEN (post-close child
+                    # visibility flags are meaningless), then dismiss through its real Close
+                    # button so exec() can return to Bulk Rename, which refreshes Sessions
+                    # and re-scans.
+                    close = next((b for b in editor.findChildren(QPushButton)
+                                  if b.objectName() == 'close_button'), None)
+                    state['dialog_open'] = not editor.isHidden()
+                    state['cancel_hidden_at_swap'] = editor.cancel_button.isHidden()
+                    state['close_shown_while_open'] = (not editor.close_button.isHidden()) \
+                        and (not editor.isHidden())
+                    if close is not None:
+                        close.click()
+                    else:  # structural fallback: dismiss directly if the widget vanished
                         editor.reject()
                     state['cancelled'] = True
             except Exception as exc:  # recorded and asserted after exec() returns
@@ -859,8 +1182,22 @@ class ManualEditorGuiIntegrationTests(unittest.TestCase):
         confirm = self.responder.box_with('Apply manual changes')
         self.assertIsNotNone(confirm, f'missing the apply-confirmation box: {self.responder.boxes}')
         self.assertEqual(confirm['chosen'], 'Yes', 'the apply must be confirmed explicitly')
-        self.assertIsNotNone(self.responder.box_with('Manual edit result'),
-                             f'missing the editor result box: {self.responder.boxes}')
+        # Task 17A (A): the success result carries a visible primary message in the
+        # integrated flow, not just an icon + details button.
+        result_box = self.responder.box_with('Manual edit result')
+        self.assertIsNotNone(result_box, f'missing the editor result box: {self.responder.boxes}')
+        self.assertEqual(result_box['text'], 'Changes applied successfully.',
+                         f'primary success message missing from the result box: {result_box!r}')
+
+        # Task 17A (B): captured WHILE THE EDITOR WAS STILL OPEN — Cancel was hidden and a
+        # visible Close stood in its place; afterwards Close is structurally laid out with
+        # its row siblings (mission-15 defect class).
+        self.assertTrue(state.get('dialog_open'), 'the editor must have been visibly open')
+        self.assertTrue(state.get('cancel_hidden_at_swap'),
+                        'Cancel must be hidden once an apply was recorded')
+        self.assertTrue(state.get('close_shown_while_open'),
+                        'Close must replace Cancel while the editor is still open')
+        assert_close_in_action_row(self, editor)
 
         report = editor.applied_report
         self.assertIsNotNone(report, 'no applied report from the manual editor')
