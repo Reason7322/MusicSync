@@ -34,6 +34,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Iterable, Optional, Sequence
 
+from mutagen import MutagenError
+
 from .cleaning import MAX_NAME_BYTES, Reason, clean_text, name_key
 from .naming import NameProposal, Override, make_ost_name, propose_name  # noqa: F401 (re-exported)
 from .scanner import ScanResult, scan_root
@@ -767,7 +769,10 @@ def apply_changes(
                     root_abs / step.from_rel,
                     {frame: new for frame, _old, new in item.tag_edits},
                 )
-        except (OSError, ParseError, ValueError) as exc:
+        except (OSError, MutagenError, ParseError, ValueError) as exc:
+            # MutagenError: mutagen wraps low-level write failures during ID3
+            # saves; without it the error escaped apply_changes and left the
+            # journal open with no aborted event (Mission 18).
             abort_reason = f"{step.kind}_failed:{getattr(exc, 'strerror', None) or str(exc)}"
             break
         try:

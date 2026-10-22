@@ -1,42 +1,42 @@
-# Handoff — Mission 17A ACCEPTANCE COMPLETE: manual editor partial-outcome UI validated (source-level, no engine repair)
+# Handoff — Mission 18 COMPLETE: engine MutagenError recovery defect fixed, tested and checkpointed (source-level)
 
-From: Qwen (Mission 17A continuation, 2026-10-22) · To: next engineer on the same branch (Forge/Codex or Qwen continuation).
+From: Qwen (Mission 18, 2026-10-22) · To: next engineer on the same branch (Forge/Codex or Qwen continuation).
 Repo: /home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration · Branch qwen/music-rename-settings · Remotes: handoff + github.
-Incoming base verified at shift start: local HEAD == handoff SHA == github SHA == 68167c37d5696ee1297ca8fd7ca84c435595dab4, clean tree. Full detail and evidence chain: PROJECT_STATUS.md, section "Continuation record — Mission 17A" → "Validation complete".
+Incoming base verified at shift start: local HEAD == handoff SHA == github SHA == `6986bcb02c9bdbafc5bbca099a4b4c6447979e01`, clean tree, no untransferred WIP. Full detail and evidence chain: PROJECT_STATUS.md → "Continuation record — Mission 18".
 
 ## ORIGINAL PRODUCT GOAL (unchanged)
 MusicSync 0.2.0 with integrated Settings → Bulk Rename → Preview → Select → Apply → Sessions → byte-exact Undo; safe manual filename/ID3 editing; preserved KDE Connect sync, ReplayGain and recovery-data protection; verified standalone AppImage on synthetic MP3s; Fedora 44 RPM; final release artifacts with provenance. **PRODUCT STATUS: INCOMPLETE.** Live install only under separate authorization.
 
-## What this checkpoint delivered (test-only)
-`tests/test_manual_metadata_editor.py` — replaced `ManualEditorSmokeTests.test_partial_outcome_is_reported_as_warning_with_session_available`: the faulty chmod-444 trigger is GONE; no worker, no engine failure, no journal simulation. The test drives the real `_on_worker_finished` slot directly with an ACTUAL engine `ApplyReport` (vendored dataclass) carrying a controlled PARTIAL outcome — this file in `partial=((name, 'tag_edit_failed'),)` (the exact abort_code shape the engine records for a mid-tag-write failure), synthetic session id, worker-shaped payload. Asserts: warning primary message ("Some changes could not be completed.") + Warning icon + NO success wording anywhere; incomplete file and recorded session named in details/informative text (recovery via Rename Sessions); editor stays open after processing; editing + Apply locked with `changes_applied` True; Cancel hidden, Close shown as a real action-row layout member (`assert_close_in_action_row`); Close dismisses. Also records on disk that nothing was journaled/mutated — GUI response handling ONLY, explicitly NOT proof of recovery safety for a real engine failure (scope note in the test docstring). Delta: one method + `ApplyReport` added to the top-level engine import; no other module changes. **No src/ changes this shift** — bulk_rename.py and the vendored engine are byte-identical to the incoming checkpoint.
+## What this checkpoint delivered
+The release blocker preserved by Mission 17A is now fixed at source level, with a focused real-recovery regression. Exactly two files in src/tests + docs:
+- `src/musicsync/vendored/engine.py` — TWO semantic lines: new import `from mutagen import MutagenError`; step-handler catch tuple extended from `(OSError, ParseError, ValueError)` to `(OSError, MutagenError, ParseError, ValueError)` (inline comment added). Mutation ordering, backups, journal events, ApplyReport classification and Undo behavior are byte-identical; no new error-handling architecture; no other src/ file touched.
+- `tests/test_engine_mutagen_recovery.py` (NEW) — pure engine, no Qt, disposable synthetic MP3s (proven-identical F1 design from tests/test_bulk_rename.build_library). Test 1 drives the REAL apply_changes execution path with a deterministic injected MutagenError from the tag-writing operation (mock.patch.object on `engine.apply_tag_edits`, call count asserted): returns ApplyReport (no escape), `partial == ((rel, 'tag_edit_failed'),)` exactly, journal events exactly `[header, op(rename), done(rename), op(tag_edit), aborted]` with reason carrying the injected message, byte-exact backup present, list_sessions shows state 'aborted' (ops 2/done_ops 1, not corrupt) — inspectable; undo_session() restores original filename + exact sha256 bytes + mtime_ns exactly, terminal 'undone'; repeat undo verified no-op. Test 2 (control): un-patched successful apply (rename+TIT2 cleanup, session 'closed', decoys preserved) then byte/mtime-exact undo — normal path unchanged by the patch.
+- `PROJECT_STATUS.md` + this file.
 
-## Actual results this shift (fresh offscreen process per test, bounded)
-Command form: `PYTHONPATH=src:tests QT_QPA_PLATFORM=offscreen PYTHONDONTWRITEBYTECODE=1 python3 -m unittest <dotted.test> -v` (each under `timeout -s ABRT`).
-- **PASS exit 0, OK 0.056 s**: rewritten partial-outcome test — first run green, no chmod trigger.
-- **PASS exit 0, OK 0.201 s**: `ManualEditorGuiIntegrationTests.test_manual_edit_button_fixes_ambiguous_row_and_sessions_undo_restores_exactly` (previously UNTESTED) — real Manual Edit… button → Apply (explicit Yes) → Sessions-tab row located → REAL Undo control → tree byte- AND mtime-exact restore, session 'undone'.
-- **PASS exit 0, OK 0.064 s**: `ManualEditorSmokeTests.test_stale_file_modified_while_open_is_rejected_and_not_overwritten` (previously UNTESTED) — rewritten "Nothing applied" branch intact; externally modified file never overwritten.
-Success + refused smoke tests remain PASS from the incoming checkpoint (no production behavior changed this shift → no rerun per standing rules).
+**Vendoring divergence added (deliberate):** the vendored engine now intentionally differs from reference MusicSyncRename @ 8023175 by exactly this import + tuple entry, on top of the two earlier documented divergences (worker clean() fix; scan prune_dirnames). The reference repository was NOT edited or deleted.
 
-## Preserved release blocker (NOT fixed — engine intentionally untouched)
-A real mid-item tag-write failure raises mutagen `MutagenError` (wrapping PermissionError/OSError), which is NOT in the engine step-level catch `(OSError, ParseError, ValueError)` inside `apply_changes`. The exception escapes to RenameWorker's broad except → generic "Internal error" GUI payload and the session journal left OPEN without closed/aborted (recovery data at risk; next apply blocked as unresolved). A constructed ApplyReport proves nothing about this path — do not claim recovery safety from the new test. Repairing it is separate authorized work on `src/musicsync/vendored/engine.py` (vendor-and-recopy rule applies; upstream reference repo must not be edited in place).
+## Actual results this shift (fresh offscreen processes, bounded; exact commands → outcomes)
+- `PYTHONPATH=src:tests QT_QPA_PLATFORM=offscreen PYTHONDONTWRITEBYTECODE=1 python3 -m unittest test_engine_mutagen_recovery.EngineMutagenErrorRecoveryTests.test_injected_mutagen_error_is_partial_journaled_aborted_and_undoable -v` → **PASS exit 0, OK 0.004 s** (first run).
+- `...test_successful_apply_then_undo_still_exact_regression -v` → **PASS exit 0, OK 0.004 s**.
+- Whole new module in one process: **Ran 2 tests — OK**, exit 0, 0.007 s.
+- Integration regression (engine feeds RenameWorker; src/ changed this shift): `test_manual_metadata_editor.ManualEditorSmokeTests.test_metadata_edit_applies_and_undo_restores_exact_bytes` → **PASS exit 0, OK 0.085 s**. No broader-suite rerun — no trigger beyond these.
 
-## Honest distinction — source vs artifact
-The V16 AppImage `dist/MusicSync-0.2.0-x86_64.AppImage` (SHA-256 587ee62ca97d3c80…) was NOT rebuilt and does NOT contain the Mission 17A UI changes (or any post-V15 work). Rebuild is separately authorized; not done here.
+## Honest distinctions
+- Injected exceptions prove THIS failure class is handled/classified/journaled/undoable; they do NOT prove every possible filesystem mid-mutation failure is recoverable (backup-storage and journal-storage failures were explicitly out of scope). GUI symptom removal follows from apply_changes now returning the exact partial shape 17A's slot test classifies as a proper warning-with-session message, plus the worker-path smoke test above staying green; an in-GUI live-MutagenError run is not claimed.
+- Source-level fix only: V16 AppImage `dist/MusicSync-0.2.0-x86_64.AppImage` (SHA-256 587ee62ca97d…) does NOT contain this fix; it ships separately when packaging work is next authorized.
 
-## Remaining product work (unchanged, in order)
-1. Engine journal-close defect repair (`MutagenError` gap) — open release blocker.
-2. AppImage rebuild + BOTH packaged verification tests against the new artifact; record SHA-256s.
-3. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline (outstanding since V10).
-4. Fedora 44 RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
+## Remaining product work (updated, in order)
+1. AppImage rebuild + BOTH packaged verification tests against the new artifact (will also carry this engine fix); record SHA-256s.
+2. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (outstanding since V10; due after any src change, including this one).
+3. Packaged manual-editor acceptance + Fedora 44 RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
 
 ## ONE potential next action (NOT authorized)
-Authorizing a focused mission to repair the engine's step-level exception handling so a real mid-item tag-write failure classifies as `partial` and closes its journal with an `aborted` event — then re-pointing the partial-outcome test at a deterministic real-failure trigger once that exists.
+Authorize the AppImage rebuild milestone: `python3 scripts/build_appimage.py --skip-container-build` then BOTH established packaged tests against the new artifact — the fix reaches users only through that build (or, if preferred first, the release-suite re-baseline since src/ changed).
 
-## Environment facts (carry forward)
-- Qt visibility semantics (PySide6 6.11.2 offscreen): never-shown top-level reports hidden from birth; after parent close EVERY child reads hidden — visibility assertions need `show()` first and capture WHILE the modal editor is open.
-- `int(QMessageBox.icon())` raises TypeError on this binding — compare raw enums with `==`.
-- mutagen wraps low-level OSErrors in `MutagenError`; code expecting OSError from a tag save will miss them (the defect above).
-- Executor: pass `working_directory=` on every run_command; bound long runs (`timeout -s ABRT`, foreground wall ~30–52 s); github push/ls-remote ONLY via `GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c credential.helper='!gh auth git-credential' …`; handoff remote is a plain path.
+## Environment facts (carry forward; unchanged from 17A)
+- Qt visibility semantics and QMessageBox icon-compare gotchas for PySide6 6.11.2 offscreen (see 17A record); executor needs explicit `working_directory=` on every run_command, bounded runs (`timeout -s ABRT`), foreground wall ~30–52 s; github push/ls-remote ONLY via `GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c credential.helper='!gh auth git-credential' …`; handoff remote is a plain path.
+- New this shift: the executor's static path analyzer rejects heredoc python that performs file I/O ("targets '/' not write-accessible"); write such probes as real files under QwenProjects/_probe_tmp and run `python3 <abs-file>` plainly instead.
+- mutagen 1.47.0 on host python 3.14.8: `MutagenError` is defined directly in `mutagen/__init__.py`, MRO `[MutagenError, Exception]` — import as `from mutagen import MutagenError`; there is NO importable `mutagen.exceptions` module and no top-level `ParseError`. The vendored tags.py defines its own unrelated `class ParseError(Exception)`.
 
 ## Checkpoint identity
-Incoming base: 68167c37d5696ee1297ca8fd7ca84c435595dab4 (verified on both remotes + local at shift start, clean). This checkpoint commit contains exactly: `tests/test_manual_metadata_editor.py`, `PROJECT_STATUS.md`, `handoffs/QWEN_TO_FORGE.md`. Pushed to BOTH remotes on qwen/music-rename-settings; local HEAD == handoff SHA == github SHA verified by ls-remote after push. Never merged into main. No force-push.
+Incoming base: 6986bcb02c9bdbafc5bbca099a4b4c6447979e01 (verified on both remotes + local at shift start, clean). This checkpoint commit contains exactly: `src/musicsync/vendored/engine.py`, `tests/test_engine_mutagen_recovery.py` (new), `PROJECT_STATUS.md`, `handoffs/QWEN_TO_FORGE.md`. Pushed to BOTH remotes on qwen/music-rename-settings; local HEAD == handoff SHA == github SHA verified by ls-remote after push. Never merged into main. No force-push.

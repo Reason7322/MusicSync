@@ -1,8 +1,40 @@
 # MusicSyncSettingsIntegration — Project Status
 
-## PRODUCT STATUS: INCOMPLETE (packaging milestone V16 done — new V15-based AppImage 0.2.0 built, BOTH established packaged tests PASS; Fedora RPM, release regression and packaged manual-editor acceptance still open; Mission 17A ACCEPTANCE COMPLETE — partial-outcome, case-C integration and stale-file GUI tests all pass offscreen; engine journal-close defect remains an OPEN RELEASE BLOCKER)
+## PRODUCT STATUS: INCOMPLETE (packaging milestone V16 done — new V15-based AppImage 0.2.0 built, BOTH established packaged tests PASS; Fedora RPM, release regression and packaged manual-editor acceptance still open; Mission 17A ACCEPTANCE COMPLETE — partial-outcome, case-C integration and stale-file GUI tests all pass offscreen. **Mission 18 DONE (2026-10-22): the engine MutagenError step-handler gap is FIXED at source with a focused real-recovery regression — the former OPEN RELEASE BLOCKER is resolved in source; it reaches users only when packaging work next ships**
 
 Product goal (unchanged): MusicSync 0.2.0 with Bulk Rename inside Settings — Preview → Select → Apply → Sessions → Undo with byte-exact undo and no approved-changes default — plus manual filename/ID3 metadata editing, verified standalone AppImage on synthetic MP3s, Fedora 44 native RPM, preserved source/artifacts; live install only under separate authorization. `dist/MusicSync-0.2.0-x86_64.AppImage` is now the **V16 build** from source commit f94a643… (SHA-256 587ee62ca97d…, 127,695,352 bytes) and contains ALL V10–V15 source work including `manual_edit.py`. The previous V11 artifact is preserved as `dist/MusicSync-0.2.0-x86_64.AppImage.bak-d9865a3a` (SHA-256 d9865a3abdc66ae50ca3dca156094c0a02fb1b50c39b2b9baaf53eb9ac38e39e).
+
+## Continuation record — Mission 18: engine MutagenError step-handler gap FIXED (focused real-recovery regression, source-level; 2026-10-22)
+
+Mission 18: repair the confirmed recovery defect that Mission 17A preserved as an open release blocker. Incoming base verified at shift start: local HEAD == handoff SHA == github SHA == `6986bcb02c9bdbafc5bbca099a4b4c6447979e01`, clean tree, no untransferred WIP; readiness all PASS (worktree paths read_write; Python 3.14.8, mutagen 1.47.0, git 2.56.0 functional; pytest absent → unittest as established).
+
+### Defect (confirmed pre-fix)
+`apply_changes()`'s per-step mutation handler caught only `(OSError, ParseError, ValueError)`. A real mid-item ID3 tag-write failure raises mutagen's `MutagenError`; in this install its MRO is `[MutagenError, Exception]` — unrelated to OSError — and the vendored tags module's own `ParseError` is likewise a plain Exception. The exception therefore escaped apply_changes entirely: RenameWorker's broad except surfaced "Internal error in apply operation" (GUI payload ok=False) and the session journal was left OPEN with no closed/aborted event — recovery data at risk, subsequent applies blocked as unresolved (demonstrated on this host during Mission 17A).
+
+### Fix — two semantic lines, `src/musicsync/vendored/engine.py` only
+- New import: `from mutagen import MutagenError`.
+- Step-handler catch tuple extended to `(OSError, MutagenError, ParseError, ValueError)`, with an inline comment naming the gap. Everything else — mutation ordering, pre-mutation backups, journal event sequence, ApplyReport classification, Undo behavior — is byte-identical; no new error-handling architecture; no other src/ file touched.
+**Vendoring divergence added (deliberate):** this repo's vendored engine now intentionally differs from reference MusicSyncRename @ 8023175 by exactly this import + tuple entry, on top of the two earlier documented divergences (worker clean() and scan prune). The reference repository was NOT edited or deleted.
+
+### Focused regression — new `tests/test_engine_mutagen_recovery.py` (pure engine, no Qt; disposable synthetic MP3s)
+Fixture is the proven-identical F1 design from `tests/test_bulk_rename.build_library` (8 silent 417-byte MPEG frames + TPE1/TIT2 with junk group + TALB/ReplayGain-TXXX decoys); setUp asserts the preview shape first (status ok, proposal 'Junk Artist - Dream On.mp3', single TIT2 cleanup edit), so a fixture drift fails loudly.
+- `test_injected_mutagen_error_is_partial_journaled_aborted_and_undoable` drives the REAL apply_changes execution path with a deterministic injected `MutagenError` from the tag-writing operation (`mock.patch.object(engine, 'apply_tag_edits')`, call count asserted == 1): returns an ApplyReport instead of escaping; `partial == ((rel, 'tag_edit_failed'),)` exactly (applied/rejected/canceled all empty); renamed slot live with pre-snapshot bytes untouched; journal events exactly `[header, op(rename), done(rename), op(tag_edit), aborted]` with reason `'tag_edit_failed:<injected message>'`; byte-exact backup present under `.musicsyncrename/backups/`; `list_sessions` shows the session as state 'aborted' (ops 2 / done_ops 1, not corrupt) — inspectable; `undo_session()` → ok, restored == (rel,), original filename + exact sha256 bytes + mtime_ns all restored exactly; journal terminal event 'undone'; repeat undo verified no-op with file untouched.
+- `test_successful_apply_then_undo_still_exact_regression` (control): un-patched apply applies rename+TIT2 cleanup cleanly (applied partition exact, session 'closed', decoys preserved on disk), then undo restores name + exact bytes + mtime + original tag text — proves the normal success path is unchanged by the patch.
+**Honest scope:** injected exceptions prove THIS failure class is handled/classified/journaled/undoable; they do NOT prove every possible filesystem mid-mutation failure is recoverable, and backup-storage or journal-storage failures are out of scope here. GUI symptom removal follows from (i) apply_changes now returning normally with exactly the partial shape Mission 17A's rewritten slot test classifies as a proper warning-with-session message, plus (ii) the established worker-path smoke test below still green; an in-GUI live-MutagenError run is not claimed.
+
+### Actual test evidence this shift (fresh offscreen processes, bounded; exact commands → results)
+- `PYTHONPATH=src:tests QT_QPA_PLATFORM=offscreen PYTHONDONTWRITEBYTECODE=1 python3 -m unittest test_engine_mutagen_recovery.EngineMutagenErrorRecoveryTests.test_injected_mutagen_error_is_partial_journaled_aborted_and_undoable -v` → **PASS exit 0, OK 0.004 s** (first run).
+- `...test_successful_apply_then_undo_still_exact_regression -v` → **PASS exit 0, OK 0.004 s**.
+- Whole new module in one process: **Ran 2 tests — OK**, exit 0, 0.007 s.
+- Integration regression (engine feeds RenameWorker; src/ changed this shift): established `test_manual_metadata_editor.ManualEditorSmokeTests.test_metadata_edit_applies_and_undo_restores_exact_bytes` → **PASS exit 0, OK 0.085 s**. No broader-suite rerun — no trigger beyond the above.
+
+### Artifact state — honest distinction
+Source-level fix only: V16 AppImage `dist/MusicSync-0.2.0-x86_64.AppImage` (SHA-256 587ee62ca97d…) does NOT contain this engine fix; it ships separately when packaging work is next authorized. Overall PRODUCT STATUS remains INCOMPLETE.
+
+### Remaining product work (updated, in order)
+1. AppImage rebuild + BOTH packaged verification tests against the new artifact (will also carry this engine fix); record SHA-256s.
+2. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (outstanding since V10; due after any src change, including this one).
+3. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Fedora 44 RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
 
 ## Continuation record — Mission 17A: manual editor result dialog + post-apply Close UX (2026-10-22) — ACCEPTANCE COMPLETE
 
