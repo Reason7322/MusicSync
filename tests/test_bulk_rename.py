@@ -7,6 +7,7 @@ the confirmation workflow (which requires an explicit Yes) can be exercised
 deterministically without a human.
 """
 import faulthandler
+from datetime import datetime
 import hashlib
 import json
 import os
@@ -22,7 +23,7 @@ from unittest import mock
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 
 from PySide6.QtCore import QObject, QEventLoop, Qt, QTimer  # noqa: E402
-from PySide6.QtWidgets import QMessageBox  # noqa: E402
+from PySide6.QtWidgets import QHeaderView, QMessageBox  # noqa: E402
 
 from test_process import APP  # shared offscreen QApplication (imports first)
 
@@ -109,6 +110,47 @@ def build_library(root: Path):
     set_tags(root / TWIN_B, artist='Twin Act', title='Same Song')
     build_mp3(root / F8)
     set_tags(root / F8, artist='Late Band', title='Slow Burn')
+
+
+# ---------------------------------------------------------------------------
+# Synthetic session-journal fixtures (Mission 20 sessions-table tests)
+# Engine journal format: one JSON object per line under .musicsyncrename/sessions/
+# ---------------------------------------------------------------------------
+
+def journals_dir(library: Path):
+    return library / JOURNAL_DIR / 'sessions'
+
+
+def make_journal(sessions_dir, session_id, *, started=None, terminal='closed', ops=0, done=None):
+    """Write one minimal valid engine-format journal file.
+
+    ``started`` is written verbatim into the header (Z-suffixed ISO UTC for a
+    real timestamp; None omits the key entirely - the missing-stamp case).
+    ``terminal`` in {'closed','aborted','undone'} or None for a crash-shaped
+    open journal. Returns the session id."""
+    lines = []
+    header = {'type': 'header', 'id': session_id, 'root': str(sessions_dir)}
+    if started is not None:
+        header['started'] = started
+    lines.append(json.dumps(header))
+    for index in range(ops):
+        lines.append(json.dumps({'type': 'op', 'index': index, 'rel': 'fixture.mp3'}))
+    if done is None:
+        done = ops
+    for index in range(done):
+        lines.append(json.dumps({'type': 'done', 'index': index}))
+    if terminal is not None:
+        lines.append(json.dumps({'type': terminal}))
+    sessions_dir.mkdir(parents=True, exist_ok=True)
+    (sessions_dir / f'{session_id}.jsonl').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    return session_id
+
+
+def make_corrupt_journal(sessions_dir, session_id):
+    """A journal the engine cannot parse: surfaced as corrupt=True."""
+    sessions_dir.mkdir(parents=True, exist_ok=True)
+    (sessions_dir / f'{session_id}.jsonl').write_text('not json at all\n{broken line', encoding='utf-8')
+    return session_id
 
 
 # ---------------------------------------------------------------------------
@@ -291,11 +333,33 @@ def check_all_checkable(dialog):
 
 
 def session_row(table, session_id):
+    """Find a Sessions-tab row by its REAL engine session id (Mission 20).
+
+    The visible cell holds a sequential display number; the actual session id
+    is stored as item data on column 0."""
     for row in range(table.rowCount()):
         cell = table.item(row, 0)
-        if cell is not None and str(cell.text()) == str(session_id):
+        if cell is not None and str(cell.data(Qt.ItemDataRole.UserRole)) == str(session_id):
             return row
     raise AssertionError(f'session {session_id!r} not listed in Sessions tab')
+
+
+def session_number(table, number):
+    """Find a Sessions-tab row by its visible 1-based display number."""
+    wanted = str(number)
+    for row in range(table.rowCount()):
+        cell = table.item(row, 0)
+        if cell is not None and str(cell.text()) == wanted:
+            return row
+    raise AssertionError(f'session number {wanted!r} not listed in Sessions tab')
+
+
+def session_row_id(table, row):
+    """The real engine session id stored on a Sessions-tab row."""
+    cell = table.item(row, 0)
+    if cell is None:
+        return ''
+    return str(cell.data(Qt.ItemDataRole.UserRole))
 
 
 # ---------------------------------------------------------------------------
@@ -687,16 +751,12 @@ class BulkRenameDialogTests(unittest.TestCase):
         dialog = self.open_dialog()
         self.assertTrue(wait_idle(dialog))
 
-        # The unresolved session is visible in the Sessions tab (never hidden).
+        # The unresolved session is visible in the Sessions tab (never hidden),
+        # numbered like every other row and mapped to its real journal id.
         sessions_table = dialog.sessions_table
-        crash_row = None
-        for row in range(sessions_table.rowCount()):
-            cell = sessions_table.item(row, 0)
-            if cell is not None and str(cell.text()) == crash_id:
-                crash_row = row
-                break
-        self.assertIsNotNone(crash_row, 'crash journal not listed')
-        self.assertEqual(str(sessions_table.item(crash_row, 2).text()), 'OPEN')
+        crash_row = session_row(sessions_table, crash_id)  # raises when not listed
+        self.assertEqual(session_number(sessions_table, 1), crash_row, 'only session must be numbered 1')
+        self.assertEqual(str(sessions_table.item(crash_row, 2).text()), '❌ Incomplete')
 
         # A new apply is refused while it exists.
         dialog.select_all_button.click()
@@ -845,6 +905,290 @@ class ResponderBoxHandlingTests(unittest.TestCase):
 
         # Nothing left busy on the dialog side.
         self.assertFalse(self.dialog.busy)
+
+
+class SessionTablePresentationTests(unittest.TestCase):
+    """Mission 20 focused coverage of the Rename Sessions table (offscreen).
+
+    Numbered rows in true newest-first timestamp order; DD-MM-YYYY | HH:MM local
+    timestamps with safe handling of missing/invalid stamps; human state labels
+    while the engine's raw values stay intact internally; manually resizable
+    columns; and numbered-row -> real session id resolution through the actual
+    Undo path. Fixtures are hand-written journal files (established shape, see
+    test #9) plus at most one REAL engine apply for the undo-mapping proof."""
+
+    def setUp(self):
+        self._tempdir = tempfile.TemporaryDirectory(prefix='musicsync-sessionsui-')
+        self.library = Path(self._tempdir.name) / 'library'
+        self.library.mkdir()
+        build_library(self.library)
+        self.pre_snapshot = snapshot_tree(self.library)
+        self.responder = BoxAutoResponder()
+        self.responder.start()
+        self.dialogs = []
+        self._old_tz = os.environ.get('TZ')
+
+    def tearDown(self):
+        if self._old_tz is None:
+            os.environ.pop('TZ', None)
+        else:
+            os.environ['TZ'] = self._old_tz
+        if hasattr(time, 'tzset'):
+            try:
+                time.tzset()  # restore the host timezone for later tests
+            except Exception:  # noqa: BLE001 - teardown must never mask a verdict
+                pass
+        for dialog in reversed(self.dialogs):
+            try:
+                wait_idle(dialog, 10000)
+                dialog.close()
+            except Exception:  # noqa: BLE001
+                pass
+        self.responder.stop()
+        self._tempdir.cleanup()
+
+    def open_dialog_on(self, library=None):
+        dialog = BulkRenameDialog(str(library if library is not None else self.library), None)
+        self.dialogs.append(dialog)
+        return dialog
+
+    # A ------------------------------------------------------------------
+
+    def test_sessions_sort_newest_first_with_sequential_numbers(self):
+        sessions = journals_dir(self.library)
+        # Chosen so that neither the engine's name-sorted list order nor its
+        # reverse equals the true timestamp order: newest must come from the
+        # parsed stamps, not from ids or filenames.
+        new_id = make_journal(sessions, 'bbbb11112222333344445555666677aa',
+                              started='2026-10-21T06:30:00Z', terminal='aborted', ops=1, done=0)
+        mid_id = make_journal(sessions, 'aaaa11112222333344445555666677bb',
+                              started='2026-10-20T05:00:00Z', terminal='closed')
+        old_id = make_journal(sessions, 'cccc11112222333344445555666677cc',
+                              started='2026-10-19T04:15:00Z', terminal='closed')
+
+        dialog = self.open_dialog_on()
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+
+        table = dialog.sessions_table
+        self.assertEqual(table.rowCount(), 3)
+        # Visible sequential numbers, consistent with displayed order.
+        self.assertEqual([str(table.item(row, 0).text()) for row in range(3)], ['1', '2', '3'])
+        # Newest first by actual start timestamp (NOT name order [mid,new,old]
+        # and NOT its reverse [old,new,mid]).
+        ids = [session_row_id(table, row) for row in range(3)]
+        self.assertEqual(ids, [new_id, mid_id, old_id])
+        self.assertEqual([str(table.item(row, 2).text()) for row in range(3)],
+                         ['❌ Failed', '✅ Finished', '✅ Finished'])
+
+        # Original engine values preserved internally.
+        raw = {s['session_id']: s.get('state') for s in dialog.sessions}
+        self.assertEqual(raw, {new_id: 'aborted', mid_id: 'closed', old_id: 'closed'})
+        # Diagnostics: the real identifier stays available via tooltip.
+        self.assertIn(new_id, str(table.item(0, 0).toolTip()))
+        self.assertIn(mid_id, str(table.item(1, 3).toolTip()))
+
+    # B ------------------------------------------------------------------
+
+    def test_started_column_shows_local_time_dd_mm_yyyy_hh_mm(self):
+        stamp_a = '2026-10-19T04:15:00Z'
+        id_a = make_journal(journals_dir(self.library),
+                            'aaaa00001111222233334444555566ee',
+                            started=stamp_a, terminal='closed')
+
+        dialog = self.open_dialog_on()
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+        table = dialog.sessions_table
+        row = session_row(table, id_a)
+        cell_text = str(table.item(row, 1).text())
+        # Exact shape plus an independent stdlib UTC->local conversion mirror.
+        self.assertRegex(cell_text, r'^\d{2}-\d{2}-\d{4} \| \d{2}:\d{2}$')
+        expected_local = datetime.fromisoformat(stamp_a.replace('Z', '+00:00')) \
+            .astimezone().strftime('%d-%m-%Y | %H:%M')
+        self.assertEqual(cell_text, expected_local)
+        self.assertNotEqual(cell_text, stamp_a, 'raw stored string leaked into the table')
+
+        # Phase B: force a known non-UTC offset (UTC+2 via POSIX TZ format; a
+        # year-end UTC stamp must roll over to the next local day).
+        if not hasattr(time, 'tzset'):  # Linux host assumption of this suite
+            self.skipTest('time.tzset unavailable')
+        os.environ['TZ'] = 'FOO-2'  # POSIX: negative offset == east of UTC -> UTC+2
+        time.tzset()
+        try:
+            self.assertEqual(time.timezone, -7200, 'phase-B environment must be UTC+2')
+            lib2 = Path(self._tempdir.name) / 'library-tz'
+            lib2.mkdir()  # empty library: the scan is read-only and trivial here
+            stamp_b = '2026-12-31T23:30:00Z'
+            id_b = make_journal(journals_dir(lib2),
+                                'bbbb00001111222233334444555566ff',
+                                started=stamp_b, terminal='closed')
+            dialog2 = self.open_dialog_on(lib2)
+            self.assertTrue(wait_idle(dialog2), 'initial scan did not finish (tz phase)')
+            row_b = session_row(dialog2.sessions_table, id_b)
+            cell_b = str(dialog2.sessions_table.item(row_b, 1).text())
+            # Hand-computed under UTC+2: 23:30Z + 2h crosses midnight.
+            self.assertEqual(cell_b, '01-01-2027 | 01:30')
+            self.assertNotEqual(cell_b, '31-12-2026 | 23:30', 'no local conversion happened')
+        finally:
+            os.environ['TZ'] = self._old_tz if self._old_tz is not None else ''
+            time.tzset()
+
+    # C ------------------------------------------------------------------
+
+    def test_all_five_state_presentations_and_corrupt_stays_visible(self):
+        sessions = journals_dir(self.library)
+        fin_id = make_journal(sessions, 'f1n100000000000000000000000000aa',
+                              started='2026-03-01T10:00:00Z', terminal='closed')
+        fail_id = make_journal(sessions, 'f4il000000000000000000000000bb',
+                               started='2026-03-01T11:00:00Z', terminal='aborted', ops=1, done=0)
+        inc_id = make_journal(sessions, 'inc0000000000000000000000000cc',
+                              started='2026-03-01T12:00:00Z', terminal=None)  # crash-shaped open
+        und_id = make_journal(sessions, 'und0000000000000000000000000dd',
+                              started='2026-03-01T13:00:00Z', terminal='undone', ops=1)
+        corrupt_id = make_corrupt_journal(sessions, 'corruptjournal00000000000000ee')
+
+        dialog = self.open_dialog_on()
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+        table = dialog.sessions_table
+        # Nothing is hidden: all five sessions are visible rows.
+        self.assertEqual(table.rowCount(), 5)
+        # Newest-first by stamp; the corrupt journal (no parseable header at
+        # all) remains visible - here with no time, i.e. after timed rows it
+        # lands wherever its (absent) timestamp sorts: at the bottom.
+        expected_ids = [und_id, inc_id, fail_id, fin_id]  # newest -> oldest among timed
+        self.assertEqual([session_row_id(table, r) for r in range(4)], expected_ids)
+        self.assertEqual(session_row_id(table, 4), corrupt_id, 'corrupt journal must stay visible')
+        self.assertEqual([str(table.item(row, 2).text()) for row in range(5)],
+                         ['↩ Undone', '❌ Incomplete', '❌ Failed', '✅ Finished',
+                          '❌ Corrupt journal'])
+        # Interrupted/undone rows keep their step counters; corrupt shows none.
+        self.assertEqual(str(table.item(session_row(table, fail_id), 3).text()), '0/1')
+        self.assertEqual(str(table.item(session_row(table, und_id), 3).text()), '1/1')
+        self.assertEqual(str(table.item(4, 3).text()), '')
+        # Internal engine values are untouched by the presentation layer.
+        raw = {s['session_id']: (s.get('state'), bool(s.get('corrupt'))) for s in dialog.sessions}
+        self.assertEqual(raw[fin_id], ('closed', False))
+        self.assertEqual(raw[fail_id], ('aborted', False))
+        self.assertEqual(raw[inc_id], ('open', False))
+        self.assertEqual(raw[und_id], ('undone', False))
+        self.assertTrue(raw[corrupt_id][1])
+
+        # Recovery semantics unchanged: a corrupt journal is NOT undoable -
+        # selecting it must surface the info box and start no worker.
+        table.selectRow(session_row(table, corrupt_id))
+        dialog.undo_button.click()
+        self.assertTrue(pump_until(lambda: 'No undoable session selected' in self.responder.titles(), 5000),
+                        f'expected refusal for corrupt journal: {self.responder.boxes}')
+        self.assertFalse(dialog.busy)
+        self.assertIsNone(dialog.undo_report, 'undo worker started for a corrupt journal')
+
+    # D ------------------------------------------------------------------
+
+    def test_session_table_columns_are_interactively_resizable_and_preview_untouched(self):
+        dialog = self.open_dialog_on()
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+        table = dialog.sessions_table
+        header = table.horizontalHeader()
+        labels = []
+        for col in range(4):  # horizontalHeaderItem(): QHeaderView.item unbound here
+            item = table.horizontalHeaderItem(col)
+            labels.append(item.text() if item is not None else '')
+        self.assertEqual(labels, ['Session', 'Started (local)', 'State', 'Completed steps'])
+
+        # All four columns: Interactive mode + useful initial widths.
+        interactive = QHeaderView.ResizeMode.Interactive
+        for col in range(4):
+            self.assertEqual(header.sectionResizeMode(col), interactive, f'col {col} not user-resizable')
+        self.assertGreaterEqual(table.columnWidth(0), 50)
+        self.assertGreaterEqual(table.columnWidth(1), 130)  # full 'DD-MM-YYYY | HH:MM' string
+        self.assertGreaterEqual(table.columnWidth(2), 90)
+        self.assertGreaterEqual(table.columnWidth(3), 60)
+
+        # Programmatic drag-equivalent resize round-trip on every column.
+        for col, new_width in enumerate((96, 210, 88, 74)):
+            table.setColumnWidth(col, new_width)
+        widths = [table.columnWidth(c) for c in range(4)]
+        self.assertEqual(widths, [96, 210, 88, 74], 'manual resize must stick (no forced mode)')
+
+        # The separate Rename Preview table keeps its established modes.
+        p_header = dialog.preview_table.horizontalHeader()
+        rrc = QHeaderView.ResizeMode.ResizeToContents
+        stretch = QHeaderView.ResizeMode.Stretch
+        expected_modes = [rrc, rrc, stretch, stretch, rrc, interactive]
+        self.assertEqual([p_header.sectionResizeMode(c) for c in range(6)], expected_modes)
+
+    # E ------------------------------------------------------------------
+
+    def test_numbered_rows_resolve_to_real_ids_and_undo_uses_them(self):
+        sessions = journals_dir(self.library)
+        # Resolved (closed) old session: visible but never blocks a new apply,
+        # and it will NOT be undone - only its row-number -> id mapping is used.
+        old_id = make_journal(sessions, 'oldd0000000000000000000000000ff',
+                              started='1970-01-01T00:00:01Z', terminal='closed', ops=1)
+
+        dialog = self.open_dialog_on()
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+        dialog.select_all_button.click()
+        dialog.apply_button.click()  # explicit Yes auto-answered by the responder
+        self.assertTrue(wait_operation(dialog, 'report'), 'apply report missing or stuck busy')
+        report = dialog.report
+        self.assertEqual(set(dict(report.applied)), {F1, F2, F8})
+
+        table = dialog.sessions_table
+        self.assertEqual(table.rowCount(), 2)
+        row_newest = session_number(table, 1)
+        row_older = session_number(table, 2)
+        # Selecting by visible number must resolve to the correct real ids.
+        self.assertEqual(session_row_id(table, row_newest), report.session_id)
+        self.assertEqual(session_row_id(table, row_older), old_id)
+
+        # Drive the REAL Undo control from the numbered selection.
+        table.selectRow(row_newest)
+        dialog.undo_button.click()
+        undo_box = self.responder.box_with('Undo rename session')
+        self.assertIsNotNone(undo_box, f'no undo confirmation: {self.responder.boxes}')
+        self.assertIn(report.session_id, undo_box['text'], 'wrong session id reached the confirm box')
+        self.assertTrue(wait_operation(dialog, 'undo_report'), 'undo did not finish')
+        undo = dialog.undo_report
+        self.assertEqual(undo.session_id, report.session_id)  # correct original id used
+        self.assertEqual(set(undo.restored), {F1, F2, F8})
+        self.assertEqual(len(undo.anomalies), 0)
+        assert_same_tree(self, self.pre_snapshot, snapshot_tree(self.library), label='after numbered-row undo')
+
+        # Mapping stays stable across the post-undo table refresh.
+        wait_idle(dialog)
+        self.assertEqual(session_row_id(table, session_number(table, 1)), report.session_id)
+        self.assertEqual(str(table.item(session_number(table, 1), 2).text()), '↩ Undone')
+        self.assertEqual(session_row_id(table, session_number(table, 2)), old_id)
+
+    # F ------------------------------------------------------------------
+
+    def test_sessions_without_valid_timestamps_stay_visible_at_bottom(self):
+        sessions = journals_dir(self.library)
+        timed_id = make_journal(sessions, 't1m3d000000000000000000000aaa',
+                                started='2026-07-04T12:34:56Z', terminal='closed')
+        missing_id = make_journal(sessions, 'm1ss1ngstamp000000000000000bbb',
+                                  started=None, terminal='closed')  # key omitted entirely
+        invalid_id = make_journal(sessions, 'n0ts4st4mp0000000000000000ccc',
+                                  started='not-a-timestamp', terminal='closed')
+
+        dialog = self.open_dialog_on()
+        self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
+        table = dialog.sessions_table
+        # Nothing hidden: all three sessions remain visible rows.
+        self.assertEqual(table.rowCount(), 3)
+        # The timed session sorts first (newest-first among valid stamps);
+        # the two without usable timestamps stay visible below it...
+        row_timed = session_row(table, timed_id)
+        self.assertEqual(row_timed, session_number(table, 1))
+        expected_local = datetime.fromisoformat('2026-07-04T12:34:56+00:00') \
+            .astimezone().strftime('%d-%m-%Y | %H:%M')
+        self.assertEqual(str(table.item(row_timed, 1).text()), expected_local)
+        # ...and each degrades to a safe 'Unknown' label instead of crashing.
+        bottom = {session_row_id(table, r): str(table.item(r, 1).text()) for r in range(3)}
+        self.assertEqual(bottom[missing_id], 'Unknown')
+        self.assertEqual(bottom[invalid_id], 'Unknown')
+        visible_ids = {session_row_id(table, r) for r in range(3)}
+        self.assertEqual(visible_ids, {timed_id, missing_id, invalid_id})
 
 
 if __name__ == '__main__':

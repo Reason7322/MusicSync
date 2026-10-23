@@ -6,6 +6,7 @@ connected device. Long-running engine calls run in worker QThreads; all widget
 updates happen on the GUI thread via queued signals.
 """
 import logging
+from datetime import datetime, timezone
 
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (QDialog, QHBoxLayout, QHeaderView, QLabel, QMessageBox,
@@ -21,6 +22,53 @@ TAG_FRAME_NAMES = {'TIT2': 'Title', 'TPE1': 'Artist'}
 
 def _human_reasons(reasons):
     return [f'{r.code} — {r.detail}' if r.detail else f'{r.code}' for r in reasons]
+
+
+# Sessions-table presentation (Mission 20). Only display mapping lives here:
+# the engine's raw session dicts and state values are preserved internally.
+SESSION_STATE_LABELS = {
+    'closed': '✅ Finished',
+    'aborted': '❌ Failed',
+    'open': '❌ Incomplete',
+    'undone': '↩ Undone',
+}
+
+
+def parse_session_started(session):
+    """Parse the journal's UTC start stamp into an aware datetime.
+
+    Returns None when the value is missing or invalid - such sessions stay
+    visible, they simply have no sortable/formattable time."""
+    raw = session.get('started')
+    if not isinstance(raw, str) or not raw.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.strip())
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:  # journal stamps are UTC by construction
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed
+
+
+def format_session_started_local(session):
+    """DD-MM-YYYY | HH:MM in the user's local timezone; '' when unknown."""
+    parsed = parse_session_started(session)
+    if parsed is None:
+        return ''
+    return parsed.astimezone().strftime('%d-%m-%Y | %H:%M')
+
+
+def session_sort_key(index, session):
+    """Newest-first ordering by actual start timestamp.
+
+    Sessions without a valid timestamp sort after all timed ones and keep
+    their relative engine order (``index``) - the index is only that fallback
+    tie break, never an ID/filename-derived time source."""
+    parsed = parse_session_started(session)
+    if parsed is None:
+        return (1, 0.0, float(index))
+    return (0, -parsed.timestamp(), float(index))
 
 
 def row_details(item):
@@ -195,9 +243,15 @@ class BulkRenameDialog(QDialog):
 
     def _make_session_table(self):
         table = QTableWidget(0, 4)
-        table.setHorizontalHeaderLabels(['Session', 'Started (UTC)', 'State', 'Completed steps'])
-        for index in range(3):
-            table.horizontalHeader().setSectionResizeMode(index, QHeaderView.ResizeMode.Stretch)
+        table.setHorizontalHeaderLabels(['Session', 'Started (local)', 'State', 'Completed steps'])
+        # All four columns stay manually resizable (Interactive separators)
+        # with useful initial widths - no Stretch/ResizeToContents lock-in.
+        for index in range(4):
+            table.horizontalHeader().setSectionResizeMode(index, QHeaderView.ResizeMode.Interactive)
+        table.setColumnWidth(0, 72)    # row numbers: keep narrow
+        table.setColumnWidth(1, 165)   # 'DD-MM-YYYY | HH:MM' fits whole
+        table.setColumnWidth(2, 150)   # state labels incl. '❌ Corrupt journal'
+        table.setColumnWidth(3, 120)   # 'done/total' step counters
         table.verticalHeader().hide()
         table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
@@ -234,17 +288,36 @@ class BulkRenameDialog(QDialog):
 
     def _fill_sessions(self):
         table = self.sessions_table
-        ordered = list(reversed(self.sessions))
+        # Rows numbered 1..N in true chronological order, newest first. The
+        # real session id is preserved per row (item data + tooltip) so that
+        # selecting a numbered row and clicking Undo always operates on the
+        # original engine identifier.
+        keyed = sorted(
+            ((session_sort_key(index, session), session) for index, session in enumerate(self.sessions)),
+            key=lambda pair: pair[0])
+        ordered = [session for _key, session in keyed]
         table.setRowCount(len(ordered))
         for row, session in enumerate(ordered):
+            started_text = format_session_started_local(session) or 'Unknown'
             if session.get('corrupt'):
-                values = [session['session_id'], '', 'CORRUPT JOURNAL', '']
+                state_text = '❌ Corrupt journal'
+                steps_text = ''
             else:
                 done, total = session.get('done_ops', 0), session.get('ops', 0)
-                state = (session.get('state') or 'open').upper()
-                values = [str(session['session_id']), str(session.get('started') or ''), state, f'{done}/{total}']
+                state = str(session.get('state') or 'open')
+                state_text = SESSION_STATE_LABELS.get(state, state)
+                steps_text = f'{done}/{total}'
+            diagnostic = f"Session {session['session_id']}"
+            raw_started = session.get('started')
+            if isinstance(raw_started, str) and raw_started:
+                diagnostic += f'\nStarted (stored UTC): {raw_started}'
+            values = [str(row + 1), started_text, state_text, steps_text]
             for col, text in enumerate(values):
-                table.setItem(row, col, QTableWidgetItem(text))
+                item = QTableWidgetItem(text)
+                if col == 0:
+                    item.setData(Qt.ItemDataRole.UserRole, str(session['session_id']))
+                item.setToolTip(diagnostic)
+                table.setItem(row, col, item)
 
     # --------------------------------------------------------------- preview
 
@@ -371,7 +444,12 @@ class BulkRenameDialog(QDialog):
         row = self.sessions_table.currentRow()
         if row < 0 or row >= self.sessions_table.rowCount():
             return None
-        session_id = str(self.sessions_table.item(row, 0).text())
+        item = self.sessions_table.item(row, 0)
+        if item is None:
+            return None
+        # The visible cell holds a row number; the real session id was stored
+        # as item data when the table was filled.
+        session_id = str(item.data(Qt.ItemDataRole.UserRole) or '')
         for session in self.sessions:
             if session.get('session_id') == session_id:
                 return session

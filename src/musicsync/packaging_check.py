@@ -9,7 +9,7 @@ import shutil
 import time
 
 from PySide6 import __version__ as pyside_version
-from PySide6.QtCore import QLibraryInfo, QObject, QTimer
+from PySide6.QtCore import QLibraryInfo, QObject, Qt, QTimer
 from PySide6.QtGui import QIcon, QPalette
 from PySide6.QtWidgets import QMessageBox
 from musicsync import APP_ID
@@ -335,9 +335,11 @@ def install_check(app, window, mode):
                     if report.session_id:
                         sessions_table = dialog.sessions_table
                         row = -1
+                        # Row cells show a display number; the real session id
+                        # is stored as item data (Mission 20 UI change).
                         for r in range(sessions_table.rowCount()):
                             cell = sessions_table.item(r, 0)
-                            if cell is not None and str(cell.text()) == report.session_id:
+                            if cell is not None and str(cell.data(Qt.ItemDataRole.UserRole)) == report.session_id:
                                 row = r
                                 break
                         if row < 0:
