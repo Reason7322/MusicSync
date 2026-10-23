@@ -1083,7 +1083,7 @@ class SessionTablePresentationTests(unittest.TestCase):
 
     # D ------------------------------------------------------------------
 
-    def test_session_table_columns_are_interactively_resizable_and_preview_untouched(self):
+    def test_session_and_preview_tables_are_interactively_resizable(self):
         dialog = self.open_dialog_on()
         self.assertTrue(wait_idle(dialog), 'initial scan did not finish')
         table = dialog.sessions_table
@@ -1109,12 +1109,34 @@ class SessionTablePresentationTests(unittest.TestCase):
         widths = [table.columnWidth(c) for c in range(4)]
         self.assertEqual(widths, [96, 210, 88, 74], 'manual resize must stick (no forced mode)')
 
-        # The separate Rename Preview table keeps its established modes.
-        p_header = dialog.preview_table.horizontalHeader()
-        rrc = QHeaderView.ResizeMode.ResizeToContents
-        stretch = QHeaderView.ResizeMode.Stretch
-        expected_modes = [rrc, rrc, stretch, stretch, rrc, interactive]
-        self.assertEqual([p_header.sectionResizeMode(c) for c in range(6)], expected_modes)
+        # The Rename Preview table has the same manual-resize contract:
+        # all six columns Interactive with useful initial widths.
+        p_table = dialog.preview_table
+        p_header = p_table.horizontalHeader()
+        p_labels = []
+        for col in range(6):  # horizontalHeaderItem(): QHeaderView.item unbound here
+            item = p_table.horizontalHeaderItem(col)
+            p_labels.append(item.text() if item is not None else '')
+        self.assertEqual(p_labels, ['Apply', 'Path', 'Current name', 'Proposed name',
+                                    'Status', 'Details'])
+        for col in range(6):
+            self.assertEqual(p_header.sectionResizeMode(col), interactive,
+                             f'preview col {col} not user-resizable')
+        # Useful initial widths: no column starts unusably narrow.
+        self.assertGreaterEqual(p_table.columnWidth(0), 40)   # Apply checkbox
+        for col in range(1, 6):
+            self.assertGreaterEqual(p_table.columnWidth(col), 90)
+
+        # Programmatic drag-equivalent resize round-trip on every preview column:
+        # each width must stick independently (no forced mode).
+        new_widths = [84, 230, 160, 300, 70, 420]
+        for col, new_width in enumerate(new_widths):
+            p_table.setColumnWidth(col, new_width)
+        widths = [p_table.columnWidth(c) for c in range(6)]
+        self.assertEqual(widths, new_widths, 'manual resize must stick on all six preview columns')
+
+        # Horizontal scrolling covers what does not fit the dialog.
+        self.assertEqual(p_table.horizontalScrollBarPolicy(), Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     # E ------------------------------------------------------------------
 

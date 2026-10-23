@@ -228,14 +228,17 @@ class BulkRenameDialog(QDialog):
     def _make_item_table(self):
         table = QTableWidget(0, 6)
         table.setHorizontalHeaderLabels(['Apply', 'Path', 'Current name', 'Proposed name', 'Status', 'Details'])
-        header = table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
-        header.setSectionResizeMode(5, QHeaderView.ResizeMode.Interactive)
-        table.setColumnWidth(5, 260)
+        # All six columns stay manually resizable (Interactive separators)
+        # with useful initial widths - no Stretch/ResizeToContents lock-in;
+        # horizontal scrolling covers what does not fit the dialog.
+        for index in range(6):
+            table.horizontalHeader().setSectionResizeMode(index, QHeaderView.ResizeMode.Interactive)
+        table.setColumnWidth(0, 60)    # Apply checkbox: keep narrow
+        table.setColumnWidth(1, 180)   # relative path column
+        table.setColumnWidth(2, 200)   # current filename
+        table.setColumnWidth(3, 200)   # proposed filename
+        table.setColumnWidth(4, 110)   # status labels incl. 'Needs review'
+        table.setColumnWidth(5, 240)   # details; tooltip carries the full text
         table.verticalHeader().hide()
         table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
