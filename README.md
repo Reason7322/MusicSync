@@ -1,3 +1,6 @@
+> **Disclaimer:** This application is 100% vibe coded by OpenAI Codex and my locally running Qwen model. Use it at your own discretion.
+
+
 # MusicSync
 
 MusicSync is a small Linux desktop application for synchronizing your local music library with an Android phone through KDE Connect.
@@ -8,7 +11,6 @@ It provides synchronization previews, ReplayGain processing, filename compatibil
 
 <img width="2560" height="1376" alt="MusicSync running on Linux" src="https://github.com/user-attachments/assets/7bd8b67a-4e3c-4c05-a729-57e02237d37e" />
 
-> **Disclaimer:** This application is 100% vibe coded by OpenAI Codex and my locally running Qwen model. Use it at your own discretion.
 
 ## Features
 
