@@ -1,0 +1,1930 @@
+{
+  "at": "2026-10-17T21:48:59+02:00",
+  "tests_run": 173,
+  "failures": 10,
+  "errors": 7,
+  "skipped": 0,
+  "seconds": 86.164,
+  "tests": [
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_android_invalid_characters_are_replaced_but_unicode_is_preserved",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_colon_translation_is_readable_and_preserves_extension",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_hash_suffix_collision_with_valid_name_is_resolved_deterministically",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_long_translation_stays_within_component_limit_and_keeps_extension",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_mapping_is_order_independent_and_translates_each_path_component",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_repeated_invalid_characters_collapse_to_one_separator",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_unrelated_source_changes_do_not_remap_existing_paths",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_android_names.AndroidFilenameTests.test_valid_name_keeps_priority_when_translated_names_collide",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_app.ApplicationIconTests.test_theme_lookup_uses_app_id_and_bundled_svg_fallback",
+      "status": "PASS",
+      "seconds": 0.003,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_build_configuration_is_standalone_and_metadata_consistent",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_dependency_helper_reports_host_setup_and_missing_private_tools",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_frozen_worker_uses_kernel_executable_not_python_or_cwd",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_host_environment_restored_without_changing_parent",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_host_gsettings_environment_is_restored",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_host_tools_remain_on_host",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_missing_host_dependency_stops_startup_before_scan_or_mount",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_native_launcher_preserves_appearance_and_external_xdg",
+      "status": "FAIL",
+      "seconds": 0.0048,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_appimage.py\", line 128, in test_native_launcher_preserves_appearance_and_external_xdg\n    subprocess.run(['gcc', '-o', str(launcher), str(source)], check=True, capture_output=True)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 578, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['gcc', '-o', '/tmp/musicsync-bundle-opuognu1/AppDir \u03a9 $cash ; literal/AppRun', '/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/packaging/appimage/AppRun.c']' returned non-zero exit status 1.\n"
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_preset_relative_resolution_preserves_custom_and_serialized_default",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_private_tools_do_not_fall_back_to_path (name='rsync')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_private_tools_do_not_fall_back_to_path (name='rsgain')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_private_tools_do_not_fall_back_to_path",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_qprocess_uses_private_executable_even_with_host_tool_present",
+      "status": "FAIL",
+      "seconds": 0.0013,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_appimage.py\", line 49, in test_qprocess_uses_private_executable_even_with_host_tool_present\n    self.assertEqual(result.code, 0, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -1 != 0 : Child process set up failed: execve: Exec format error\n"
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_source_and_unrelated_appdir_use_host_defaults",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_theme_build_pins_exact_sdk_and_keeps_required_kde_sources",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_appimage.AppImageTests.test_worker_payload_is_an_argument_not_shell_interpolation",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_apply_with_nothing_approved_is_a_noop",
+      "status": "PASS",
+      "seconds": 0.0565,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_busy_guard_blocks_overlapping_operations",
+      "status": "PASS",
+      "seconds": 0.0299,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_collision_pair_rejected_together_but_single_side_applies",
+      "status": "PASS",
+      "seconds": 0.1786,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_declined_confirmation_applies_nothing",
+      "status": "PASS",
+      "seconds": 0.0529,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_file_changed_after_preview_is_rejected_while_others_apply",
+      "status": "PASS",
+      "seconds": 0.125,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_mid_apply_cancellation_keeps_files_and_aborted_session_is_recoverable",
+      "status": "PASS",
+      "seconds": 0.1483,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_preview_is_read_only_with_deterministic_statuses_and_no_default_approval",
+      "status": "PASS",
+      "seconds": 0.0289,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_programmatic_approval_of_ambiguous_row_is_rejected",
+      "status": "PASS",
+      "seconds": 0.0591,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_select_apply_verify_undo_restores_bytes_exactly",
+      "status": "PASS",
+      "seconds": 0.1606,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_settings_bulk_rename_save_works_without_configured_phone",
+      "status": "PASS",
+      "seconds": 0.0046,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.BulkRenameDialogTests.test_unresolved_crash_journal_blocks_apply_and_undo_recovers_it",
+      "status": "PASS",
+      "seconds": 0.1726,
+      "detail": ""
+    },
+    {
+      "test": "test_bulk_rename.ResponderBoxHandlingTests.test_responder_dismisses_info_box_and_yes_no_confirmations",
+      "status": "PASS",
+      "seconds": 0.1026,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_streamed_change_uses_workflow_filename_translation",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='preview')",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='success')",
+      "status": "PASS",
+      "seconds": 0.0033,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='failure')",
+      "status": "PASS",
+      "seconds": 0.0043,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules (mode='cancel')",
+      "status": "PASS",
+      "seconds": 0.0052,
+      "detail": ""
+    },
+    {
+      "test": "test_controller.ControllerTests.test_terminal_states_and_last_success_rules",
+      "status": "PASS",
+      "seconds": 0.0052,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_desktop_spec_validation_and_gio_launch_preserve_literal_unicode_path",
+      "status": "FAIL",
+      "seconds": 5.0379,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_desktop_integration.py\", line 73, in test_desktop_spec_validation_and_gio_launch_preserve_literal_unicode_path\n    self.assertEqual(json.loads(result.read_text()), [str(self.image)])\n                                ~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib64/python3.14/pathlib/__init__.py\", line 787, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/pathlib/__init__.py\", line 771, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/tmp/musicsync-desktop-a_m2wvhz/launched.json'\n"
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_entry_dispatch_is_explicit_and_does_not_initialize_gui",
+      "status": "PASS",
+      "seconds": 0.0018,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_install_repeat_uninstall_uses_image_path_and_preserves_image",
+      "status": "PASS",
+      "seconds": 0.0037,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_missing_runtime_or_appdir_target_never_installs",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), uninstall=False)",
+      "status": "PASS",
+      "seconds": 0.0017,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), uninstall=True)",
+      "status": "PASS",
+      "seconds": 0.0023,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), uninstall=False)",
+      "status": "PASS",
+      "seconds": 0.0032,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), uninstall=True)",
+      "status": "PASS",
+      "seconds": 0.0039,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/musicsync/appimage-desktop.json'), uninstall=False)",
+      "status": "PASS",
+      "seconds": 0.005,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals (target=PosixPath('/tmp/musicsync-desktop-knopvdab/data \u03a9/musicsync/appimage-desktop.json'), uninstall=True)",
+      "status": "PASS",
+      "seconds": 0.0056,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_modified_artifacts_or_receipt_block_all_writes_and_removals",
+      "status": "PASS",
+      "seconds": 0.0062,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-n3nk6dz6/data \u03a9/applications/io.github.reason7322.MusicSync.desktop'), content=b'unrelated')",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-n3nk6dz6/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), content=b'unrelated')",
+      "status": "PASS",
+      "seconds": 0.0025,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed (target=PosixPath('/tmp/musicsync-desktop-n3nk6dz6/data \u03a9/icons/hicolor/scalable/apps/io.github.reason7322.MusicSync.svg'), content=b'<svg xmlns=\"')",
+      "status": "PASS",
+      "seconds": 0.0035,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_preexisting_desktop_or_identical_icon_is_not_claimed",
+      "status": "PASS",
+      "seconds": 0.0038,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='relative.AppImage')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\nfile')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\x00file')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\rfile')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\tfile')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/bad\\x7ffile')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (value='/tmp/a=b')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (name='APPIMAGE', value='relative')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (name='APPIMAGE', value='/tmp/bad\\npath')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (name='XDG_DATA_HOME', value='relative')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes (name='XDG_DATA_HOME', value='/tmp/bad\\npath')",
+      "status": "PASS",
+      "seconds": 0.0013,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_rejects_unsafe_and_nonabsolute_paths_without_writes",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_symlink_artifacts_are_never_followed",
+      "status": "PASS",
+      "seconds": 0.0027,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_xdg_default_and_empty_value_use_user_data_directory (value=None)",
+      "status": "PASS",
+      "seconds": 0.0018,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_xdg_default_and_empty_value_use_user_data_directory (value='')",
+      "status": "PASS",
+      "seconds": 0.0027,
+      "detail": ""
+    },
+    {
+      "test": "test_desktop_integration.DesktopIntegrationTests.test_xdg_default_and_empty_value_use_user_data_directory",
+      "status": "PASS",
+      "seconds": 0.0031,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_empty_and_missing_source",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_inventory_snapshot_and_protection",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_local_directory_cannot_pass_remote_guard",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_no_symlinks",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_partial_staging_failure_removes_stage_and_closes_files",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_probe_cleanup",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_source_inventory_has_stable_android_mapping_digest",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_staging_pins_regular_files_and_cleans_up",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_staging_rejects_source_file_or_parent_swapped_to_symlink (swapped='file')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_staging_rejects_source_file_or_parent_swapped_to_symlink (swapped='parent')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_filesystem.FilesystemTests.test_staging_rejects_source_file_or_parent_swapped_to_symlink",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovered_device_selection_saves_real_selection_and_retains_it",
+      "status": "PASS",
+      "seconds": 0.0136,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device (listing='')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device (listing='test-phone Example phone\\nother-phone Other phone\\n')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_discovery_without_selection_never_queries_or_mounts_a_device",
+      "status": "PASS",
+      "seconds": 0.0111,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_first_run_widgets_require_selection_then_enable_operations",
+      "status": "PASS",
+      "seconds": 0.055,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_mirror_defaults_off_and_saved_values_are_preserved_without_writing (mirror=True)",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_mirror_defaults_off_and_saved_values_are_preserved_without_writing (mirror=False)",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_mirror_defaults_off_and_saved_values_are_preserved_without_writing",
+      "status": "PASS",
+      "seconds": 0.0111,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_missing_config_uses_qt_music_location_without_inventing_device_or_writing",
+      "status": "PASS",
+      "seconds": 0.0109,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_saved_source_is_not_replaced_by_qt_suggestion",
+      "status": "PASS",
+      "seconds": 0.0115,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-h349ou_1')",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/musicsync-first-run-h349ou_1/')",
+      "status": "PASS",
+      "seconds": 0.0016,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='relative')",
+      "status": "PASS",
+      "seconds": 0.0019,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/../music')",
+      "status": "PASS",
+      "seconds": 0.0022,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source (value='/tmp/bad\\npath')",
+      "status": "PASS",
+      "seconds": 0.0025,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unavailable_or_unsafe_qt_suggestion_requires_explicit_source",
+      "status": "PASS",
+      "seconds": 0.0128,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'source': '/'})",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'remote_dir': '/storage/emulated/0/../Music'})",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'device_id': 'test-phone'})",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'device_name': 'Phone'})",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'threads': 0})",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices (payload={'exclusions': []})",
+      "status": "PASS",
+      "seconds": 0.0012,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_load_still_rejects_malformed_paths_and_partial_devices",
+      "status": "PASS",
+      "seconds": 0.0115,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command (preview=True)",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command (preview=False)",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unconfigured_workflow_stops_before_any_external_command",
+      "status": "PASS",
+      "seconds": 0.011,
+      "detail": ""
+    },
+    {
+      "test": "test_first_run.FirstRunTests.test_unset_source_is_not_scanned_and_does_not_stop_device_discovery",
+      "status": "PASS",
+      "seconds": 0.0109,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_cancelled_translated_rsync_cleans_stage_before_returning",
+      "status": "PASS",
+      "seconds": 0.0017,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='changed')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='empty')",
+      "status": "PASS",
+      "seconds": 0.0019,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes (mode='phone_changed')",
+      "status": "PASS",
+      "seconds": 0.0029,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_changed_or_empty_source_never_executes",
+      "status": "PASS",
+      "seconds": 0.0029,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_mapping_change_never_starts_rsync",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_real_translated_mirror_is_repeatable_and_stable_after_unrelated_add",
+      "status": "PASS",
+      "seconds": 0.1398,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_rsync_uses_pinned_directories_and_delete_cap",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "detail": ""
+    },
+    {
+      "test": "test_guards.GuardTests.test_translated_source_uses_copy_links_and_pinned_file_descriptors",
+      "status": "PASS",
+      "seconds": 0.0017,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_arguments",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_devices",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_itemization",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_mount_validation",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_progress",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_settings",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_logic.LogicTests.test_threshold",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_cancel_and_kill_escalation",
+      "status": "FAIL",
+      "seconds": 15.0,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_process.py\", line 52, in test_cancel_and_kill_escalation\n    self.assertTrue(result.cancelled)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
+    },
+    {
+      "test": "test_process.ProcessTests.test_delete_cap_blocks_unpreviewed_deletion",
+      "status": "PASS",
+      "seconds": 0.1452,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_failed_to_start",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_incremental_channels_and_cr",
+      "status": "FAIL",
+      "seconds": 14.8451,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_process.py\", line 41, in test_incremental_channels_and_cr\n    self.assertEqual(result.code, 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: -1 != 0\n"
+    },
+    {
+      "test": "test_process.ProcessTests.test_real_rsync_in_temporary_directories",
+      "status": "PASS",
+      "seconds": 0.1355,
+      "detail": ""
+    },
+    {
+      "test": "test_process.ProcessTests.test_timeout",
+      "status": "FAIL",
+      "seconds": 14.8733,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_process.py\", line 57, in test_timeout\n    self.assertTrue(result.timed_out)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_atomic_settings_failure_preserves_previous_content",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='{')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='[]')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='{\"unknown\":1}')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults (data='{\"threads\":0}')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_corrupt_settings_do_not_fall_back_to_defaults",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=0, total=0)",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=1, total=1)",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=1, total=5)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=2, total=5)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=49, total=1000)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=50, total=1000)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=20, total=100)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix (deleted=21, total=100)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_deletion_boundary_matrix",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='')",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='/')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='relative')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value='/tmp/../Music')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='source', value=None)",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='-flag')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='a/b')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='device_id', value='a b')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/../Music')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/./Music')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0//Music')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='//storage/emulated/0/Music')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/Music/')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='remote_dir', value='/storage/emulated/0/Music\\x00')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=0)",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=33)",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value=True)",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='threads', value='4')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='mirror', value='true')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='mirror', value=1)",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='replaygain', value=None)",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='replaygain', value=1)",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=[])",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=['*.mp3'])",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal (key='exclusions', value=['/.thumbnails/', '/a/b/'])",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_invalid_settings_matrix_and_remote_traversal",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size (code='cd+++++++++')",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size (code='*deleting  ')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size (code='.f..t......')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_itemized_directory_delete_metadata_only_update_and_file_size",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_log_location_rotation_and_ansi_cleanup",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='kdeconnect-cli')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='sshfs')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='rsync')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='rsgain')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='findmnt')",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='mountpoint')",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset (tool='fusermount3')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_missing_tools_and_missing_replaygain_preset",
+      "status": "PASS",
+      "seconds": 0.0012,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_progress_units_and_unrecognized_lines",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_replaygain_summary_recognized_or_explicitly_unknown",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_roundtrip_all_settings_and_config_file_permissions",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.ParsingSettingsReleaseTests.test_unicode_line_separator_is_a_filename_not_a_record_boundary",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - fuse.sshfs kdeconnect@host:/ rw\\n42 1 0:2 / /run/user/1000/device rw - fuse.sshfs kdeconnect@host:/ rw\\n')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - ext4 kdeconnect@host:/ rw\\n')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id (text='42 1 0:2 / /run/user/1000/device rw - fuse.sshfs other@host:/ rw\\n')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_current_mount_requires_unique_identity_and_matching_id",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_fifo_and_unix_socket_rejected_without_blocking",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='bad json')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": []}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}, {\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}]}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/other\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": 42}]}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed (text='{\"filesystems\": [{\"target\": \"/run/user/1000/device\", \"fstype\": \"fuse.sshfs\", \"source\": \"kdeconnect@host:/\", \"id\": \"bad\"}]}')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_findmnt_malformed_empty_duplicate_wrong_target_fails_closed",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected (ids=[124])",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected (ids=[123, 124])",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_identity_and_nested_mount_rejected",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_missing_not_created_and_symlink_components_rejected",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_remote_readonly_and_delete_denied_probe_errors",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_source_zero_byte_file_is_a_file_but_directories_and_exclusions_are_not",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='file')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='directory')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected (target='missing')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_symlink_roots_files_directories_and_dangling_links_rejected",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.SourceDestinationReleaseTests.test_unreadable_subtree_aborts_instead_of_becoming_deletions",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Scan PC library')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Discover KDE Connect devices')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Check per-track ReplayGain')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Get KDE Connect mountpoint')",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Scan phone Music')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Verify phone write and delete capability')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='rsync preview')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='Final phone write/delete check')",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate (label='rsync mirror')",
+      "status": "PASS",
+      "seconds": 0.0018,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cancellation_at_each_operation_gate",
+      "status": "PASS",
+      "seconds": 0.0018,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_cleanup_failure_visible_separately_and_borrowed_failure_untouched",
+      "status": "PASS",
+      "seconds": 0.001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate (gate=1)",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate (gate=2)",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate (gate=3)",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_device_disconnect_at_each_connectivity_gate",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_final_verification_detects_remaining_changes",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_malformed_preview_aborts_real_sync",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_missing_mountpoint_directory_can_be_created_only_by_kdeconnect",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_normal_unmount_failure_falls_back_once_to_lazy",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned (cancelled=False)",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned (cancelled=True)",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_mount_on_failure_and_cancellation_is_cleaned",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_partial_unexpected_mount_never_detached",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_preview_does_not_require_preset_or_rsgain",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_replaygain_disabled_does_not_require_or_invoke_it",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_stale_detach_failure_no_remount_or_sync",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_stale_detach_that_did_not_detach_stops",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_release_core.WorkflowReleaseTests.test_stale_storage_timeout_uses_one_recovery",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_cleanup_waits_for_unmount",
+      "status": "FAIL",
+      "seconds": 0.0631,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 199, in test_close_during_cleanup_waits_for_unmount\n    self.assertTrue(window.controller.active)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_mount_cleans_partial_mount",
+      "status": "PASS",
+      "seconds": 0.0834,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_replaygain_cancels_process_and_never_mounts",
+      "status": "FAIL",
+      "seconds": 0.0514,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 171, in test_close_during_replaygain_cancels_process_and_never_mounts\n    self.assertEqual(window.controller.state, State.CANCELLED)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: <State.FAILED: 'Failed'> != <State.CANCELLED: 'Cancelled'>\n"
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_during_rsync_cancels_and_cleans_owned_mount",
+      "status": "FAIL",
+      "seconds": 0.0731,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 182, in test_close_during_rsync_cancels_and_cleans_owned_mount\n    self.assertEqual(window.controller.state, State.CANCELLED)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: <State.FAILED: 'Failed'> != <State.CANCELLED: 'Cancelled'>\n"
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_close_while_approval_pending_stops_without_sync",
+      "status": "PASS",
+      "seconds": 0.1163,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_large_delete_dialog_defaults_to_cancel_and_lists_files",
+      "status": "PASS",
+      "seconds": 0.1072,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_large_preview_table_10000_rows_and_return_to_event_loop",
+      "status": "PASS",
+      "seconds": 0.2081,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_liquid_glass_ui_keeps_qt_theme_and_shows_results_only_after_preview",
+      "status": "PASS",
+      "seconds": 0.0706,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_preview_and_live_status_show_destination_filename_translation",
+      "status": "PASS",
+      "seconds": 0.0703,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_progress_and_log_widgets_update_while_subprocess_runs",
+      "status": "FAIL",
+      "seconds": 0.0619,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 239, in test_progress_and_log_widgets_update_while_subprocess_runs\n    self.assertEqual(window.progress_bar.value(), 42)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -1 != 42\n"
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_repeated_clicks_and_controller_starts_cannot_overlap",
+      "status": "FAIL",
+      "seconds": 0.0625,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_gui.py\", line 160, in test_repeated_clicks_and_controller_starts_cannot_overlap\n    self.assertEqual(window.controller.state, State.CANCELLED)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: <State.FAILED: 'Failed'> != <State.CANCELLED: 'Cancelled'>\n"
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_settings_dialog_saves_all_controls_to_isolated_xdg",
+      "status": "PASS",
+      "seconds": 0.0705,
+      "detail": ""
+    },
+    {
+      "test": "test_release_gui.GUIReleaseTests.test_startup_is_idle_and_does_not_begin_sync",
+      "status": "PASS",
+      "seconds": 0.0694,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_history_write_failure_is_visible_and_does_not_erase_prior_success",
+      "status": "PASS",
+      "seconds": 0.0028,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='preview')",
+      "status": "PASS",
+      "seconds": 0.0013,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='failure')",
+      "status": "PASS",
+      "seconds": 0.0032,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes (mode='cancel')",
+      "status": "PASS",
+      "seconds": 0.0039,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_preview_failure_and_cancel_preserve_existing_success_bytes",
+      "status": "PASS",
+      "seconds": 0.0039,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.HistoryReleaseTests.test_success_fields_counts_timezone_and_cleanup_warning",
+      "status": "PASS",
+      "seconds": 0.0023,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_absent_mount_directory_is_unmounted_without_creating_it",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_cancelled_startup_stops_without_followup_commands",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_cleanup_presence_timeout_does_not_claim_unmounted",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_path_timeout_or_existing_path_never_claims_absence (reply=Result(code=0, stdout='{\"exists\": false}', stderr='', cancelled=False, timed_out=True))",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_path_timeout_or_existing_path_never_claims_absence (reply=Result(code=0, stdout='{\"exists\": true}', stderr='', cancelled=False, timed_out=False))",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_path_timeout_or_existing_path_never_claims_absence",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_presence_timeout_never_authorizes_sync_even_exit_zero",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_mount_status_permission_error_is_not_reported_as_unmounted",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_history_status.TimeoutStatusReleaseTests.test_startup_status_checks_do_not_mount_or_sync",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.ProcessLifecycleReleaseTests.test_cancel_does_not_leave_a_child_process_running",
+      "status": "FAIL",
+      "seconds": 14.6888,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_io.py\", line 129, in test_cancel_does_not_leave_a_child_process_running\n    pid = int(result.stdout.strip())\nValueError: invalid literal for int() with base 10: ''\n"
+    },
+    {
+      "test": "test_release_io.ProcessLifecycleReleaseTests.test_cancel_from_started_signal_does_not_launch_command",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_actual_rsync_cancel_before_delete_after_keeps_extra_file",
+      "status": "PASS",
+      "seconds": 3.0926,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_failed_sender_io_does_not_delete_phone_only_file",
+      "status": "PASS",
+      "seconds": 0.1459,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_large_library_worker_and_parser_10000_files",
+      "status": "FAIL",
+      "seconds": 14.8047,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_io.py\", line 112, in test_large_library_worker_and_parser_10000_files\n    self.assertEqual(result.code, 0, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: -1 != 0 : No program defined\n"
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_real_preview_is_byte_and_mtime_unchanged_with_unusual_names",
+      "status": "PASS",
+      "seconds": 0.0925,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_root_thumbnails_protected_but_nested_thumbnails_follow_mirror",
+      "status": "PASS",
+      "seconds": 0.0465,
+      "detail": ""
+    },
+    {
+      "test": "test_release_io.RealTemporaryRsyncReleaseTests.test_update_only_keeps_extra_files_and_updates_changed_files",
+      "status": "PASS",
+      "seconds": 0.0456,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_application_identity_is_consistent",
+      "status": "PASS",
+      "seconds": 0.0023,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_desktop_template_and_pyproject_metadata",
+      "status": "PASS",
+      "seconds": 0.0024,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_external_command_ast_has_no_shell_interpolation_or_gui_waits",
+      "status": "PASS",
+      "seconds": 0.0577,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_first_run_without_saved_config",
+      "status": "FAIL",
+      "seconds": 0.0147,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 155, in test_fresh_source_copy_first_run_without_saved_config\n    self.fresh_source_launch(configured=False)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 160, in fresh_source_launch\n    setup = subprocess.run([sys.executable, '-m', 'venv', '--system-site-packages', str(root / '.venv')], capture_output=True, text=True, timeout=60)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_fresh_source_copy_setup_and_launch_from_unrelated_cwd",
+      "status": "FAIL",
+      "seconds": 0.0112,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 152, in test_fresh_source_copy_setup_and_launch_from_unrelated_cwd\n    self.fresh_source_launch(configured=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 160, in fresh_source_launch\n    setup = subprocess.run([sys.executable, '-m', 'venv', '--system-site-packages', str(root / '.venv')], capture_output=True, text=True, timeout=60)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_installer_is_relocatable_and_does_not_modify_real_home",
+      "status": "FAIL",
+      "seconds": 0.0119,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 58, in test_installer_is_relocatable_and_does_not_modify_real_home\n    result = subprocess.run([sys.executable, str(root / 'scripts/install_desktop.py')], env=env, capture_output=True, text=True, timeout=20)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_installer_refuses_unrelated_existing_files_before_any_write",
+      "status": "PASS",
+      "seconds": 0.0015,
+      "detail": ""
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_real_qt_honors_isolated_xdg_music_directory",
+      "status": "FAIL",
+      "seconds": 0.001,
+      "detail": "Traceback (most recent call last):\n  File \"/home/reason/Temporary/QwenProjects/MusicSyncSettingsIntegration/tests/test_release_packaging.py\", line 128, in test_real_qt_honors_isolated_xdg_music_directory\n    result = subprocess.run([sys.executable, '-c', code], env=env, capture_output=True, text=True, timeout=10)\n  File \"/usr/lib64/python3.14/subprocess.py\", line 555, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1039, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        pass_fds, cwd, env,\n                        ^^^^^^^^^^^^^^^^^^^\n    ...<5 lines>...\n                        gid, gids, uid, umask,\n                        ^^^^^^^^^^^^^^^^^^^^^^\n                        start_new_session, process_group)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib64/python3.14/subprocess.py\", line 1990, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nPermissionError: [Errno 13] Permission denied: ''\n"
+    },
+    {
+      "test": "test_release_packaging.PackagingReleaseTests.test_version_is_consistent_across_source_and_appimage_outputs",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_replaygain_integration.ReplayGainIntegrationTests.test_new_track_tagged_then_skipped_byte_for_byte",
+      "status": "PASS",
+      "seconds": 0.3092,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_broken_replacement_stops",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_cancel_cleans_owned_mount",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_cancel_replaygain_never_mounts",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_changed_cleanup_mount_left_untouched",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_delete_approval_and_cap",
+      "status": "PASS",
+      "seconds": 0.0008,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Scan PC library')",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Discover KDE Connect devices')",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Check per-track ReplayGain')",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Get KDE Connect mountpoint')",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Mount KDE Connect filesystem')",
+      "status": "PASS",
+      "seconds": 0.0006,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Verify SSHFS identity')",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Scan phone Music')",
+      "status": "PASS",
+      "seconds": 0.0009,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Verify phone write and delete capability')",
+      "status": "PASS",
+      "seconds": 0.0011,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='rsync preview')",
+      "status": "PASS",
+      "seconds": 0.0013,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync (label='Final phone write/delete check')",
+      "status": "PASS",
+      "seconds": 0.0016,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_failures_block_sync",
+      "status": "PASS",
+      "seconds": 0.0016,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_healthy_borrowed_mount_left_alone",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_preview_change_reports_original_and_android_destination_names",
+      "status": "PASS",
+      "seconds": 0.0,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_preview_no_tagging_probe_or_real_rsync",
+      "status": "PASS",
+      "seconds": 0.0002,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_real_order",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_rsync_error_does_not_verify_success",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_rsync_payload_binds_execution_to_previewed_filename_mapping",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_stale_recovered_once",
+      "status": "PASS",
+      "seconds": 0.0004,
+      "detail": ""
+    },
+    {
+      "test": "test_workflow.WorkflowTests.test_unexpected_filesystem_never_unmounted",
+      "status": "PASS",
+      "seconds": 0.0003,
+      "detail": ""
+    }
+  ]
+}
