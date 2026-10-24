@@ -1,8 +1,16 @@
 # MusicSyncSettingsIntegration — Project Status
 
-## PRODUCT STATUS: INCOMPLETE (**Mission 22 DONE (2026-10-23)** — all six Rename Preview table columns now manually resizable (Interactive) with useful initial widths, matching the accepted Sessions-table contract; focused + targeted regression tests green (19/19 individually). Source-level only: build-V18 AppImage does NOT yet carry this change. Mission 21 record stands: V18 built from `2caad1fc…`, both packaged tests PASS on it, V17 preserved as `.bak-18808cb2`. Fedora RPM + release-suite re-baseline still open.)
+## PRODUCT STATUS: INCOMPLETE (**Mission 22 DONE (2026-10-23)** — all six Rename Preview table columns now manually resizable (Interactive) with useful initial widths, matching the accepted Sessions-table contract; focused + targeted regression tests green (19/19 individually). Source-level only: build-V18 AppImage does NOT yet carry this change. Mission 21 record stands: V18 built from `2caad1fc…`, both packaged tests PASS on it, V17 preserved as `.bak-18808cb2`. Updated AppImage + Fedora RPM packaging still open; a full release-suite re-baseline is NOT an authorized milestone or packaging gate.)
 
 Product goal (unchanged): MusicSync 0.2.0 with Bulk Rename inside Settings — Preview → Select → Apply → Sessions → Undo with byte-exact undo and no approved-changes default — plus manual filename/ID3 metadata editing, verified standalone AppImage on synthetic MP3s, Fedora 44 native RPM, preserved source/artifacts; live install only under separate authorization. `dist/MusicSync-0.2.0-x86_64.AppImage` is now the **build-V18 artifact** from source commit `2caad1fc70b76bb25624e05bc77962a702b95fe1` (SHA-256 `7a197215ab06ed6032d7df7520abbc0cffd0357c776e15737513f292dd33bc1d`, 127,715,832 bytes) and contains ALL accepted source work through Mission 20 — `manual_edit.py`, the Mission 17A result-dialog/Close UX, the Mission 18 engine MutagenError step-handler fix, AND the Mission 20 Sessions-table usability UI (provenance: corresponding-source tarball members src/tests/scripts byte-identical to this commit; frozen bundle contains the Mission 20 markers). The previous **V17 build** artifact is preserved as `dist/MusicSync-0.2.0-x86_64.AppImage.bak-18808cb2` (SHA-256 `18808cb25c057861a987c3a4b5ae28dabbd64fdbd2cfb61680107f657efaff06`, re-hashed identical after copy) with versioned provenance copies `build/appimage/SHA256SUMS.v17-18808cb2`, `appimage-build-manifest.v17-18808cb2.json`, `runtime-tests.v17-18808cb2.json`, `bulk-rename-tests.v17-18808cb2.json` (all re-hashed identical after copy); older backups `.bak-d9865a3a`, `.bak-185e79f1`, `.bak-587ee62c` untouched. **Source has advanced since V18:** Mission 22's Rename Preview column-resize change (this commit's parent) is source-level only and ships at the next packaging milestone; no artifact rebuild was authorized or performed this mission.
+## CURRENT SCOPE — Reason's explicit correction, 2026-10-24 (supersedes ALL historical to-do/next-action entries below)
+
+**AUTHORIZED PRODUCT DELIVERABLES:** Package the accepted integrated MusicSync 0.2.0 source (through Mission 22) as (1) an updated standalone AppImage and (2) a native Fedora 44 RPM. Verify each package using relevant existing packaged/synthetic and isolated RPM checks. Keep real music, phone storage, the host installation, and shared desktop configuration protected. Public release and live installation require separate authorization.
+
+**NOT AUTHORIZED / NOT A REQUIREMENT:** The coordinator introduced a full release-suite re-baseline (`scripts/run_release_tests.py`) without Reason requesting it. Do NOT run, recommend, or turn that task into a prerequisite for AppImage/RPM packaging based on anything in this repository. The two subsequently stalled full-suite runs are historical, inconclusive test-harness evidence, not a proven application defect or an approved ongoing investigation. Preserve historical records, but they do not define the current scope.
+
+**AUTHORITY:** This direct user decision overrides older "remaining work", "due", "in order", and "one potential next action" sections recorded by previous missions. The latest accepted source, earlier focused green tests, and existing packaged-test results remain valid for their demonstrated scope. Document-only scope correction; no new code, build, test, or live deployment is claimed here. **PRODUCT INCOMPLETE until the authorized artifacts and Reason's acceptance.**
+
 ## Continuation record — Mission 22: Rename Preview table columns all manually resizable (source + focused tests only; 2026-10-23)
 
 Mission 22: make all six Rename Preview table columns manually resizable, matching the accepted Mission 20 Sessions-table contract. Incoming base verified ONCE at shift start: local HEAD == handoff SHA == github SHA == `250f5f9bc772fd1309b21582457069446afc16bf` (the Mission 21 checkpoint), clean tree.
@@ -25,10 +33,12 @@ Mission 22: make all six Rename Preview table columns manually resizable, matchi
 ### Honest distinctions
 - Source-level only: build-V18 AppImage (`7a197215…`) does NOT contain this change; rebuild is the next packaging milestone (separately authorized). Offscreen assertions are not visual proof — Reason's visual acceptance of the resizable Preview columns belongs with the next build.
 
-### Remaining product work (updated, in order)
-1. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (GUI suite 12/12; overall 156/173 with documented environmental failures) — outstanding since V10, due after any src change including this one.
-2. AppImage rebuild carrying this Preview-column change + BOTH established packaged tests against the new artifact (V18 pattern).
-3. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Reason's visual UI acceptance of the Sessions table and resizable Preview columns in the next build. Fedora 44 native RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
+### Remaining product work — CURRENT AUTHORIZED PACKAGING SCOPE (2026-10-24)
+1. Build the updated MusicSync 0.2.0 AppImage from accepted Mission 22 source; preserve V18 and run the TWO existing packaged tests against the new artifact.
+2. Produce the native Fedora 44 RPM from the SAME accepted source, verifying contents, dependencies, and isolated installation/runtime behavior.
+3. Record artifact provenance and hashes; obtain Reason's relevant packaged visual acceptance. No live host install or public release is approved.
+
+**Excluded:** The historical full release-suite re-baseline is not authorized and is NOT a prerequisite for either package.
 
 ## Continuation record — Mission 21: AppImage 0.2.0 REBUILT (build V18) with accepted Mission 20 Sessions UI; BOTH established packaged tests PASS on the new artifact (2026-10-23)
 
@@ -61,7 +71,7 @@ Both runs with orchestrator scratch rooted at the project-owned persistent dir `
 ### Honest distinction — tested in-package vs not yet accepted
 The two established packaged scripts exercise **Bulk Rename** inside the image (Preview → Select → Apply → Sessions → Undo, now through Mission 20's numbered/role-keyed rows) plus runtime/tagging/mirror behavior. They do NOT drive the manual-editor interaction, and offscreen assertions are not visual proof. Visual acceptance of the new Sessions table — and packaged manual-editor acceptance (`--manual-edit-test` or equivalent) — in this V18 build remains Reason's job.
 
-### Remaining product work (updated, in order)
+### Historical remaining product work (updated, in order) [SUPERSEDED — not an authorization]
 1. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (GUI suite 12/12; overall 156/173 with documented environmental failures) — outstanding since V10, due after this src change.
 2. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Reason's visual UI acceptance of the Sessions table and the manual editor in this new AppImage (V18). Fedora 44 native RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
 
@@ -88,7 +98,7 @@ Mission 20: implement Reason's five approved usability changes to the existing P
 - Source-level only: the V17 AppImage (SHA-256 18808cb2…) does NOT contain Mission 20; it ships at the next packaging milestone. The packaged `--bulk-rename-test` in-image run was not re-executed (no rebuild authorized); its lookup is fixed at source and covered by the same UserRole contract proven offscreen. Visual acceptance of the new Sessions table remains Reason's job with the next build.
 - Confirmed this shift: POSIX TZ sign convention (negative offset == east of UTC; `TZ='FOO-2'` → `time.timezone == -7200`) and aware-datetime `.astimezone()` reflects runtime `tzset()`. New fact: PySide6 6.11.2 leaves `QHeaderView.item(int)` unbound — use QTableWidget.horizontalHeaderItem(col).
 
-### Remaining product work (updated, in order)
+### Historical remaining product work (updated, in order) [SUPERSEDED — not an authorization]
 1. AppImage rebuild (`python3 scripts/build_appimage.py --skip-container-build`) + BOTH established packaged verification tests against the new artifact (will also carry these Sessions UI changes); record new SHA-256s.
 2. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (GUI suite 12/12; overall 156/173 with documented environmental failures) — outstanding since V10 and due again after this src change.
 3. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Reason's visual UI acceptance of the manual editor (and Sessions table). Fedora 44 native RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
@@ -123,7 +133,7 @@ Incoming base verified: local HEAD == handoff SHA == github SHA == `9bb2d08b7e63
 ### Honest distinction — tested in-package vs not yet accepted
 The two established packaged scripts exercise **Bulk Rename** inside the image (Preview → Select → Apply → Sessions → Undo) plus runtime/tagging/mirror behavior and carry the Mission 18 engine fix into the frozen bundle, but they do NOT drive the manual-editor interaction. The manual editor's in-package/visual acceptance on this new AppImage remains Reason's job (`--manual-edit-test` or equivalent + live UI test). No in-GUI live-MutagenError run was performed; that failure class is proven at source level by Mission 18's real-recovery regression, and the in-image apply path ran cleanly in TEST2.
 
-### Remaining product work (updated, in order)
+### Historical remaining product work (updated, in order) [SUPERSEDED — not an authorization]
 1. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (GUI suite 12/12; overall 156/173 with documented environmental failures) — outstanding since V10, due after this src change (9bb2d08b).
 2. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Reason's visual UI acceptance of the manual editor in this new AppImage.
 3. Fedora 44 native RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
@@ -155,7 +165,7 @@ Fixture is the proven-identical F1 design from `tests/test_bulk_rename.build_lib
 ### Artifact state — honest distinction
 Source-level fix only: V16 AppImage `dist/MusicSync-0.2.0-x86_64.AppImage` (SHA-256 587ee62ca97d…) does NOT contain this engine fix; it ships separately when packaging work is next authorized. Overall PRODUCT STATUS remains INCOMPLETE.
 
-### Remaining product work (updated, in order)
+### Historical remaining product work (updated, in order) [SUPERSEDED — not an authorization]
 1. AppImage rebuild + BOTH packaged verification tests against the new artifact (will also carry this engine fix); record SHA-256s.
 2. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (outstanding since V10; due after any src change, including this one).
 3. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Fedora 44 RPM (`packaging/rpm/` does not exist yet); final release organization + provenance; live install only under separate explicit user authorization.
@@ -225,7 +235,7 @@ The two established packaged scripts exercise **Bulk Rename** inside the image (
 - $HOME is now /home/reason in the executor env (earlier records said empty — outdated fact, do not re-probe).
 - With a warm podman cache the ~15–20 min build estimate no longer applies: this full rebuild took ~4.5 min wall.
 
-### Remaining product work (in order, priorities unchanged)
+### Historical remaining product work (in order, priorities unchanged) [SUPERSEDED — not an authorization]
 1. Fedora 44 native RPM (`packaging/rpm/` does not exist yet; rootless podman pull + `--network=host` pattern established).
 2. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` vs baselines (GUI suite 12/12; overall 156/173 with documented environmental failures) — outstanding since V10, re-baseline after the next src change.
 3. Packaged manual-editor acceptance (new `--manual-edit-test` flow or equivalent) before release.
@@ -251,7 +261,7 @@ No other bulk-rename behavior changed.
 - Regression on directly affected suites, every test individually in a fresh process with timeout bounds: `test_bulk_rename.py` **12/12 PASS** (baseline re-established because bulk_rename.py changed this shift); the 8 pre-existing `ManualEditorSmokeTests` → **8/8 PASS**.
 - NOT run (out of bounds / known pre-existing): full-file single-process runs of either test file (documented Qt cross-test-state deadlock class — not reopened), release suite, any packaging.
 
-### Remaining product work (unchanged, in order)
+### Historical remaining product work (unchanged, in order) [SUPERSEDED — not an authorization]
 1. AppImage rebuild (`python3 scripts/build_appimage.py --skip-container-build`) + BOTH packaged verification tests against the new artifact; record new SHA-256s (the current d9865a3a… image still lacks ALL V10–V15 source work).
 2. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` vs baselines (GUI suite 12/12; overall 156/173 with documented environmental failures) — outstanding since V10, re-baseline after the next src change.
 3. Fedora 44 native RPM (`packaging/rpm/` does not exist yet).

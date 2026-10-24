@@ -22,13 +22,19 @@ Source + focused tests ONLY (geometry-only change):
 - Source-level only: build-V18 AppImage (`7a197215ab06…`, 127,715,832 B) does NOT contain this change; it ships at the next packaging milestone (no rebuild authorized or done here). Offscreen assertions are not visual proof — Reason's visual acceptance of the resizable Preview columns belongs with the next build.
 - No RPM, no release work, no dependency changes, no live/real-music operations (all out of bounds for this mission by authorization and untouched in fact).
 
-## Remaining product work (updated, in order)
-1. `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` re-baseline vs recorded baselines (GUI 12/12; overall 156/173 with documented environmental failures) — outstanding since V10, due after any src change including this one.
-2. AppImage rebuild carrying this Preview-column change + BOTH established packaged tests against the new artifact (V18 pattern).
-3. Packaged manual-editor acceptance (`--manual-edit-test` or equivalent) + Reason's visual UI acceptance of Sessions table and resizable Preview columns in the next build. Fedora 44 native RPM; final release organization + provenance; live install only under separate explicit user authorization.
+## CURRENT SCOPE CORRECTION (Reason, 2026-10-24 — supersedes prior instructions)
 
-## ONE potential next action (NOT authorized)
-Run the release-suite re-baseline: `QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py` vs recorded baselines — outstanding since V10, due after this src change.
+Reason explicitly authorized TWO MusicSync 0.2.0 packaging deliverables from the accepted Mission 22 source: an updated AppImage and a native Fedora 44 RPM. Preserve older builds; perform relevant package-specific verification, record hashes, and protect real music, phone data, and the live system. Product remains INCOMPLETE pending packages and Reason's acceptance.
+
+The coordinator-added full release-suite re-baseline (`scripts/run_release_tests.py`) was NOT requested or authorized by Reason. It is NOT an outstanding product requirement, recommended next action, or gate for AppImage/RPM packaging. Do not resume the previous stalled full-suite investigation from historical records. Earlier tests and historical failure evidence remain documented without creating new work.
+
+## Remaining authorized product work
+1. Rebuild the AppImage from the accepted Mission 22 source and run both established packaged tests.
+2. Build and verify a native Fedora 44 RPM from the same source, with isolated dependency/install checks.
+3. Record artifact hashes/provenance and arrange Reason's appropriate packaged acceptance. No live install or public release without separate consent.
+
+## ONE potential next action (documented, NOT execution authorization)
+Package the existing accepted MusicSync 0.2.0 application as AppImage + native Fedora 44 RPM under Reason's separately provided packaging authorization. Do not add the full release-suite re-baseline.
 
 ## Environment facts (carry forward / new this shift)
 - Batch runner pattern proven again this shift: gitignored bash script looping the exact dotted test list, each run in a fresh offscreen process with `timeout -s ABRT 58` + `PYTHONFAULTHANDLER=1`, per-test logs; ~0.2–0.4 s wall per fresh PySide6 process on this machine when healthy (fast CPU/warm cache).
