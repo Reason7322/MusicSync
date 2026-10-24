@@ -1,0 +1,2465 @@
+{
+  "ubuntu_components": {
+    "dconf-gsettings-backend:amd64": {
+      "version": "0.40.0-4ubuntu0.1",
+      "source": "dconf",
+      "source_version": "0.40.0-4ubuntu0.1",
+      "licenses": [
+        "GPL-3",
+        "LGPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/dconf-gsettings-backend_amd64.copyright"
+    },
+    "libacl1:amd64": {
+      "version": "2.3.2-1build1.1",
+      "source": "acl",
+      "source_version": "2.3.2-1build1.1",
+      "licenses": [
+        "GPL-2+",
+        "LGPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libacl1_amd64.copyright"
+    },
+    "libaom3:amd64": {
+      "version": "3.8.2-2ubuntu0.2",
+      "source": "aom",
+      "source_version": "3.8.2-2ubuntu0.2",
+      "licenses": [
+        "BSD-2-Clause",
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "Expat",
+        "ISC",
+        "public-domain-md5"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libaom3_amd64.copyright"
+    },
+    "libatk-bridge2.0-0t64:amd64": {
+      "version": "2.52.0-1build1",
+      "source": "at-spi2-core",
+      "source_version": "2.52.0-1build1",
+      "licenses": [
+        "AFL-2.1",
+        "AFL-2.1 or GPL-2+",
+        "GPL-2",
+        "GPL-2+",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libatk-bridge2.0-0t64_amd64.copyright"
+    },
+    "libatk1.0-0t64:amd64": {
+      "version": "2.52.0-1build1",
+      "source": "at-spi2-core",
+      "source_version": "2.52.0-1build1",
+      "licenses": [
+        "AFL-2.1",
+        "AFL-2.1 or GPL-2+",
+        "GPL-2",
+        "GPL-2+",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libatk1.0-0t64_amd64.copyright"
+    },
+    "libatspi2.0-0t64:amd64": {
+      "version": "2.52.0-1build1",
+      "source": "at-spi2-core",
+      "source_version": "2.52.0-1build1",
+      "licenses": [
+        "AFL-2.1",
+        "AFL-2.1 or GPL-2+",
+        "GPL-2",
+        "GPL-2+",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libatspi2.0-0t64_amd64.copyright"
+    },
+    "libavcodec60:amd64": {
+      "version": "7:6.1.1-3ubuntu5",
+      "source": "ffmpeg",
+      "source_version": "7:6.1.1-3ubuntu5",
+      "licenses": [
+        "BSD-1-clause",
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "BSL",
+        "Expat",
+        "GPL-2+",
+        "GPL-3+",
+        "IJG",
+        "ISC",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ and BSD-2-clause",
+        "LGPL-2.1+ and BSD-3-clause",
+        "LGPL-2.1+ and BSL",
+        "LGPL-2.1+ and Expat",
+        "LGPL-2.1+ and Sundry",
+        "Sundry",
+        "Zlib",
+        "man-page",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libavcodec60_amd64.copyright"
+    },
+    "libavformat60:amd64": {
+      "version": "7:6.1.1-3ubuntu5",
+      "source": "ffmpeg",
+      "source_version": "7:6.1.1-3ubuntu5",
+      "licenses": [
+        "BSD-1-clause",
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "BSL",
+        "Expat",
+        "GPL-2+",
+        "GPL-3+",
+        "IJG",
+        "ISC",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ and BSD-2-clause",
+        "LGPL-2.1+ and BSD-3-clause",
+        "LGPL-2.1+ and BSL",
+        "LGPL-2.1+ and Expat",
+        "LGPL-2.1+ and Sundry",
+        "Sundry",
+        "Zlib",
+        "man-page",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libavformat60_amd64.copyright"
+    },
+    "libavutil58:amd64": {
+      "version": "7:6.1.1-3ubuntu5",
+      "source": "ffmpeg",
+      "source_version": "7:6.1.1-3ubuntu5",
+      "licenses": [
+        "BSD-1-clause",
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "BSL",
+        "Expat",
+        "GPL-2+",
+        "GPL-3+",
+        "IJG",
+        "ISC",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ and BSD-2-clause",
+        "LGPL-2.1+ and BSD-3-clause",
+        "LGPL-2.1+ and BSL",
+        "LGPL-2.1+ and Expat",
+        "LGPL-2.1+ and Sundry",
+        "Sundry",
+        "Zlib",
+        "man-page",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libavutil58_amd64.copyright"
+    },
+    "libblkid1:amd64": {
+      "version": "2.39.3-9ubuntu6.6",
+      "source": "util-linux",
+      "source_version": "2.39.3-9ubuntu6.6",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-4-clause",
+        "BSLA",
+        "GPL-2",
+        "GPL-2+",
+        "GPL-3+",
+        "LGPL",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-3+",
+        "MIT",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libblkid1_amd64.copyright"
+    },
+    "libbluray2:amd64": {
+      "version": "1:1.3.4-1build1",
+      "source": "libbluray",
+      "source_version": "1:1.3.4-1build1",
+      "licenses": [
+        "BSD-3-clause",
+        "GPL-2+",
+        "LGPL-2.1+",
+        "MPL-1.0",
+        "MPL-1.0 or GPL-2+ or LGPL-2.1+",
+        "custom"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libbluray2_amd64.copyright"
+    },
+    "libbrotli1:amd64": {
+      "version": "1.1.0-2build2",
+      "source": "brotli",
+      "source_version": "1.1.0-2build2",
+      "licenses": [
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libbrotli1_amd64.copyright"
+    },
+    "libbsd0:amd64": {
+      "version": "0.12.1-1build1.1",
+      "source": "libbsd",
+      "source_version": "0.12.1-1build1.1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-2-clause-NetBSD",
+        "BSD-2-clause-author",
+        "BSD-2-clause-verbatim",
+        "BSD-3-clause",
+        "BSD-3-clause-John-Birrell",
+        "BSD-3-clause-Regents",
+        "BSD-3-clause-Regents and BSD-2-clause-NetBSD",
+        "BSD-3-clause-author",
+        "BSD-5-clause-Peter-Wemm",
+        "Beerware",
+        "Expat",
+        "ISC",
+        "ISC-Original",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libbsd0_amd64.copyright"
+    },
+    "libbz2-1.0:amd64": {
+      "version": "1.0.8-5.1ubuntu0.1",
+      "source": "bzip2",
+      "source_version": "1.0.8-5.1ubuntu0.1",
+      "licenses": [
+        "BSD-variant",
+        "GPL-2"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libbz2-1.0_amd64.copyright"
+    },
+    "libcairo-gobject2:amd64": {
+      "version": "1.18.0-3build1",
+      "source": "cairo",
+      "source_version": "1.18.0-3build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libcairo-gobject2_amd64.copyright"
+    },
+    "libcairo2:amd64": {
+      "version": "1.18.0-3build1",
+      "source": "cairo",
+      "source_version": "1.18.0-3build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libcairo2_amd64.copyright"
+    },
+    "libcap2:amd64": {
+      "version": "1:2.66-5ubuntu2.4",
+      "source": "libcap2",
+      "source_version": "1:2.66-5ubuntu2.4",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-3-clause or GPL-2",
+        "BSD-3-clause or GPL-2+",
+        "GPL-2",
+        "GPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libcap2_amd64.copyright"
+    },
+    "libchromaprint1:amd64": {
+      "version": "1.5.1-5",
+      "source": "chromaprint",
+      "source_version": "1.5.1-5",
+      "licenses": [
+        "BSD-3-clause",
+        "Expat",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libchromaprint1_amd64.copyright"
+    },
+    "libcjson1:amd64": {
+      "version": "1.7.17-1",
+      "source": "cjson",
+      "source_version": "1.7.17-1",
+      "licenses": [
+        "Apache-2.0",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libcjson1_amd64.copyright"
+    },
+    "libcodec2-1.2:amd64": {
+      "version": "1.2.0-2build1",
+      "source": "codec2",
+      "source_version": "1.2.0-2build1",
+      "licenses": [
+        "JMVBSD",
+        "KISSFFTBSD",
+        "LGPL-2.1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libcodec2-1.2_amd64.copyright"
+    },
+    "libcom-err2:amd64": {
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "source": "e2fsprogs",
+      "source_version": "1.47.0-2.4~exp1ubuntu4.1",
+      "licenses": [
+        "Apache-2",
+        "BSD-3-Clause",
+        "GPL or MIT-US-export",
+        "GPL-2",
+        "GPL-2+ with Texinfo exception",
+        "ISC",
+        "Kazlib",
+        "LGPL-2",
+        "Latex2e"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libcom-err2_amd64.copyright"
+    },
+    "libdatrie1:amd64": {
+      "version": "0.2.13-3build1",
+      "source": "libdatrie",
+      "source_version": "0.2.13-3build1",
+      "licenses": [
+        "GPL-2+",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libdatrie1_amd64.copyright"
+    },
+    "libdav1d7:amd64": {
+      "version": "1.4.1-1build1",
+      "source": "dav1d",
+      "source_version": "1.4.1-1build1",
+      "licenses": [
+        "BSD-2-clause",
+        "ISC",
+        "ISC and BSD-2-clause",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libdav1d7_amd64.copyright"
+    },
+    "libdbus-1-3:amd64": {
+      "version": "1.14.10-4ubuntu4.1",
+      "source": "dbus",
+      "source_version": "1.14.10-4ubuntu4.1",
+      "licenses": [
+        "AFL-2.1",
+        "BSD-3-clause",
+        "BSD-3-clause and BSD-3-clause-generic",
+        "BSD-3-clause-generic",
+        "Expat",
+        "FSF-unlimited-permission",
+        "GPL-2+",
+        "GPL-2+ or AFL-2.1, and Expat and Tcl-BSDish",
+        "LGPL-2.1+",
+        "Tcl-BSDish",
+        "autoconf-archive-permissive",
+        "g10-permissive"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libdbus-1-3_amd64.copyright"
+    },
+    "libdrm2:amd64": {
+      "version": "2.4.125-1ubuntu0.1~24.04.2",
+      "source": "libdrm",
+      "source_version": "2.4.125-1ubuntu0.1~24.04.2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libdrm2_amd64.copyright"
+    },
+    "libebur128-1:amd64": {
+      "version": "1.2.6-1build1",
+      "source": "libebur128",
+      "source_version": "1.2.6-1build1",
+      "licenses": [
+        "BSD-3-clause",
+        "Expat"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libebur128-1_amd64.copyright"
+    },
+    "libepoxy0:amd64": {
+      "version": "1.5.10-1build1",
+      "source": "libepoxy",
+      "source_version": "1.5.10-1build1",
+      "licenses": [
+        "Expat"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libepoxy0_amd64.copyright"
+    },
+    "libexpat1:amd64": {
+      "version": "2.6.1-2ubuntu0.6",
+      "source": "expat",
+      "source_version": "2.6.1-2ubuntu0.6",
+      "licenses": [
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libexpat1_amd64.copyright"
+    },
+    "libffi8:amd64": {
+      "version": "3.4.6-1build1",
+      "source": "libffi",
+      "source_version": "3.4.6-1build1",
+      "licenses": [
+        "Expat",
+        "GPL",
+        "GPL-2+",
+        "GPL-3+",
+        "MPL-1.1 or GPL-2+ or LGPL-2.1+",
+        "X11",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libffi8_amd64.copyright"
+    },
+    "libfmt9:amd64": {
+      "version": "9.1.0+ds1-2",
+      "source": "fmtlib",
+      "source_version": "9.1.0+ds1-2",
+      "licenses": [
+        "BSD-2-Clause",
+        "CC0-1.0",
+        "Expat",
+        "Expat or CC0-1.0",
+        "Expat with embedded exception",
+        "Python"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libfmt9_amd64.copyright"
+    },
+    "libfontconfig1:amd64": {
+      "version": "2.15.0-1.1ubuntu2",
+      "source": "fontconfig",
+      "source_version": "2.15.0-1.1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libfontconfig1_amd64.copyright"
+    },
+    "libfreetype6:amd64": {
+      "version": "2.13.2+dfsg-1ubuntu0.2",
+      "source": "freetype",
+      "source_version": "2.13.2+dfsg-1ubuntu0.2",
+      "licenses": [
+        "BSD-3-Clause",
+        "BSL-1.0",
+        "Expat",
+        "FSFAP",
+        "FTL",
+        "FTL and Expat",
+        "GPL-2+",
+        "GPL-3+",
+        "MIT-Modern-Variant",
+        "MIT-SMC",
+        "OpenGroup-MIT",
+        "Public-Domain",
+        "Zlib"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libfreetype6_amd64.copyright"
+    },
+    "libfribidi0:amd64": {
+      "version": "1.0.13-3build1",
+      "source": "fribidi",
+      "source_version": "1.0.13-3build1",
+      "licenses": [
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libfribidi0_amd64.copyright"
+    },
+    "libgcc-s1:amd64": {
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "source": "gcc-14",
+      "source_version": "14.2.0-4ubuntu2~24.04.1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgcc-s1_amd64.copyright"
+    },
+    "libgcrypt20:amd64": {
+      "version": "1.10.3-2ubuntu0.2",
+      "source": "libgcrypt20",
+      "source_version": "1.10.3-2ubuntu0.2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgcrypt20_amd64.copyright"
+    },
+    "libgdk-pixbuf-2.0-0:amd64": {
+      "version": "2.42.10+dfsg-3ubuntu3.3",
+      "source": "gdk-pixbuf",
+      "source_version": "2.42.10+dfsg-3ubuntu3.3",
+      "licenses": [
+        "CC0-1.0",
+        "GPL-2+",
+        "LGPL-2+",
+        "LGPL-2+ and LGPL-2.1+ and CC0-1.0",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgdk-pixbuf-2.0-0_amd64.copyright"
+    },
+    "libglib2.0-0t64:amd64": {
+      "version": "2.80.0-6ubuntu3.9",
+      "source": "glib2.0",
+      "source_version": "2.80.0-6ubuntu3.9",
+      "licenses": [
+        "AFL-2.0",
+        "AFL-2.0 or LGPL-2.1+",
+        "Apache-2.0 with LLVM exception",
+        "CC-BY-SA-3.0",
+        "CC0-1.0",
+        "CC0-1.0 or Mingw-PD",
+        "Expat",
+        "FSFULLR",
+        "GPL-2+",
+        "Iconv-PD",
+        "Janik-permissive",
+        "Janik-permissive and old-glib-tests",
+        "Kuchling-PD",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ and Kuchling-PD and Plumb-PD",
+        "LGPL-3+",
+        "Mingw-PD",
+        "Plumb-PD",
+        "Unicode-DFS-2016",
+        "bzip2-1.0.6",
+        "cmph",
+        "old-glib-tests"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libglib2.0-0t64_amd64.copyright"
+    },
+    "libgme0:amd64": {
+      "version": "0.6.3-7build1",
+      "source": "game-music-emu",
+      "source_version": "0.6.3-7build1",
+      "licenses": [
+        "LGPL-2.1+",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgme0_amd64.copyright"
+    },
+    "libgmp10:amd64": {
+      "version": "2:6.3.0+dfsg-2ubuntu6.1",
+      "source": "gmp",
+      "source_version": "2:6.3.0+dfsg-2ubuntu6.1",
+      "licenses": [
+        "GPL-2+",
+        "GPL-2+ or LGPL-3+",
+        "GPL-3+",
+        "GPL-3+ with Bison exception",
+        "LGPL-3+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgmp10_amd64.copyright"
+    },
+    "libgnutls30t64:amd64": {
+      "version": "3.8.3-1.1ubuntu3.6",
+      "source": "gnutls28",
+      "source_version": "3.8.3-1.1ubuntu3.6",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-Clause",
+        "CC0 license",
+        "Expat",
+        "GPLv3+",
+        "LGPLv2.1+",
+        "LGPLv3+_or_GPLv2+",
+        "The main library is licensed under GNU Lesser"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgnutls30t64_amd64.copyright"
+    },
+    "libgomp1:amd64": {
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "source": "gcc-14",
+      "source_version": "14.2.0-4ubuntu2~24.04.1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgomp1_amd64.copyright"
+    },
+    "libgpg-error0:amd64": {
+      "version": "1.47-3build2.1",
+      "source": "libgpg-error",
+      "source_version": "1.47-3build2.1",
+      "licenses": [
+        "BSD-3-clause",
+        "GPL-3+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ or BSD-3-clause",
+        "g10-permissive"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgpg-error0_amd64.copyright"
+    },
+    "libgraphite2-3:amd64": {
+      "version": "1.3.14-2ubuntu0.24.04.1",
+      "source": "graphite2",
+      "source_version": "1.3.14-2ubuntu0.24.04.1",
+      "licenses": [
+        "Artistic",
+        "Artistic or GPL-1+",
+        "GPL-1+",
+        "GPL-2+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ or GPL-2+ or MPL-1.1",
+        "LGPL-2.1+ or MPL-1.1 or GPL-2+",
+        "MPL-1.1",
+        "custom-sil-open-font-license",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgraphite2-3_amd64.copyright"
+    },
+    "libgsm1:amd64": {
+      "version": "1.0.22-1build1",
+      "source": "libgsm",
+      "source_version": "1.0.22-1build1",
+      "licenses": [
+        "TU-Berlin-2.0"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgsm1_amd64.copyright"
+    },
+    "libgssapi-krb5-2:amd64": {
+      "version": "1.20.1-6ubuntu2.10",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.10",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgssapi-krb5-2_amd64.copyright"
+    },
+    "libgtk-3-0t64:amd64": {
+      "version": "3.24.41-4ubuntu1.3",
+      "source": "gtk+3.0",
+      "source_version": "3.24.41-4ubuntu1.3",
+      "licenses": [
+        "Apache-2.0",
+        "CC-BY-SA-4.0",
+        "Expat",
+        "GPL-3+",
+        "LGPL-2+",
+        "LGPL-2+ and LGPL-2.1+ and Expat",
+        "LGPL-2+ and ZPL-2.1",
+        "LGPL-2+ or SWL",
+        "LGPL-2.1+",
+        "SWL",
+        "X11R5-permissive",
+        "ZPL-2.1",
+        "check-gdk-cairo-permissive",
+        "other",
+        "unencumbered"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgtk-3-0t64_amd64.copyright"
+    },
+    "libgtk-3-common": {
+      "version": "3.24.41-4ubuntu1.3",
+      "source": "gtk+3.0",
+      "source_version": "3.24.41-4ubuntu1.3",
+      "licenses": [
+        "Apache-2.0",
+        "CC-BY-SA-4.0",
+        "Expat",
+        "GPL-3+",
+        "LGPL-2+",
+        "LGPL-2+ and LGPL-2.1+ and Expat",
+        "LGPL-2+ and ZPL-2.1",
+        "LGPL-2+ or SWL",
+        "LGPL-2.1+",
+        "SWL",
+        "X11R5-permissive",
+        "ZPL-2.1",
+        "check-gdk-cairo-permissive",
+        "other",
+        "unencumbered"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libgtk-3-common.copyright"
+    },
+    "libharfbuzz0b:amd64": {
+      "version": "8.3.0-2build2",
+      "source": "harfbuzz",
+      "source_version": "8.3.0-2build2",
+      "licenses": [
+        "Apache-2.0",
+        "CC0-1.0",
+        "Expat",
+        "FSFAP",
+        "FSFUL",
+        "FSFULLR",
+        "GPL-2+ with AutoConf exception",
+        "GPL-2+ with Font exception",
+        "GPL-2+ with LibTool exception",
+        "GPL-3+",
+        "GPL-3+ with AutoConf exception",
+        "ISC",
+        "LGPL-2.1+",
+        "MIT",
+        "Monotype",
+        "OFL-1.1",
+        "UFL-1.0",
+        "Unicode"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libharfbuzz0b_amd64.copyright"
+    },
+    "libhogweed6t64:amd64": {
+      "version": "3.9.1-2.2build1.1",
+      "source": "nettle",
+      "source_version": "3.9.1-2.2build1.1",
+      "licenses": [
+        "Expat",
+        "GAP",
+        "GPL-2",
+        "GPL-2+",
+        "GPL-3+ with Autoconf exception",
+        "LGPL-2+",
+        "LGPL-3+",
+        "LGPL-3+ or GPL-2+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libhogweed6t64_amd64.copyright"
+    },
+    "libhwy1t64:amd64": {
+      "version": "1.0.7-8.1build1",
+      "source": "highway",
+      "source_version": "1.0.7-8.1build1",
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libhwy1t64_amd64.copyright"
+    },
+    "libicu74:amd64": {
+      "version": "74.2-1ubuntu3.1",
+      "source": "icu",
+      "source_version": "74.2-1ubuntu3.1",
+      "licenses": [
+        "GPL-3",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libicu74_amd64.copyright"
+    },
+    "libidn2-0:amd64": {
+      "version": "2.3.7-2build1.1",
+      "source": "libidn2",
+      "source_version": "2.3.7-2build1.1",
+      "licenses": [
+        "GPL-2+",
+        "GPL-3+",
+        "LGPL-3+",
+        "LGPL-3+ or GPL-2+",
+        "Unicode"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libidn2-0_amd64.copyright"
+    },
+    "libinih1:amd64": {
+      "version": "55-1ubuntu2",
+      "source": "libinih",
+      "source_version": "55-1ubuntu2",
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libinih1_amd64.copyright"
+    },
+    "libjpeg-turbo8:amd64": {
+      "version": "2.1.5-2ubuntu2",
+      "source": "libjpeg-turbo",
+      "source_version": "2.1.5-2ubuntu2",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-BY-LC-NE",
+        "Expat",
+        "NTP",
+        "Zlib"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libjpeg-turbo8_amd64.copyright"
+    },
+    "libjxl0.7:amd64": {
+      "version": "0.7.0-10.2ubuntu6.1",
+      "source": "jpeg-xl",
+      "source_version": "0.7.0-10.2ubuntu6.1",
+      "licenses": [
+        "BSD-3-clause-Google",
+        "ISC-License"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libjxl0.7_amd64.copyright"
+    },
+    "libk5crypto3:amd64": {
+      "version": "1.20.1-6ubuntu2.10",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.10",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libk5crypto3_amd64.copyright"
+    },
+    "libkeyutils1:amd64": {
+      "version": "1.6.3-3build1",
+      "source": "keyutils",
+      "source_version": "1.6.3-3build1",
+      "licenses": [
+        "GPL-2+",
+        "LGPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libkeyutils1_amd64.copyright"
+    },
+    "libkrb5-3:amd64": {
+      "version": "1.20.1-6ubuntu2.10",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.10",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libkrb5-3_amd64.copyright"
+    },
+    "libkrb5support0:amd64": {
+      "version": "1.20.1-6ubuntu2.10",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.10",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libkrb5support0_amd64.copyright"
+    },
+    "liblcms2-2:amd64": {
+      "version": "2.14-2ubuntu0.1",
+      "source": "lcms2",
+      "source_version": "2.14-2ubuntu0.1",
+      "licenses": [
+        "GPL-2+",
+        "GPL-3",
+        "IJG",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/liblcms2-2_amd64.copyright"
+    },
+    "liblz4-1:amd64": {
+      "version": "1.9.4-1build1.1",
+      "source": "lz4",
+      "source_version": "1.9.4-1build1.1",
+      "licenses": [
+        "BSD-2-clause",
+        "GPL-2+",
+        "GPL-2+ or BSD-2-clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/liblz4-1_amd64.copyright"
+    },
+    "liblzma5:amd64": {
+      "version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "source": "xz-utils",
+      "source_version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "licenses": [
+        "Autoconf",
+        "GPL-2",
+        "GPL-2+",
+        "LGPL-2.1+",
+        "PD",
+        "PD-debian",
+        "config-h",
+        "noderivs",
+        "none",
+        "permissive-fsf",
+        "permissive-nowarranty",
+        "probably-PD"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/liblzma5_amd64.copyright"
+    },
+    "libmbedcrypto7t64:amd64": {
+      "version": "2.28.8-1",
+      "source": "mbedtls",
+      "source_version": "2.28.8-1",
+      "licenses": [
+        "Apache-2.0",
+        "Apache-2.0 or GPL-2+",
+        "GPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libmbedcrypto7t64_amd64.copyright"
+    },
+    "libmd0:amd64": {
+      "version": "1.1.0-2build1.1",
+      "source": "libmd",
+      "source_version": "1.1.0-2build1.1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-2-clause-NetBSD",
+        "BSD-3-clause",
+        "BSD-3-clause-Aaron-D-Gifford",
+        "Beerware",
+        "ISC",
+        "public-domain-md4",
+        "public-domain-md5",
+        "public-domain-sha1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libmd0_amd64.copyright"
+    },
+    "libmount1:amd64": {
+      "version": "2.39.3-9ubuntu6.6",
+      "source": "util-linux",
+      "source_version": "2.39.3-9ubuntu6.6",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-4-clause",
+        "BSLA",
+        "GPL-2",
+        "GPL-2+",
+        "GPL-3+",
+        "LGPL",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-3+",
+        "MIT",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libmount1_amd64.copyright"
+    },
+    "libmp3lame0:amd64": {
+      "version": "3.100-6build1",
+      "source": "lame",
+      "source_version": "3.100-6build1",
+      "licenses": [
+        "BSD-3-clause",
+        "GPL-1+",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "zlib/libpng"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libmp3lame0_amd64.copyright"
+    },
+    "libmpg123-0t64:amd64": {
+      "version": "1.32.5-1ubuntu1.1",
+      "source": "mpg123",
+      "source_version": "1.32.5-1ubuntu1.1",
+      "licenses": [
+        "LGPL-2.1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libmpg123-0t64_amd64.copyright"
+    },
+    "libnettle8t64:amd64": {
+      "version": "3.9.1-2.2build1.1",
+      "source": "nettle",
+      "source_version": "3.9.1-2.2build1.1",
+      "licenses": [
+        "Expat",
+        "GAP",
+        "GPL-2",
+        "GPL-2+",
+        "GPL-3+ with Autoconf exception",
+        "LGPL-2+",
+        "LGPL-3+",
+        "LGPL-3+ or GPL-2+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libnettle8t64_amd64.copyright"
+    },
+    "libnorm1t64:amd64": {
+      "version": "1.5.9+dfsg-3.1build1",
+      "source": "norm",
+      "source_version": "1.5.9+dfsg-3.1build1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "BSD-4-clause-UC",
+        "NRL-2-clause",
+        "NRL-3-clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libnorm1t64_amd64.copyright"
+    },
+    "libnuma1:amd64": {
+      "version": "2.0.18-1ubuntu0.24.04.1",
+      "source": "numactl",
+      "source_version": "2.0.18-1ubuntu0.24.04.1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libnuma1_amd64.copyright"
+    },
+    "libogg0:amd64": {
+      "version": "1.3.5-3build1",
+      "source": "libogg",
+      "source_version": "1.3.5-3build1",
+      "licenses": [
+        "BSD-3-clause",
+        "rfc3533-license",
+        "rfc5334-license"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libogg0_amd64.copyright"
+    },
+    "libopenjp2-7:amd64": {
+      "version": "2.5.0-2ubuntu0.5",
+      "source": "openjpeg2",
+      "source_version": "2.5.0-2ubuntu0.5",
+      "licenses": [
+        "BSD-2",
+        "BSD-3",
+        "LIBPNG",
+        "LIBTIFF",
+        "LIBTIFF-GLARSON",
+        "LIBTIFF-PIXAR",
+        "MIT",
+        "ZLIB",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libopenjp2-7_amd64.copyright"
+    },
+    "libopenmpt0t64:amd64": {
+      "version": "0.7.3-1.1build3",
+      "source": "libopenmpt",
+      "source_version": "0.7.3-1.1build3",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-3-clause or BSL-1.0",
+        "BSL-1.0",
+        "GNU-All-Permissive-License",
+        "GNU-All-Permissive-License-FSF",
+        "GPL-2+ with Autoconf exception",
+        "GPL-2+ with LibTool exception",
+        "GPL-3+ with AutoConf exception",
+        "GPL-3+ with Autoconf Macros exception",
+        "X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libopenmpt0t64_amd64.copyright"
+    },
+    "libopus0:amd64": {
+      "version": "1.4-1build1",
+      "source": "opus",
+      "source_version": "1.4-1build1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-3-clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libopus0_amd64.copyright"
+    },
+    "libp11-kit0:amd64": {
+      "version": "0.25.3-4ubuntu2.2",
+      "source": "p11-kit",
+      "source_version": "0.25.3-4ubuntu2.2",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-clause",
+        "FSFAP",
+        "FSFULLR",
+        "GPL-2+ with Autoconf-data exception",
+        "GPL-3+ with Autoconf-data exception",
+        "ISC",
+        "LGPL-2.1+",
+        "X11",
+        "customFSFUL",
+        "customFSFULLRWD"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libp11-kit0_amd64.copyright"
+    },
+    "libpango-1.0-0:amd64": {
+      "version": "1.52.1+ds-1build1",
+      "source": "pango1.0",
+      "source_version": "1.52.1+ds-1build1",
+      "licenses": [
+        "  Unicode",
+        "Apache-2",
+        "Apache-2 and Bitstream-Vera and OFL-1.1",
+        "Bitstream-Vera",
+        "Chromium-BSD-style",
+        "Example",
+        "ICU",
+        "LGPL-2+",
+        "LGPL-2+ and ICU",
+        "LGPL-2+ and LGPL-2.1+",
+        "LGPL-2+ and TCL",
+        "LGPL-2.1+",
+        "OFL-1.1",
+        "TCL",
+        "Unicode"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpango-1.0-0_amd64.copyright"
+    },
+    "libpangocairo-1.0-0:amd64": {
+      "version": "1.52.1+ds-1build1",
+      "source": "pango1.0",
+      "source_version": "1.52.1+ds-1build1",
+      "licenses": [
+        "  Unicode",
+        "Apache-2",
+        "Apache-2 and Bitstream-Vera and OFL-1.1",
+        "Bitstream-Vera",
+        "Chromium-BSD-style",
+        "Example",
+        "ICU",
+        "LGPL-2+",
+        "LGPL-2+ and ICU",
+        "LGPL-2+ and LGPL-2.1+",
+        "LGPL-2+ and TCL",
+        "LGPL-2.1+",
+        "OFL-1.1",
+        "TCL",
+        "Unicode"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpangocairo-1.0-0_amd64.copyright"
+    },
+    "libpangoft2-1.0-0:amd64": {
+      "version": "1.52.1+ds-1build1",
+      "source": "pango1.0",
+      "source_version": "1.52.1+ds-1build1",
+      "licenses": [
+        "  Unicode",
+        "Apache-2",
+        "Apache-2 and Bitstream-Vera and OFL-1.1",
+        "Bitstream-Vera",
+        "Chromium-BSD-style",
+        "Example",
+        "ICU",
+        "LGPL-2+",
+        "LGPL-2+ and ICU",
+        "LGPL-2+ and LGPL-2.1+",
+        "LGPL-2+ and TCL",
+        "LGPL-2.1+",
+        "OFL-1.1",
+        "TCL",
+        "Unicode"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpangoft2-1.0-0_amd64.copyright"
+    },
+    "libpcre2-8-0:amd64": {
+      "version": "10.42-4ubuntu2.1",
+      "source": "pcre2",
+      "source_version": "10.42-4ubuntu2.1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "BSD-3-clause-Cambridge with BINARY LIBRARY-LIKE PACKAGES exception",
+        "X11",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpcre2-8-0_amd64.copyright"
+    },
+    "libpgm-5.3-0t64:amd64": {
+      "version": "5.3.128~dfsg-2.1build1",
+      "source": "libpgm",
+      "source_version": "5.3.128~dfsg-2.1build1",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-3-clause and ISC",
+        "ISC",
+        "LGPL-2+",
+        "LGPL-2.1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpgm-5.3-0t64_amd64.copyright"
+    },
+    "libpixman-1-0:amd64": {
+      "version": "0.42.2-1build1",
+      "source": "pixman",
+      "source_version": "0.42.2-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpixman-1-0_amd64.copyright"
+    },
+    "libpng16-16t64:amd64": {
+      "version": "1.6.43-5ubuntu0.7",
+      "source": "libpng1.6",
+      "source_version": "1.6.43-5ubuntu0.7",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-clause",
+        "BSD-like-with-advertising-clause",
+        "GPL-2+",
+        "GPL-2+ or BSD-like-with-advertising-clause",
+        "expat",
+        "libpng",
+        "libpng OR Apache-2.0 OR BSD-3-clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpng16-16t64_amd64.copyright"
+    },
+    "libpopt0:amd64": {
+      "version": "1.19+dfsg-1build1",
+      "source": "popt",
+      "source_version": "1.19+dfsg-1build1",
+      "licenses": [
+        "GPL-2+",
+        "expat"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpopt0_amd64.copyright"
+    },
+    "libpython3.12-minimal:amd64": {
+      "version": "3.12.3-1ubuntu0.17",
+      "source": "python3.12",
+      "source_version": "3.12.3-1ubuntu0.17",
+      "licenses": [
+        " * Permission to use this software in any way is granted without",
+        "By obtaining, using, and/or copying this software and/or its",
+        "Permission  is  hereby granted,  free  of charge,  to  any person",
+        "Permission is hereby granted, free of charge, to any person obtaining",
+        "Permission to use, copy, modify, and distribute this software and",
+        "Permission to use, copy, modify, and distribute this software and its",
+        "Permission to use, copy, modify, and distribute this software for any",
+        "Redistribution and use in source and binary forms, with or without",
+        "This software is provided 'as-is', without any express or implied",
+        "This software is provided as-is, without express or implied"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpython3.12-minimal_amd64.copyright"
+    },
+    "libpython3.12-stdlib:amd64": {
+      "version": "3.12.3-1ubuntu0.17",
+      "source": "python3.12",
+      "source_version": "3.12.3-1ubuntu0.17",
+      "licenses": [
+        " * Permission to use this software in any way is granted without",
+        "By obtaining, using, and/or copying this software and/or its",
+        "Permission  is  hereby granted,  free  of charge,  to  any person",
+        "Permission is hereby granted, free of charge, to any person obtaining",
+        "Permission to use, copy, modify, and distribute this software and",
+        "Permission to use, copy, modify, and distribute this software and its",
+        "Permission to use, copy, modify, and distribute this software for any",
+        "Redistribution and use in source and binary forms, with or without",
+        "This software is provided 'as-is', without any express or implied",
+        "This software is provided as-is, without express or implied"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libpython3.12-stdlib_amd64.copyright"
+    },
+    "librabbitmq4:amd64": {
+      "version": "0.11.0-1ubuntu0.2",
+      "source": "librabbitmq",
+      "source_version": "0.11.0-1ubuntu0.2",
+      "licenses": [
+        "BSD-Author",
+        "Expat"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/librabbitmq4_amd64.copyright"
+    },
+    "librav1e0:amd64": {
+      "version": "0.7.1-2",
+      "source": "rust-rav1e",
+      "source_version": "0.7.1-2",
+      "licenses": [
+        "BSD-2-Clause",
+        "BSD-2-clause",
+        "ISC"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/librav1e0_amd64.copyright"
+    },
+    "librist4:amd64": {
+      "version": "0.2.10+dfsg-2",
+      "source": "librist",
+      "source_version": "0.2.10+dfsg-2",
+      "licenses": [
+        "BSD-1-clause",
+        "BSD-2-clause",
+        "ISC",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/librist4_amd64.copyright"
+    },
+    "librsvg2-2:amd64": {
+      "version": "2.58.0+dfsg-1ubuntu0.1",
+      "source": "librsvg",
+      "source_version": "2.58.0+dfsg-1ubuntu0.1",
+      "licenses": [
+        "0BSD",
+        "Apache-2.0",
+        "Apache-2.0, and BSD-2-clause, and BSD-3-clause, and Expat, and Apache-2.0 or Expat or 0BSD, and Apache-2.0 or Boost-1.0, and Apache-2.0 or Expat, and Expat or Unlicense, and MPL-2.0, and Sun-permissive, and zlib",
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "Boost-1.0",
+        "CC-zero-waive-1.0-us",
+        "Expat",
+        "FSFAP",
+        "LGPL-2+",
+        "MPL-2.0",
+        "OFL-1.1",
+        "Sun-permissive",
+        "Unlicense",
+        "zlib"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/librsvg2-2_amd64.copyright"
+    },
+    "libselinux1:amd64": {
+      "version": "3.5-2ubuntu2.1",
+      "source": "libselinux",
+      "source_version": "3.5-2ubuntu2.1",
+      "licenses": [
+        "GPL-2",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libselinux1_amd64.copyright"
+    },
+    "libsharpyuv0:amd64": {
+      "version": "1.3.2-0.4build3",
+      "source": "libwebp",
+      "source_version": "1.3.2-0.4build3",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-Clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsharpyuv0_amd64.copyright"
+    },
+    "libshine3:amd64": {
+      "version": "3.1.1-2build1",
+      "source": "shine",
+      "source_version": "3.1.1-2build1",
+      "licenses": [
+        "GPL-2+",
+        "LGPL-2"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libshine3_amd64.copyright"
+    },
+    "libsnappy1v5:amd64": {
+      "version": "1.1.10-1build1",
+      "source": "snappy",
+      "source_version": "1.1.10-1build1",
+      "licenses": [
+        "BSD-3-Clause",
+        "CC-BY-3.0",
+        "CC-BY-4.0",
+        "MIT",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsnappy1v5_amd64.copyright"
+    },
+    "libsodium23:amd64": {
+      "version": "1.0.18-1ubuntu0.24.04.1",
+      "source": "libsodium",
+      "source_version": "1.0.18-1ubuntu0.24.04.1",
+      "licenses": [
+        "BSD-2-clause",
+        "CC0",
+        "GPL-2+",
+        "ISC",
+        "MIT",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsodium23_amd64.copyright"
+    },
+    "libsoxr0:amd64": {
+      "version": "0.1.3-4build3",
+      "source": "libsoxr",
+      "source_version": "0.1.3-4build3",
+      "licenses": [
+        "LGPL-2.1+",
+        "Spherepack",
+        "permissive1",
+        "permissive2"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsoxr0_amd64.copyright"
+    },
+    "libspeex1:amd64": {
+      "version": "1.2.1-2ubuntu2.24.04.1",
+      "source": "speex",
+      "source_version": "1.2.1-2ubuntu2.24.04.1",
+      "licenses": [
+        "BSD-3-Clause",
+        "BSD-3-Clause and custom-1",
+        "GFDL-1.1-or-later",
+        "LGPL-2.0-or-later",
+        "custom-1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libspeex1_amd64.copyright"
+    },
+    "libsrt1.5-gnutls:amd64": {
+      "version": "1.5.3-1build2",
+      "source": "srt",
+      "source_version": "1.5.3-1build2",
+      "licenses": [
+        "BSD-3-clause",
+        "LGPL-2.1+",
+        "MPL-2.0",
+        "Zlib",
+        "unlicense"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsrt1.5-gnutls_amd64.copyright"
+    },
+    "libssh-gcrypt-4:amd64": {
+      "version": "0.10.6-2ubuntu0.5",
+      "source": "libssh",
+      "source_version": "0.10.6-2ubuntu0.5",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "LGPL-2.1",
+        "LGPL-2.1+~OpenSSL",
+        "LGPL-2.1+~OpenSSL or BSD-2-clause or BSD-3-clause",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libssh-gcrypt-4_amd64.copyright"
+    },
+    "libssl3t64:amd64": {
+      "version": "3.0.13-0ubuntu3.16",
+      "source": "openssl",
+      "source_version": "3.0.13-0ubuntu3.16",
+      "licenses": [
+        "Apache-2.0",
+        "Artistic",
+        "Artistic or GPL-1+",
+        "GPL-1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libssl3t64_amd64.copyright"
+    },
+    "libstdc++6:amd64": {
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "source": "gcc-14",
+      "source_version": "14.2.0-4ubuntu2~24.04.1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libstdc++6_amd64.copyright"
+    },
+    "libsvtav1enc1d1:amd64": {
+      "version": "1.7.0+dfsg-2build1",
+      "source": "svt-av1",
+      "source_version": "1.7.0+dfsg-2build1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-3-Clause-Clear",
+        "BSD-3-clause",
+        "Expat",
+        "ISC",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsvtav1enc1d1_amd64.copyright"
+    },
+    "libswresample4:amd64": {
+      "version": "7:6.1.1-3ubuntu5",
+      "source": "ffmpeg",
+      "source_version": "7:6.1.1-3ubuntu5",
+      "licenses": [
+        "BSD-1-clause",
+        "BSD-2-clause",
+        "BSD-3-clause",
+        "BSL",
+        "Expat",
+        "GPL-2+",
+        "GPL-3+",
+        "IJG",
+        "ISC",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "LGPL-2.1+ and BSD-2-clause",
+        "LGPL-2.1+ and BSD-3-clause",
+        "LGPL-2.1+ and BSL",
+        "LGPL-2.1+ and Expat",
+        "LGPL-2.1+ and Sundry",
+        "Sundry",
+        "Zlib",
+        "man-page",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libswresample4_amd64.copyright"
+    },
+    "libsystemd0:amd64": {
+      "version": "255.4-1ubuntu8.17",
+      "source": "systemd",
+      "source_version": "255.4-1ubuntu8.17",
+      "licenses": [
+        "CC0-1.0",
+        "Expat",
+        "GPL-2 with Linux-syscall-note exception",
+        "GPL-2+",
+        "LGPL-2.1+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libsystemd0_amd64.copyright"
+    },
+    "libtag1v5-vanilla:amd64": {
+      "version": "1.13.1-1build1",
+      "source": "taglib",
+      "source_version": "1.13.1-1build1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSL-1.0",
+        "LGPL-2.1",
+        "LGPL-2.1 or MPL-1.1",
+        "MPL-1.1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libtag1v5-vanilla_amd64.copyright"
+    },
+    "libtasn1-6:amd64": {
+      "version": "4.19.0-3ubuntu0.24.04.2",
+      "source": "libtasn1-6",
+      "source_version": "4.19.0-3ubuntu0.24.04.2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libtasn1-6_amd64.copyright"
+    },
+    "libthai0:amd64": {
+      "version": "0.1.29-2build1",
+      "source": "libthai",
+      "source_version": "0.1.29-2build1",
+      "licenses": [
+        "GPL-2+",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libthai0_amd64.copyright"
+    },
+    "libtheora0:amd64": {
+      "version": "1.1.1+dfsg.1-16.1build3",
+      "source": "libtheora",
+      "source_version": "1.1.1+dfsg.1-16.1build3",
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libtheora0_amd64.copyright"
+    },
+    "libtwolame0:amd64": {
+      "version": "0.4.0-2build3",
+      "source": "twolame",
+      "source_version": "0.4.0-2build3",
+      "licenses": [
+        "LGPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libtwolame0_amd64.copyright"
+    },
+    "libudfread0:amd64": {
+      "version": "1.1.2-1build1",
+      "source": "libudfread",
+      "source_version": "1.1.2-1build1",
+      "licenses": [
+        "GPL-2+ with autoconf-macro exception",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libudfread0_amd64.copyright"
+    },
+    "libunistring5:amd64": {
+      "version": "1.1-2build1.1",
+      "source": "libunistring",
+      "source_version": "1.1-2build1.1",
+      "licenses": [
+        "FreeSoftware",
+        "GFDL-NIV-1.2+",
+        "GPL-2+",
+        "GPL-2+ with distribution exception",
+        "GPL-2+ with distribution exception, Expat and GPL-2+",
+        "GPL-3+",
+        "GPL-3+ or GFDL-NIV-1.2+",
+        "LGPL-3+",
+        "LGPL-3+ or GPL-2+",
+        "X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libunistring5_amd64.copyright"
+    },
+    "libva-drm2:amd64": {
+      "version": "2.20.0-2ubuntu0.2",
+      "source": "libva",
+      "source_version": "2.20.0-2ubuntu0.2",
+      "licenses": [
+        "Expat",
+        "Expat-advertising",
+        "GPL-2+",
+        "other"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libva-drm2_amd64.copyright"
+    },
+    "libva-x11-2:amd64": {
+      "version": "2.20.0-2ubuntu0.2",
+      "source": "libva",
+      "source_version": "2.20.0-2ubuntu0.2",
+      "licenses": [
+        "Expat",
+        "Expat-advertising",
+        "GPL-2+",
+        "other"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libva-x11-2_amd64.copyright"
+    },
+    "libva2:amd64": {
+      "version": "2.20.0-2ubuntu0.2",
+      "source": "libva",
+      "source_version": "2.20.0-2ubuntu0.2",
+      "licenses": [
+        "Expat",
+        "Expat-advertising",
+        "GPL-2+",
+        "other"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libva2_amd64.copyright"
+    },
+    "libvdpau1:amd64": {
+      "version": "1.5-2build1",
+      "source": "libvdpau",
+      "source_version": "1.5-2build1",
+      "licenses": [
+        "Expat",
+        "other"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libvdpau1_amd64.copyright"
+    },
+    "libvorbis0a:amd64": {
+      "version": "1.3.7-1build3",
+      "source": "libvorbis",
+      "source_version": "1.3.7-1build3",
+      "licenses": [
+        "BSD-3-Clause",
+        "RFC-special"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libvorbis0a_amd64.copyright"
+    },
+    "libvorbisenc2:amd64": {
+      "version": "1.3.7-1build3",
+      "source": "libvorbis",
+      "source_version": "1.3.7-1build3",
+      "licenses": [
+        "BSD-3-Clause",
+        "RFC-special"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libvorbisenc2_amd64.copyright"
+    },
+    "libvorbisfile3:amd64": {
+      "version": "1.3.7-1build3",
+      "source": "libvorbis",
+      "source_version": "1.3.7-1build3",
+      "licenses": [
+        "BSD-3-Clause",
+        "RFC-special"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libvorbisfile3_amd64.copyright"
+    },
+    "libvpl2": {
+      "version": "2023.3.0-1build1",
+      "source": "onevpl",
+      "source_version": "2023.3.0-1build1",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-clause",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libvpl2.copyright"
+    },
+    "libvpx9:amd64": {
+      "version": "1.14.0-1ubuntu2.3",
+      "source": "libvpx",
+      "source_version": "1.14.0-1ubuntu2.3",
+      "licenses": [
+        "BSD-3-Clause",
+        "ISC",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libvpx9_amd64.copyright"
+    },
+    "libwayland-client0:amd64": {
+      "version": "1.22.0-2.1build1",
+      "source": "wayland",
+      "source_version": "1.22.0-2.1build1",
+      "licenses": [
+        "X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libwayland-client0_amd64.copyright"
+    },
+    "libwayland-cursor0:amd64": {
+      "version": "1.22.0-2.1build1",
+      "source": "wayland",
+      "source_version": "1.22.0-2.1build1",
+      "licenses": [
+        "X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libwayland-cursor0_amd64.copyright"
+    },
+    "libwayland-egl1:amd64": {
+      "version": "1.22.0-2.1build1",
+      "source": "wayland",
+      "source_version": "1.22.0-2.1build1",
+      "licenses": [
+        "X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libwayland-egl1_amd64.copyright"
+    },
+    "libwebp7:amd64": {
+      "version": "1.3.2-0.4build3",
+      "source": "libwebp",
+      "source_version": "1.3.2-0.4build3",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-Clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libwebp7_amd64.copyright"
+    },
+    "libwebpmux3:amd64": {
+      "version": "1.3.2-0.4build3",
+      "source": "libwebp",
+      "source_version": "1.3.2-0.4build3",
+      "licenses": [
+        "Apache-2.0",
+        "BSD-3-Clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libwebpmux3_amd64.copyright"
+    },
+    "libx11-6:amd64": {
+      "version": "2:1.8.7-1build1",
+      "source": "libx11",
+      "source_version": "2:1.8.7-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libx11-6_amd64.copyright"
+    },
+    "libx11-xcb1:amd64": {
+      "version": "2:1.8.7-1build1",
+      "source": "libx11",
+      "source_version": "2:1.8.7-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libx11-xcb1_amd64.copyright"
+    },
+    "libx264-164:amd64": {
+      "version": "2:0.164.3108+git31e19f9-1",
+      "source": "x264",
+      "source_version": "2:0.164.3108+git31e19f9-1",
+      "licenses": [
+        "BSD-3-clause",
+        "Expat",
+        "GPL-2+",
+        "GPL-2+ with other exception",
+        "ISC",
+        "LGPL-2.1+",
+        "public-domain"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libx264-164_amd64.copyright"
+    },
+    "libx265-199:amd64": {
+      "version": "3.5-2build1",
+      "source": "x265",
+      "source_version": "3.5-2build1",
+      "licenses": [
+        "Expat",
+        "GPL-2+",
+        "ISC",
+        "LGPL-2.1+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libx265-199_amd64.copyright"
+    },
+    "libxau6:amd64": {
+      "version": "1:1.0.9-1build6",
+      "source": "libxau",
+      "source_version": "1:1.0.9-1build6",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxau6_amd64.copyright"
+    },
+    "libxcb-cursor0:amd64": {
+      "version": "0.1.4-1build1",
+      "source": "xcb-util-cursor",
+      "source_version": "0.1.4-1build1",
+      "licenses": [
+        "MIT/X"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-cursor0_amd64.copyright"
+    },
+    "libxcb-dri3-0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-dri3-0_amd64.copyright"
+    },
+    "libxcb-glx0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-glx0_amd64.copyright"
+    },
+    "libxcb-icccm4:amd64": {
+      "version": "0.4.1-1.1build3",
+      "source": "xcb-util-wm",
+      "source_version": "0.4.1-1.1build3",
+      "licenses": [
+        "GPL-2+",
+        "MIT/X Consortium License"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-icccm4_amd64.copyright"
+    },
+    "libxcb-image0:amd64": {
+      "version": "0.4.0-2build1",
+      "source": "xcb-util-image",
+      "source_version": "0.4.0-2build1",
+      "licenses": [
+        "GPL-2+",
+        "MIT/X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-image0_amd64.copyright"
+    },
+    "libxcb-keysyms1:amd64": {
+      "version": "0.4.0-1build4",
+      "source": "xcb-util-keysyms",
+      "source_version": "0.4.0-1build4",
+      "licenses": [
+        "GPL-2+",
+        "MIT/X11"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-keysyms1_amd64.copyright"
+    },
+    "libxcb-randr0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-randr0_amd64.copyright"
+    },
+    "libxcb-render-util0:amd64": {
+      "version": "0.3.9-1build4",
+      "source": "xcb-util-renderutil",
+      "source_version": "0.3.9-1build4",
+      "licenses": [
+        "GPL-2+",
+        "MIT/X Consortium License"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-render-util0_amd64.copyright"
+    },
+    "libxcb-render0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-render0_amd64.copyright"
+    },
+    "libxcb-shape0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-shape0_amd64.copyright"
+    },
+    "libxcb-shm0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-shm0_amd64.copyright"
+    },
+    "libxcb-sync1:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-sync1_amd64.copyright"
+    },
+    "libxcb-util1:amd64": {
+      "version": "0.4.0-1build3",
+      "source": "xcb-util",
+      "source_version": "0.4.0-1build3",
+      "licenses": [
+        "GPL-2+",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-util1_amd64.copyright"
+    },
+    "libxcb-xfixes0:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-xfixes0_amd64.copyright"
+    },
+    "libxcb-xkb1:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb-xkb1_amd64.copyright"
+    },
+    "libxcb1:amd64": {
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcb1_amd64.copyright"
+    },
+    "libxcomposite1:amd64": {
+      "version": "1:0.4.5-1build3",
+      "source": "libxcomposite",
+      "source_version": "1:0.4.5-1build3",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcomposite1_amd64.copyright"
+    },
+    "libxcursor1:amd64": {
+      "version": "1:1.2.1-1build1",
+      "source": "libxcursor",
+      "source_version": "1:1.2.1-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxcursor1_amd64.copyright"
+    },
+    "libxdamage1:amd64": {
+      "version": "1:1.1.6-1build1",
+      "source": "libxdamage",
+      "source_version": "1:1.1.6-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxdamage1_amd64.copyright"
+    },
+    "libxdmcp6:amd64": {
+      "version": "1:1.1.3-0ubuntu6",
+      "source": "libxdmcp",
+      "source_version": "1:1.1.3-0ubuntu6",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxdmcp6_amd64.copyright"
+    },
+    "libxext6:amd64": {
+      "version": "2:1.3.4-1build2",
+      "source": "libxext",
+      "source_version": "2:1.3.4-1build2",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxext6_amd64.copyright"
+    },
+    "libxfixes3:amd64": {
+      "version": "1:6.0.0-2build1",
+      "source": "libxfixes",
+      "source_version": "1:6.0.0-2build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxfixes3_amd64.copyright"
+    },
+    "libxi6:amd64": {
+      "version": "2:1.8.1-1build1",
+      "source": "libxi",
+      "source_version": "2:1.8.1-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxi6_amd64.copyright"
+    },
+    "libxinerama1:amd64": {
+      "version": "2:1.1.4-3build1",
+      "source": "libxinerama",
+      "source_version": "2:1.1.4-3build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxinerama1_amd64.copyright"
+    },
+    "libxkbcommon-x11-0:amd64": {
+      "version": "1.6.0-1build1",
+      "source": "libxkbcommon",
+      "source_version": "1.6.0-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxkbcommon-x11-0_amd64.copyright"
+    },
+    "libxkbcommon0:amd64": {
+      "version": "1.6.0-1build1",
+      "source": "libxkbcommon",
+      "source_version": "1.6.0-1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxkbcommon0_amd64.copyright"
+    },
+    "libxml2:amd64": {
+      "version": "2.9.14+dfsg-1.3ubuntu3.10",
+      "source": "libxml2",
+      "source_version": "2.9.14+dfsg-1.3ubuntu3.10",
+      "licenses": [
+        "ISC",
+        "MIT-1"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxml2_amd64.copyright"
+    },
+    "libxrandr2:amd64": {
+      "version": "2:1.5.2-2build1",
+      "source": "libxrandr",
+      "source_version": "2:1.5.2-2build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxrandr2_amd64.copyright"
+    },
+    "libxrender1:amd64": {
+      "version": "1:0.9.10-1.1build1",
+      "source": "libxrender",
+      "source_version": "1:0.9.10-1.1build1",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxrender1_amd64.copyright"
+    },
+    "libxvidcore4:amd64": {
+      "version": "2:1.3.7-1build1",
+      "source": "xvidcore",
+      "source_version": "2:1.3.7-1build1",
+      "licenses": [
+        "GPL-2+",
+        "LGPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxvidcore4_amd64.copyright"
+    },
+    "libxxhash0:amd64": {
+      "version": "0.8.2-2build1",
+      "source": "xxhash",
+      "source_version": "0.8.2-2build1",
+      "licenses": [
+        "BSD-2-clause",
+        "BSD-2-clause or GPL-2+",
+        "GPL-2+"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libxxhash0_amd64.copyright"
+    },
+    "libzmq5:amd64": {
+      "version": "4.3.5-1build2",
+      "source": "zeromq3",
+      "source_version": "4.3.5-1build2",
+      "licenses": [
+        "LGPL-2.0+",
+        "MIT",
+        "MPL-2.0"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libzmq5_amd64.copyright"
+    },
+    "libzstd1:amd64": {
+      "version": "1.5.5+dfsg2-2build1.1",
+      "source": "libzstd",
+      "source_version": "1.5.5+dfsg2-2build1.1",
+      "licenses": [
+        "BSD-3-clause",
+        "BSD-3-clause or GPL-2",
+        "Expat",
+        "GPL-2",
+        "zlib"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libzstd1_amd64.copyright"
+    },
+    "libzvbi0t64:amd64": {
+      "version": "0.2.42-2",
+      "source": "zvbi",
+      "source_version": "0.2.42-2",
+      "licenses": [
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "GPL-2",
+        "GPL-2+",
+        "GPL-2+ or BSD-3-Clause",
+        "LGPL-2+",
+        "LGPL-2.1+",
+        "MIT"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/libzvbi0t64_amd64.copyright"
+    },
+    "ocl-icd-libopencl1:amd64": {
+      "version": "2.3.2-1build1",
+      "source": "ocl-icd",
+      "source_version": "2.3.2-1build1",
+      "licenses": [
+        "BSD-2-Clause"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/ocl-icd-libopencl1_amd64.copyright"
+    },
+    "python3.12": {
+      "version": "3.12.3-1ubuntu0.17",
+      "source": "python3.12",
+      "source_version": "3.12.3-1ubuntu0.17",
+      "licenses": [
+        " * Permission to use this software in any way is granted without",
+        "By obtaining, using, and/or copying this software and/or its",
+        "Permission  is  hereby granted,  free  of charge,  to  any person",
+        "Permission is hereby granted, free of charge, to any person obtaining",
+        "Permission to use, copy, modify, and distribute this software and",
+        "Permission to use, copy, modify, and distribute this software and its",
+        "Permission to use, copy, modify, and distribute this software for any",
+        "Redistribution and use in source and binary forms, with or without",
+        "This software is provided 'as-is', without any express or implied",
+        "This software is provided as-is, without express or implied"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/python3.12.copyright"
+    },
+    "rsync": {
+      "version": "3.2.7-1ubuntu1.5",
+      "source": "rsync",
+      "source_version": "3.2.7-1ubuntu1.5",
+      "licenses": [],
+      "notice": "usr/share/licenses/musicsync/ubuntu/rsync.copyright"
+    },
+    "zlib1g:amd64": {
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "source": "zlib",
+      "source_version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "licenses": [
+        "Zlib"
+      ],
+      "notice": "usr/share/licenses/musicsync/ubuntu/zlib1g_amd64.copyright"
+    }
+  },
+  "upstream_sources": {
+    "qtbase-everywhere-src-6.11.2.tar.xz": {
+      "url": "https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtbase-everywhere-src-6.11.2.tar.xz",
+      "sha256": "5b2e00eccaf5a4d8c14134ffa0ea8dfd0a35ae1ffc7f8d87fa4305a1ed23cf22"
+    },
+    "qtsvg-everywhere-src-6.11.2.tar.xz": {
+      "url": "https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtsvg-everywhere-src-6.11.2.tar.xz",
+      "sha256": "d594337feca84c26fb67fe87b85e6a5c12fda404b611d905f9d138210c311876"
+    },
+    "qtwayland-everywhere-src-6.11.2.tar.xz": {
+      "url": "https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtwayland-everywhere-src-6.11.2.tar.xz",
+      "sha256": "8eb7615e39332a10f506e8dd70f02d5954bb5949ff54f6dcbf8bd6168222f9df"
+    },
+    "qtimageformats-everywhere-src-6.11.2.tar.xz": {
+      "url": "https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtimageformats-everywhere-src-6.11.2.tar.xz",
+      "sha256": "cecd8900f34b6550076309bc94f62f828008b633a4239e0a08c86788f41001f8"
+    },
+    "pyside-setup-everywhere-src-6.11.2.tar.xz": {
+      "url": "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.11.2-src/pyside-setup-everywhere-src-6.11.2.tar.xz",
+      "sha256": "cba47efbaad1bedd529725cbc14e21f156c7a19366f07b3edfbb076ffd7afdf8"
+    },
+    "rsgain-3.6.tar.gz": {
+      "url": "https://codeload.github.com/complexlogic/rsgain/tar.gz/refs/tags/v3.6",
+      "sha256": "26f7acd1ba0851929dc756c93b3b1a6d66d7f2f36b31f744c8181f14d7b5c8a7"
+    },
+    "icu4c-73_2-src.tgz": {
+      "url": "https://github.com/unicode-org/icu/releases/download/release-73-2/icu4c-73_2-src.tgz",
+      "sha256": "818a80712ed3caacd9b652305e01afc7fa167e6f2e94996da44b90c2ab604ce1"
+    },
+    "type2-runtime.tar.gz": {
+      "url": "https://codeload.github.com/AppImage/type2-runtime/tar.gz/8f39b89e2ac31e1640b3d3f7e9a5108e6ce805fa",
+      "sha256": "c449eb42c2190820872631f5e22f8e15b1e985a36dc4a9e2de3585bb7536c785"
+    },
+    "fuse-3.15.0.tar.xz": {
+      "url": "https://github.com/libfuse/libfuse/releases/download/fuse-3.15.0/fuse-3.15.0.tar.xz",
+      "sha256": "70589cfd5e1cff7ccd6ac91c86c01be340b227285c5e200baa284e401eea2ca0"
+    },
+    "squashfuse-0.5.2.tar.gz": {
+      "url": "https://codeload.github.com/vasi/squashfuse/tar.gz/0.5.2",
+      "sha256": "db0238c5981dabbd80ee09ae15387f390091668ca060a7bc38047912491443d3"
+    },
+    "musl-1.2.5.tar.gz": {
+      "url": "https://musl.libc.org/releases/musl-1.2.5.tar.gz",
+      "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4"
+    },
+    "zstd-1.5.6.tar.gz": {
+      "url": "https://codeload.github.com/facebook/zstd/tar.gz/v1.5.6",
+      "sha256": "30f35f71c1203369dc979ecde0400ffea93c27391bfd2ac5a9715d2173d92ff7"
+    },
+    "zlib-1.3.2.tar.gz": {
+      "url": "https://codeload.github.com/madler/zlib/tar.gz/refs/tags/v1.3.2",
+      "sha256": "b99a0b86c0ba9360ec7e78c4f1e43b1cbdf1e6936c8fa0f6835c0cd694a495a1"
+    },
+    "mimalloc-2.1.7.tar.gz": {
+      "url": "https://codeload.github.com/microsoft/mimalloc/tar.gz/v2.1.7",
+      "sha256": "0eed39319f139afde8515010ff59baf24de9e47ea316a315398e8027d198202d"
+    },
+    "extra-cmake-modules-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/extra-cmake-modules-6.29.0.tar.xz",
+      "sha256": "aaf2542edd5c5af9ea56a46468892d38a7978af65f0f3518379fa8ce66cad2b8"
+    },
+    "kconfig-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/kconfig-6.29.0.tar.xz",
+      "sha256": "a0e902865763fd4cd1c86973c316069f210492923d7b8065d5052c539ae46b91"
+    },
+    "karchive-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/karchive-6.29.0.tar.xz",
+      "sha256": "3d66cd9d71fbbebc3cea68757111002666b366898b01178b6fa7203715574287"
+    },
+    "ki18n-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/ki18n-6.29.0.tar.xz",
+      "sha256": "9037f3caa67768869f00ee257dbb35b81febe6ad600ed0bd3ffdf293c36252ba"
+    },
+    "kguiaddons-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/kguiaddons-6.29.0.tar.xz",
+      "sha256": "6d0c4a4ddc7d4833ae537b1bf146896beba76135ec4b8bcf2a9525e33e39b3a4"
+    },
+    "kcolorscheme-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/kcolorscheme-6.29.0.tar.xz",
+      "sha256": "a868d9c62d402474ba063735f674967826aa905f0b9a5a176999588cde57d662"
+    },
+    "kwidgetsaddons-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/kwidgetsaddons-6.29.0.tar.xz",
+      "sha256": "76285d03cdc06f0647afbbc89f31ab5aa766cbc3c6eb177e3f8a0441444e3068"
+    },
+    "breeze-icons-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/breeze-icons-6.29.0.tar.xz",
+      "sha256": "2948a313ffe35895b846dde5a93302a1fcd587ad8dfb860b8757629209586fe4"
+    },
+    "kiconthemes-6.29.0.tar.xz": {
+      "url": "https://download.kde.org/stable/frameworks/6.29/kiconthemes-6.29.0.tar.xz",
+      "sha256": "233de4cd2fef5b7b4ce1e317196407d25300b767614a93e160b45ac34710223d"
+    },
+    "qt6ct.tar.gz": {
+      "url": "https://www.opencode.net/trialuser/qt6ct/-/archive/00823e41aa60e8fe266d5aee328e82ad1ad94348/qt6ct-00823e41aa60e8fe266d5aee328e82ad1ad94348.tar.gz",
+      "sha256": "00e8fb1efaeb294ec2379b29656e204311f80188e3dec2f775d5c417954720f1"
+    },
+    "qt6ct-kde.patch": {
+      "url": "https://www.opencode.net/trialuser/qt6ct/-/merge_requests/9.diff",
+      "sha256": "f4a88560e22627a67e500eb241a181484c9442af7eed9df64eeb6f7a55dcbcf0"
+    },
+    "kvantum-1.1.6.tar.gz": {
+      "url": "https://codeload.github.com/tsujan/Kvantum/tar.gz/ce2438af4c573856882eadca320b9a89eb8522b3",
+      "sha256": "bbf362da756db107bc7e734f40b6aef4ad9ac112909c8d090ccd0ee361acb966",
+      "commit": "ce2438af4c573856882eadca320b9a89eb8522b3",
+      "version": "1.1.6"
+    }
+  },
+  "files": {
+    "usr/lib/musicsync/PySide6/qt-plugins/iconengines/libqsvgicon.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqgif.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqicns.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqico.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqjpeg.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqsvg.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqtga.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqtiff.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqwbmp.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/imageformats/libqwebp.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqlinuxfb.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqminimal.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqminimalegl.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqoffscreen.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqvkkhrdisplay.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqvnc.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqwayland.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platforms/libqxcb.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platformthemes/libqgtk3.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/platformthemes/libqxdgdesktopportal.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/tls/libqcertonlybackend.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/tls/libqopensslbackend.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-decoration-client/libadwaita.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-decoration-client/libbradient.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-graphics-integration-client/libdmabuf-server.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-graphics-integration-client/libdrm-egl-server.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-graphics-integration-client/libshm-emulation-server.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-graphics-integration-client/libvulkan-server.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-shell-integration/libfullscreen-shell-v1.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-shell-integration/libivi-shell.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-shell-integration/libqt-shell.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-shell-integration/libwl-shell-plugin.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/wayland-shell-integration/libxdg-shell.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/xcbglintegrations/libqxcb-egl-integration.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/qt-plugins/xcbglintegrations/libqxcb-glx-integration.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6Core.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6DBus.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6Gui.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6Network.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6OpenGL.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6Svg.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6WaylandClient.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6Widgets.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6WlShellIntegration.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libQt6XcbQpa.so.6": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libbz2.so.1.0": "libbz2-1.0:amd64",
+    "usr/lib/musicsync/libcrypto.so.3": "libssl3t64:amd64",
+    "usr/lib/musicsync/libexpat.so.1": "libexpat1:amd64",
+    "usr/lib/musicsync/libicudata.so.73": "ICU-73",
+    "usr/lib/musicsync/libicui18n.so.73": "ICU-73",
+    "usr/lib/musicsync/libicuuc.so.73": "ICU-73",
+    "usr/lib/musicsync/liblzma.so.5": "liblzma5:amd64",
+    "usr/lib/musicsync/libpyside6.abi3.so.6.11": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libshiboken6.abi3.so.6.11": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/libssl.so.3": "libssl3t64:amd64",
+    "usr/lib/musicsync/PySide6/QtCore.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/QtGui.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/PySide6/QtWidgets.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/_bz2.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_codecs_cn.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_codecs_hk.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_codecs_iso2022.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_codecs_jp.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_codecs_kr.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_codecs_tw.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_contextvars.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_decimal.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_hashlib.so": "libpython3.12-minimal:amd64",
+    "usr/lib/musicsync/_lzma.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_multibytecodec.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_queue.so": "libpython3.12-stdlib:amd64",
+    "usr/lib/musicsync/_ssl.so": "libpython3.12-minimal:amd64",
+    "usr/lib/musicsync/shiboken6/Shiboken.so": "Qt-PySide6-Shiboken6",
+    "usr/lib/musicsync/gio/modules/libdconfsettings.so": "dconf-gsettings-backend:amd64",
+    "usr/share/musicsync/gtk-schemas/org.gtk.Settings.ColorChooser.gschema.xml": "libgtk-3-common",
+    "usr/share/musicsync/gtk-schemas/org.gtk.Settings.Debug.gschema.xml": "libgtk-3-common",
+    "usr/share/musicsync/gtk-schemas/org.gtk.Settings.EmojiChooser.gschema.xml": "libgtk-3-common",
+    "usr/share/musicsync/gtk-schemas/org.gtk.Settings.FileChooser.gschema.xml": "libgtk-3-common",
+    "usr/libexec/musicsync/rsync": "rsync",
+    "usr/lib/musicsync-tools/libacl.so.1": "libacl1:amd64",
+    "usr/lib/musicsync-tools/libz.so.1": "zlib1g:amd64",
+    "usr/lib/musicsync-tools/libpopt.so.0": "libpopt0:amd64",
+    "usr/lib/musicsync-tools/liblz4.so.1": "liblz4-1:amd64",
+    "usr/lib/musicsync-tools/libzstd.so.1": "libzstd1:amd64",
+    "usr/lib/musicsync-tools/libxxhash.so.0": "libxxhash0:amd64",
+    "usr/lib/musicsync-tools/libcrypto.so.3": "libssl3t64:amd64",
+    "usr/libexec/musicsync/rsgain": "rsgain-3.6",
+    "usr/lib/musicsync-tools/libavformat.so.60": "libavformat60:amd64",
+    "usr/lib/musicsync-tools/libavcodec.so.60": "libavcodec60:amd64",
+    "usr/lib/musicsync-tools/libswresample.so.4": "libswresample4:amd64",
+    "usr/lib/musicsync-tools/libavutil.so.58": "libavutil58:amd64",
+    "usr/lib/musicsync-tools/libtag.so.1": "libtag1v5-vanilla:amd64",
+    "usr/lib/musicsync-tools/libebur128.so.1": "libebur128-1:amd64",
+    "usr/lib/musicsync-tools/libinih.so.1": "libinih1:amd64",
+    "usr/lib/musicsync-tools/libfmt.so.9": "libfmt9:amd64",
+    "usr/lib/musicsync-tools/libstdc++.so.6": "libstdc++6:amd64",
+    "usr/lib/musicsync-tools/libgcc_s.so.1": "libgcc-s1:amd64",
+    "usr/lib/musicsync-tools/libxml2.so.2": "libxml2:amd64",
+    "usr/lib/musicsync-tools/libbz2.so.1.0": "libbz2-1.0:amd64",
+    "usr/lib/musicsync-tools/libgme.so.0": "libgme0:amd64",
+    "usr/lib/musicsync-tools/libopenmpt.so.0": "libopenmpt0t64:amd64",
+    "usr/lib/musicsync-tools/libchromaprint.so.1": "libchromaprint1:amd64",
+    "usr/lib/musicsync-tools/libbluray.so.2": "libbluray2:amd64",
+    "usr/lib/musicsync-tools/libgnutls.so.30": "libgnutls30t64:amd64",
+    "usr/lib/musicsync-tools/librabbitmq.so.4": "librabbitmq4:amd64",
+    "usr/lib/musicsync-tools/librist.so.4": "librist4:amd64",
+    "usr/lib/musicsync-tools/libsrt-gnutls.so.1.5": "libsrt1.5-gnutls:amd64",
+    "usr/lib/musicsync-tools/libssh-gcrypt.so.4": "libssh-gcrypt-4:amd64",
+    "usr/lib/musicsync-tools/libzmq.so.5": "libzmq5:amd64",
+    "usr/lib/musicsync-tools/libvpx.so.9": "libvpx9:amd64",
+    "usr/lib/musicsync-tools/libwebpmux.so.3": "libwebpmux3:amd64",
+    "usr/lib/musicsync-tools/liblzma.so.5": "liblzma5:amd64",
+    "usr/lib/musicsync-tools/libdav1d.so.7": "libdav1d7:amd64",
+    "usr/lib/musicsync-tools/librsvg-2.so.2": "librsvg2-2:amd64",
+    "usr/lib/musicsync-tools/libgobject-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync-tools/libglib-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync-tools/libcairo.so.2": "libcairo2:amd64",
+    "usr/lib/musicsync-tools/libzvbi.so.0": "libzvbi0t64:amd64",
+    "usr/lib/musicsync-tools/libsnappy.so.1": "libsnappy1v5:amd64",
+    "usr/lib/musicsync-tools/libaom.so.3": "libaom3:amd64",
+    "usr/lib/musicsync-tools/libcodec2.so.1.2": "libcodec2-1.2:amd64",
+    "usr/lib/musicsync-tools/libgsm.so.1": "libgsm1:amd64",
+    "usr/lib/musicsync-tools/libjxl.so.0.7": "libjxl0.7:amd64",
+    "usr/lib/musicsync-tools/libjxl_threads.so.0.7": "libjxl0.7:amd64",
+    "usr/lib/musicsync-tools/libmp3lame.so.0": "libmp3lame0:amd64",
+    "usr/lib/musicsync-tools/libopenjp2.so.7": "libopenjp2-7:amd64",
+    "usr/lib/musicsync-tools/libopus.so.0": "libopus0:amd64",
+    "usr/lib/musicsync-tools/librav1e.so.0": "librav1e0:amd64",
+    "usr/lib/musicsync-tools/libshine.so.3": "libshine3:amd64",
+    "usr/lib/musicsync-tools/libspeex.so.1": "libspeex1:amd64",
+    "usr/lib/musicsync-tools/libSvtAv1Enc.so.1": "libsvtav1enc1d1:amd64",
+    "usr/lib/musicsync-tools/libtheoraenc.so.1": "libtheora0:amd64",
+    "usr/lib/musicsync-tools/libtheoradec.so.1": "libtheora0:amd64",
+    "usr/lib/musicsync-tools/libtwolame.so.0": "libtwolame0:amd64",
+    "usr/lib/musicsync-tools/libvorbis.so.0": "libvorbis0a:amd64",
+    "usr/lib/musicsync-tools/libvorbisenc.so.2": "libvorbisenc2:amd64",
+    "usr/lib/musicsync-tools/libwebp.so.7": "libwebp7:amd64",
+    "usr/lib/musicsync-tools/libx264.so.164": "libx264-164:amd64",
+    "usr/lib/musicsync-tools/libx265.so.199": "libx265-199:amd64",
+    "usr/lib/musicsync-tools/libxvidcore.so.4": "libxvidcore4:amd64",
+    "usr/lib/musicsync-tools/libva.so.2": "libva2:amd64",
+    "usr/lib/musicsync-tools/libvpl.so.2": "libvpl2",
+    "usr/lib/musicsync-tools/libsoxr.so.0": "libsoxr0:amd64",
+    "usr/lib/musicsync-tools/libva-drm.so.2": "libva-drm2:amd64",
+    "usr/lib/musicsync-tools/libva-x11.so.2": "libva-x11-2:amd64",
+    "usr/lib/musicsync-tools/libvdpau.so.1": "libvdpau1:amd64",
+    "usr/lib/musicsync-tools/libX11.so.6": "libx11-6:amd64",
+    "usr/lib/musicsync-tools/libdrm.so.2": "libdrm2:amd64",
+    "usr/lib/musicsync-tools/libOpenCL.so.1": "ocl-icd-libopencl1:amd64",
+    "usr/lib/musicsync-tools/libicuuc.so.74": "libicu74:amd64",
+    "usr/lib/musicsync-tools/libmpg123.so.0": "libmpg123-0t64:amd64",
+    "usr/lib/musicsync-tools/libvorbisfile.so.3": "libvorbisfile3:amd64",
+    "usr/lib/musicsync-tools/libfontconfig.so.1": "libfontconfig1:amd64",
+    "usr/lib/musicsync-tools/libfreetype.so.6": "libfreetype6:amd64",
+    "usr/lib/musicsync-tools/libudfread.so.0": "libudfread0:amd64",
+    "usr/lib/musicsync-tools/libp11-kit.so.0": "libp11-kit0:amd64",
+    "usr/lib/musicsync-tools/libidn2.so.0": "libidn2-0:amd64",
+    "usr/lib/musicsync-tools/libunistring.so.5": "libunistring5:amd64",
+    "usr/lib/musicsync-tools/libtasn1.so.6": "libtasn1-6:amd64",
+    "usr/lib/musicsync-tools/libnettle.so.8": "libnettle8t64:amd64",
+    "usr/lib/musicsync-tools/libhogweed.so.6": "libhogweed6t64:amd64",
+    "usr/lib/musicsync-tools/libgmp.so.10": "libgmp10:amd64",
+    "usr/lib/musicsync-tools/libssl.so.3": "libssl3t64:amd64",
+    "usr/lib/musicsync-tools/libmbedcrypto.so.7": "libmbedcrypto7t64:amd64",
+    "usr/lib/musicsync-tools/libcjson.so.1": "libcjson1:amd64",
+    "usr/lib/musicsync-tools/libgcrypt.so.20": "libgcrypt20:amd64",
+    "usr/lib/musicsync-tools/libgpg-error.so.0": "libgpg-error0:amd64",
+    "usr/lib/musicsync-tools/libgssapi_krb5.so.2": "libgssapi-krb5-2:amd64",
+    "usr/lib/musicsync-tools/libbsd.so.0": "libbsd0:amd64",
+    "usr/lib/musicsync-tools/libsodium.so.23": "libsodium23:amd64",
+    "usr/lib/musicsync-tools/libpgm-5.3.so.0": "libpgm-5.3-0t64:amd64",
+    "usr/lib/musicsync-tools/libnorm.so.1": "libnorm1t64:amd64",
+    "usr/lib/musicsync-tools/libcairo-gobject.so.2": "libcairo-gobject2:amd64",
+    "usr/lib/musicsync-tools/libgdk_pixbuf-2.0.so.0": "libgdk-pixbuf-2.0-0:amd64",
+    "usr/lib/musicsync-tools/libgio-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync-tools/libpangocairo-1.0.so.0": "libpangocairo-1.0-0:amd64",
+    "usr/lib/musicsync-tools/libpango-1.0.so.0": "libpango-1.0-0:amd64",
+    "usr/lib/musicsync-tools/libffi.so.8": "libffi8:amd64",
+    "usr/lib/musicsync-tools/libpcre2-8.so.0": "libpcre2-8-0:amd64",
+    "usr/lib/musicsync-tools/libpng16.so.16": "libpng16-16t64:amd64",
+    "usr/lib/musicsync-tools/libXext.so.6": "libxext6:amd64",
+    "usr/lib/musicsync-tools/libXrender.so.1": "libxrender1:amd64",
+    "usr/lib/musicsync-tools/libxcb.so.1": "libxcb1:amd64",
+    "usr/lib/musicsync-tools/libxcb-render.so.0": "libxcb-render0:amd64",
+    "usr/lib/musicsync-tools/libxcb-shm.so.0": "libxcb-shm0:amd64",
+    "usr/lib/musicsync-tools/libpixman-1.so.0": "libpixman-1-0:amd64",
+    "usr/lib/musicsync-tools/libbrotlidec.so.1": "libbrotli1:amd64",
+    "usr/lib/musicsync-tools/libhwy.so.1": "libhwy1t64:amd64",
+    "usr/lib/musicsync-tools/libbrotlienc.so.1": "libbrotli1:amd64",
+    "usr/lib/musicsync-tools/liblcms2.so.2": "liblcms2-2:amd64",
+    "usr/lib/musicsync-tools/libogg.so.0": "libogg0:amd64",
+    "usr/lib/musicsync-tools/libsharpyuv.so.0": "libsharpyuv0:amd64",
+    "usr/lib/musicsync-tools/libnuma.so.1": "libnuma1:amd64",
+    "usr/lib/musicsync-tools/libgomp.so.1": "libgomp1:amd64",
+    "usr/lib/musicsync-tools/libXfixes.so.3": "libxfixes3:amd64",
+    "usr/lib/musicsync-tools/libX11-xcb.so.1": "libx11-xcb1:amd64",
+    "usr/lib/musicsync-tools/libxcb-dri3.so.0": "libxcb-dri3-0:amd64",
+    "usr/lib/musicsync-tools/libicudata.so.74": "libicu74:amd64",
+    "usr/lib/musicsync-tools/libexpat.so.1": "libexpat1:amd64",
+    "usr/lib/musicsync-tools/libkrb5.so.3": "libkrb5-3:amd64",
+    "usr/lib/musicsync-tools/libk5crypto.so.3": "libk5crypto3:amd64",
+    "usr/lib/musicsync-tools/libcom_err.so.2": "libcom-err2:amd64",
+    "usr/lib/musicsync-tools/libkrb5support.so.0": "libkrb5support0:amd64",
+    "usr/lib/musicsync-tools/libmd.so.0": "libmd0:amd64",
+    "usr/lib/musicsync-tools/libgmodule-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync-tools/libjpeg.so.8": "libjpeg-turbo8:amd64",
+    "usr/lib/musicsync-tools/libmount.so.1": "libmount1:amd64",
+    "usr/lib/musicsync-tools/libselinux.so.1": "libselinux1:amd64",
+    "usr/lib/musicsync-tools/libpangoft2-1.0.so.0": "libpangoft2-1.0-0:amd64",
+    "usr/lib/musicsync-tools/libharfbuzz.so.0": "libharfbuzz0b:amd64",
+    "usr/lib/musicsync-tools/libfribidi.so.0": "libfribidi0:amd64",
+    "usr/lib/musicsync-tools/libthai.so.0": "libthai0:amd64",
+    "usr/lib/musicsync-tools/libXau.so.6": "libxau6:amd64",
+    "usr/lib/musicsync-tools/libXdmcp.so.6": "libxdmcp6:amd64",
+    "usr/lib/musicsync-tools/libbrotlicommon.so.1": "libbrotli1:amd64",
+    "usr/lib/musicsync-tools/libkeyutils.so.1": "libkeyutils1:amd64",
+    "usr/lib/musicsync-tools/libblkid.so.1": "libblkid1:amd64",
+    "usr/lib/musicsync-tools/libgraphite2.so.3": "libgraphite2-3:amd64",
+    "usr/lib/musicsync-tools/libdatrie.so.1": "libdatrie1:amd64",
+    "usr/lib/musicsync/PySide6/qt-plugins/platformthemes/libqt6ct.so": "qt6ct",
+    "usr/lib/musicsync/libKF6IconThemes.so.6": "kiconthemes",
+    "usr/lib/musicsync/libqt6ct-common.so.0.11": "qt6ct",
+    "usr/lib/musicsync/libstdc++.so.6": "libstdc++6:amd64",
+    "usr/lib/musicsync/libgcc_s.so.1": "libgcc-s1:amd64",
+    "usr/lib/musicsync/libxkbcommon.so.0": "libxkbcommon0:amd64",
+    "usr/lib/musicsync/libKF6Archive.so.6": "karchive",
+    "usr/lib/musicsync/libKF6ColorScheme.so.6": "kcolorscheme",
+    "usr/lib/musicsync/libKF6BreezeIcons.so.6": "breeze-icons",
+    "usr/lib/musicsync/libKF6I18n.so.6": "ki18n",
+    "usr/lib/musicsync/libKF6ConfigCore.so.6": "kconfig",
+    "usr/lib/musicsync/libfontconfig.so.1": "libfontconfig1:amd64",
+    "usr/lib/musicsync/libX11.so.6": "libx11-6:amd64",
+    "usr/lib/musicsync/libglib-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync/libz.so.1": "zlib1g:amd64",
+    "usr/lib/musicsync/libfreetype.so.6": "libfreetype6:amd64",
+    "usr/lib/musicsync/libgthread-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync/libzstd.so.1": "libzstd1:amd64",
+    "usr/lib/musicsync/libKF6ConfigGui.so.6": "kconfig",
+    "usr/lib/musicsync/libKF6GuiAddons.so.6": "kguiaddons",
+    "usr/lib/musicsync/libdbus-1.so.3": "libdbus-1-3:amd64",
+    "usr/lib/musicsync/libxcb.so.1": "libxcb1:amd64",
+    "usr/lib/musicsync/libpcre2-8.so.0": "libpcre2-8-0:amd64",
+    "usr/lib/musicsync/libpng16.so.16": "libpng16-16t64:amd64",
+    "usr/lib/musicsync/libbrotlidec.so.1": "libbrotli1:amd64",
+    "usr/lib/musicsync/libsystemd.so.0": "libsystemd0:amd64",
+    "usr/lib/musicsync/libXau.so.6": "libxau6:amd64",
+    "usr/lib/musicsync/libXdmcp.so.6": "libxdmcp6:amd64",
+    "usr/lib/musicsync/libbrotlicommon.so.1": "libbrotli1:amd64",
+    "usr/lib/musicsync/libcap.so.2": "libcap2:amd64",
+    "usr/lib/musicsync/libgcrypt.so.20": "libgcrypt20:amd64",
+    "usr/lib/musicsync/liblz4.so.1": "liblz4-1:amd64",
+    "usr/lib/musicsync/libbsd.so.0": "libbsd0:amd64",
+    "usr/lib/musicsync/libgpg-error.so.0": "libgpg-error0:amd64",
+    "usr/lib/musicsync/libmd.so.0": "libmd0:amd64",
+    "usr/lib/musicsync/PySide6/qt-plugins/styles/libqt6ct-style.so": "qt6ct",
+    "usr/lib/musicsync/PySide6/qt-plugins/styles/libkvantum.so": "kvantum-1.1.6",
+    "usr/lib/musicsync/libgssapi_krb5.so.2": "libgssapi-krb5-2:amd64",
+    "usr/lib/musicsync/libkrb5.so.3": "libkrb5-3:amd64",
+    "usr/lib/musicsync/libk5crypto.so.3": "libk5crypto3:amd64",
+    "usr/lib/musicsync/libcom_err.so.2": "libcom-err2:amd64",
+    "usr/lib/musicsync/libkrb5support.so.0": "libkrb5support0:amd64",
+    "usr/lib/musicsync/libkeyutils.so.1": "libkeyutils1:amd64",
+    "usr/lib/musicsync/libwayland-client.so.0": "libwayland-client0:amd64",
+    "usr/lib/musicsync/libwayland-cursor.so.0": "libwayland-cursor0:amd64",
+    "usr/lib/musicsync/libffi.so.8": "libffi8:amd64",
+    "usr/lib/musicsync/libxcb-cursor.so.0": "libxcb-cursor0:amd64",
+    "usr/lib/musicsync/libxcb-icccm.so.4": "libxcb-icccm4:amd64",
+    "usr/lib/musicsync/libxcb-util.so.1": "libxcb-util1:amd64",
+    "usr/lib/musicsync/libxcb-image.so.0": "libxcb-image0:amd64",
+    "usr/lib/musicsync/libxcb-keysyms.so.1": "libxcb-keysyms1:amd64",
+    "usr/lib/musicsync/libxcb-randr.so.0": "libxcb-randr0:amd64",
+    "usr/lib/musicsync/libxcb-render.so.0": "libxcb-render0:amd64",
+    "usr/lib/musicsync/libxcb-render-util.so.0": "libxcb-render-util0:amd64",
+    "usr/lib/musicsync/libxcb-shape.so.0": "libxcb-shape0:amd64",
+    "usr/lib/musicsync/libxcb-shm.so.0": "libxcb-shm0:amd64",
+    "usr/lib/musicsync/libxcb-sync.so.1": "libxcb-sync1:amd64",
+    "usr/lib/musicsync/libxcb-xfixes.so.0": "libxcb-xfixes0:amd64",
+    "usr/lib/musicsync/libxcb-xkb.so.1": "libxcb-xkb1:amd64",
+    "usr/lib/musicsync/libX11-xcb.so.1": "libx11-xcb1:amd64",
+    "usr/lib/musicsync/libxkbcommon-x11.so.0": "libxkbcommon-x11-0:amd64",
+    "usr/lib/musicsync/libdrm.so.2": "libdrm2:amd64",
+    "usr/lib/musicsync/libgtk-3.so.0": "libgtk-3-0t64:amd64",
+    "usr/lib/musicsync/libgdk-3.so.0": "libgtk-3-0t64:amd64",
+    "usr/lib/musicsync/libpangocairo-1.0.so.0": "libpangocairo-1.0-0:amd64",
+    "usr/lib/musicsync/libpango-1.0.so.0": "libpango-1.0-0:amd64",
+    "usr/lib/musicsync/libharfbuzz.so.0": "libharfbuzz0b:amd64",
+    "usr/lib/musicsync/libatk-1.0.so.0": "libatk1.0-0t64:amd64",
+    "usr/lib/musicsync/libcairo-gobject.so.2": "libcairo-gobject2:amd64",
+    "usr/lib/musicsync/libcairo.so.2": "libcairo2:amd64",
+    "usr/lib/musicsync/libgdk_pixbuf-2.0.so.0": "libgdk-pixbuf-2.0-0:amd64",
+    "usr/lib/musicsync/libgio-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync/libgobject-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync/libgmodule-2.0.so.0": "libglib2.0-0t64:amd64",
+    "usr/lib/musicsync/libpangoft2-1.0.so.0": "libpangoft2-1.0-0:amd64",
+    "usr/lib/musicsync/libfribidi.so.0": "libfribidi0:amd64",
+    "usr/lib/musicsync/libepoxy.so.0": "libepoxy0:amd64",
+    "usr/lib/musicsync/libXi.so.6": "libxi6:amd64",
+    "usr/lib/musicsync/libatk-bridge-2.0.so.0": "libatk-bridge2.0-0t64:amd64",
+    "usr/lib/musicsync/libXfixes.so.3": "libxfixes3:amd64",
+    "usr/lib/musicsync/libwayland-egl.so.1": "libwayland-egl1:amd64",
+    "usr/lib/musicsync/libXext.so.6": "libxext6:amd64",
+    "usr/lib/musicsync/libXcursor.so.1": "libxcursor1:amd64",
+    "usr/lib/musicsync/libXdamage.so.1": "libxdamage1:amd64",
+    "usr/lib/musicsync/libXcomposite.so.1": "libxcomposite1:amd64",
+    "usr/lib/musicsync/libXrandr.so.2": "libxrandr2:amd64",
+    "usr/lib/musicsync/libXinerama.so.1": "libxinerama1:amd64",
+    "usr/lib/musicsync/libthai.so.0": "libthai0:amd64",
+    "usr/lib/musicsync/libgraphite2.so.3": "libgraphite2-3:amd64",
+    "usr/lib/musicsync/libXrender.so.1": "libxrender1:amd64",
+    "usr/lib/musicsync/libpixman-1.so.0": "libpixman-1-0:amd64",
+    "usr/lib/musicsync/libjpeg.so.8": "libjpeg-turbo8:amd64",
+    "usr/lib/musicsync/libmount.so.1": "libmount1:amd64",
+    "usr/lib/musicsync/libselinux.so.1": "libselinux1:amd64",
+    "usr/lib/musicsync/libatspi.so.0": "libatspi2.0-0t64:amd64",
+    "usr/lib/musicsync/libdatrie.so.1": "libdatrie1:amd64",
+    "usr/lib/musicsync/libblkid.so.1": "libblkid1:amd64",
+    "usr/lib/musicsync/libxcb-glx.so.0": "libxcb-glx0:amd64",
+    "usr/share/musicsync/presets/no_album.ini": "rsgain-3.6",
+    "AppRun": "MusicSync + Python3.12 + Nuitka-runtime",
+    "usr/bin/musicsync": "MusicSync + Python3.12 + Nuitka-runtime",
+    "usr/lib/musicsync/musicsync.bin": "MusicSync + Python3.12 + Nuitka-runtime"
+  },
+  "runtime": {
+    "url": "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64",
+    "sha256": "156f4bdbde9c52d01814600013e0a273f0118dc2de98975f3c8c63427ec79074",
+    "commit": "8f39b89e2ac31e1640b3d3f7e9a5108e6ce805fa",
+    "note": "Official static runtime: libfuse 3.15.0 and squashfuse 0.5.2 are pinned in its recipe. Binary strings identify zstd 1.5.6 and zlib 1.3.2. musl/mimalloc sources follow the Alpine 3.21 recipe; exact APK revisions are not provided in the binary release."
+  },
+  "qt": "6.11.2 LGPL-3.0-only plus third-party notices; QtPdf excluded",
+  "python": "3.12.3 Ubuntu patched build; PSF and bundled notices",
+  "mutagen": "1.47.0 MIT, compiled into musicsync.bin for Bulk Rename tag editing",
+  "musicsync": "MIT",
+  "nuitka": "4.2.1 Apache-2.0 with runtime exception"
+}

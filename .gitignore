@@ -26,3 +26,9 @@ venv/
 # Keep local runtime configuration/history out of source snapshots.
 settings.json
 last-sync.json
+
+# Consolidation archive and large accepted release artifacts remain local.
+/archive/
+/release-artifacts/0.2.0/MusicSync-0.2.0-x86_64.AppImage
+/release-artifacts/0.2.0/MusicSync-0.2.0-x86_64-sources.tar.gz
+/release-artifacts/0.2.0/musicsync-0.2.0-1.fc44.src.rpm

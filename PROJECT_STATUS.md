@@ -1,5 +1,22 @@
 # MusicSyncSettingsIntegration — Project Status
 
+## PRODUCT COMPLETE and consolidated — 2026-10-24
+
+Reason accepted MusicSync 0.2.0 after installing the native Fedora 44 RPM and
+testing real KDE Connect synchronization, Bulk Rename, and Undo. The accepted
+source baseline is `1c2c8ba990e2415a98c7bed5878a5ee7742c8bb7`.
+
+The canonical local repository is `/home/reason/Codex-Projects/MusicSync/`
+and the canonical GitHub repository is
+`https://github.com/Reason7322/MusicSync`. Original MusicSync and
+MusicSyncRename histories are retained on named archival branches. The exact
+accepted Fedora RPM is committed under `release-artifacts/0.2.0/`; the V19
+AppImage, source RPM, corresponding-source archives, and historical evidence
+remain local and are deliberately excluded from Git.
+
+This consolidation changes repository organization and provenance only. No
+application source was redesigned, rebuilt, or retested.
+
 ## PRODUCT STATUS: INCOMPLETE (**Mission 24 COMPLETE (2026-10-24)** — MusicSync 0.2.0 dual packaging built and verified from accepted source `aaa39147…`: AppImage **build V19** (`dist/MusicSync-0.2.0-x86_64.AppImage`, SHA-256 `3800b283…`) carries the Mission 22 resizable Preview columns + accepted Sessions UI and passes BOTH established packaged tests (byte-exact Apply→Undo); V18 preserved as `.bak-7a197215` (SHA-256 `7a197215…`). Native **Fedora 44 RPM** `dist/musicsync-0.2.0-1.fc44.x86_64.rpm` (SHA-256 `5ac38a90…`) built in an isolated FC44 container from the same source; metadata/dependency + isolated functional verification PASS (bulk rename Apply→Undo byte-exact on system PySide6/Mutagen). **Neither artifact installed live**; install, real-device and VM acceptance remain Reason's. The full release-suite re-baseline is NOT authorized, NOT outstanding and NOT deferred per the CURRENT SCOPE correction below.)
 
 Product goal (unchanged): MusicSync 0.2.0 with Bulk Rename inside Settings — Preview → Select → Apply → Sessions → Undo with byte-exact undo and no approved-changes default — plus manual filename/ID3 metadata editing, verified standalone AppImage on synthetic MP3s, Fedora 44 native RPM, preserved source/artifacts; live install only under separate authorization. `dist/MusicSync-0.2.0-x86_64.AppImage` is now the **build-V18 artifact** from source commit `2caad1fc70b76bb25624e05bc77962a702b95fe1` (SHA-256 `7a197215ab06ed6032d7df7520abbc0cffd0357c776e15737513f292dd33bc1d`, 127,715,832 bytes) and contains ALL accepted source work through Mission 20 — `manual_edit.py`, the Mission 17A result-dialog/Close UX, the Mission 18 engine MutagenError step-handler fix, AND the Mission 20 Sessions-table usability UI (provenance: corresponding-source tarball members src/tests/scripts byte-identical to this commit; frozen bundle contains the Mission 20 markers). The previous **V17 build** artifact is preserved as `dist/MusicSync-0.2.0-x86_64.AppImage.bak-18808cb2` (SHA-256 `18808cb25c057861a987c3a4b5ae28dabbd64fdbd2cfb61680107f657efaff06`, re-hashed identical after copy) with versioned provenance copies `build/appimage/SHA256SUMS.v17-18808cb2`, `appimage-build-manifest.v17-18808cb2.json`, `runtime-tests.v17-18808cb2.json`, `bulk-rename-tests.v17-18808cb2.json` (all re-hashed identical after copy); older backups `.bak-d9865a3a`, `.bak-185e79f1`, `.bak-587ee62c` untouched. **Source has advanced since V18:** Mission 22's Rename Preview column-resize change (this commit's parent) is source-level only and ships at the next packaging milestone; no artifact rebuild was authorized or performed this mission.
