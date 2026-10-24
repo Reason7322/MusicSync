@@ -24,15 +24,14 @@ MusicSync 0.2.0 with integrated Settings → Bulk Rename → Preview → Select 
 - Offscreen/synthetic verification is NOT visual proof and NOT real-device acceptance — both remain Reason's (see below). AppImage V19 has no separate `.bak` file because the pre-existing verified backup `.bak-7a197215` already preserves V18 (mission rule: reuse, don't duplicate).
 - RPM wrapper relies on `/usr/lib/python3.14/site-packages` being a standard site dir — TRUE for FC44 (verified `site.getsitepackages()`); the smoke test's PYTHONPATH is only the isolated analogue of that fact.
 - rpmlint was NOT run (not installed; no root). Spec hand-checked against Fedora conventions instead.
-- Release suite (`scripts/run_release_tests.py`) deliberately not run — explicit mission directive; still open since V10.
+- Full release-suite re-baseline (`scripts/run_release_tests.py`): deliberately NOT run — per the CURRENT SCOPE correction (Reason, 2026-10-24) it is NOT authorized, NOT outstanding and NOT deferred.
 
 ## Remaining product work (updated, in order)
 1. **Reason's acceptance**: install/launch of both packages where Reason chooses (AppImage double-click / RPM `dnf install`), real-device KDE Connect sync on the RPM or AppImage, and visual UI acceptance of V19 (Mission 22 resizable Preview columns + Sessions table). VM coverage per standing acceptance practice.
-2. Release-suite re-baseline (`QT_QPA_PLATFORM=offscreen python3 scripts/run_release_tests.py`) — outstanding since V10, due after any src change; explicitly parked by the Mission 24 directive.
-3. Final release organization/provenance and publication only when Reason authorizes it (nothing published this mission).
+2. Final release organization/provenance and publication only when Reason authorizes it (nothing published this mission). The full release-suite re-baseline is NOT authorized, NOT outstanding and NOT deferred per the CURRENT SCOPE correction.
 
 ## ONE potential next action (NOT authorized)
-Reason installs `dist/musicsync-0.2.0-1.fc44.x86_64.rpm` in a VM or live system, runs a real-device sync + visual V19 UI pass; afterwards schedule the release-suite re-baseline.
+Reason installs `dist/musicsync-0.2.0-1.fc44.x86_64.rpm` in a VM or live system, runs a real-device sync + visual V19 UI pass (resizable Preview columns + Sessions table).
 
 ## Environment facts (carry forward / new this shift)
 - Rootless podman on this host: `run` needs `--network=host` (netavark/pasta broken — documented in build.py); `pull` works plain. SELinux enforcing → bind-mounted dirs need `--security-opt=label=disable` for container reads/writes (same flag the AppImage builder uses).
