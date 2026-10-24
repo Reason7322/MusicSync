@@ -1,4 +1,4 @@
-> **Disclaimer:** This application is 100% vibe coded by OpenAI Codex and my locally running Qwen model. Use it at your own discretion.
+> ### This application is 100% vibe coded by OpenAI Codex and my locally running Qwen model. Use it at your own discretion.
 
 
 # MusicSync
